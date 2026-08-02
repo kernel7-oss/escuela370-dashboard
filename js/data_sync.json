@@ -1,0 +1,627 @@
+{
+  "config": {
+    "tiempoTraslado": 20,
+    "semanaActual": "2026-05-04"
+  },
+  "docentes": [
+    {
+      "id": "d9",
+      "nombre": "Pablo Soto",
+      "materia": "Lengua",
+      "nivel": "Secundaria",
+      "jornada": {
+        "Martes": {
+          "i": "13:20",
+          "f": "16:40"
+        },
+        "Miércoles": {
+          "i": "13:20",
+          "f": "16:40"
+        },
+        "Jueves": {
+          "i": "13:20",
+          "f": "16:40"
+        }
+      }
+    },
+    {
+      "id": "d10",
+      "nombre": "Pablo Mat",
+      "materia": "Matemática",
+      "nivel": "Secundaria",
+      "jornada": {
+        "Lunes": {
+          "i": "14:00",
+          "f": "17:20"
+        },
+        "Martes": {
+          "i": "14:00",
+          "f": "17:00"
+        },
+        "Miércoles": {
+          "i": "14:00",
+          "f": "17:00"
+        }
+      }
+    },
+    {
+      "id": "d11",
+      "nombre": "Ana",
+      "materia": "Cs. Sociales",
+      "nivel": "Secundaria",
+      "jornada": {
+        "Miércoles": {
+          "i": "13:20",
+          "f": "16:40"
+        },
+        "Jueves": {
+          "i": "13:20",
+          "f": "16:40"
+        },
+        "Viernes": {
+          "i": "13:20",
+          "f": "16:40"
+        }
+      }
+    },
+    {
+      "id": "d12",
+      "nombre": "Vanina",
+      "materia": "Cs. Naturales",
+      "nivel": "Secundaria",
+      "jornada": {
+        "Lunes": {
+          "i": "15:20",
+          "f": "17:20"
+        },
+        "Martes": {
+          "i": "14:00",
+          "f": "17:00"
+        },
+        "Miércoles": {
+          "i": "14:00",
+          "f": "15:20"
+        },
+        "Jueves": {
+          "i": "14:00",
+          "f": "17:00"
+        }
+      }
+    },
+    {
+      "id": "d14",
+      "nombre": "Karina",
+      "materia": "Ed. Tecnológica",
+      "nivel": "Secundaria",
+      "jornada": {
+        "Jueves": {
+          "i": "13:20",
+          "f": "17:20"
+        },
+        "Viernes": {
+          "i": "13:20",
+          "f": "17:20"
+        }
+      }
+    },
+    {
+      "id": "d19",
+      "nombre": "Ricardo",
+      "materia": "P.O.T.",
+      "nivel": "Secundaria",
+      "jornada": {}
+    },
+    {
+      "id": "d20",
+      "nombre": "Maxi",
+      "materia": "Inglés",
+      "nivel": "Secundaria",
+      "jornada": {
+        "Miércoles": {
+          "i": "14:00",
+          "f": "16:40"
+        },
+        "Jueves": {
+          "i": "14:00",
+          "f": "16:40"
+        },
+        "Viernes": {
+          "i": "14:00",
+          "f": "16:40"
+        }
+      }
+    }
+  ],
+  "estudiantes": [
+    {
+      "id": "e15",
+      "nombre": "Romero Paulo Daniel",
+      "grado": "6to año",
+      "escuelaOrigen": "Escuela N° 766",
+      "barrio": "Diadema",
+      "domicilio": "Río Grande Nº 335 casa 225",
+      "telefono": "2974783959 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "31-05-2026"
+    },
+    {
+      "id": "e16",
+      "nombre": "Julio Jerónimo Jesús",
+      "grado": "2do año",
+      "escuelaOrigen": "Escuela Nº 7704",
+      "barrio": "Diadema Argentina",
+      "domicilio": "Río Lepa Nº 237",
+      "telefono": "2974734075 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "MAYO 06, 2026"
+    },
+    {
+      "id": "e17",
+      "nombre": "Arias Leal Dylan",
+      "grado": "4to año",
+      "escuelaOrigen": "Escuela N° 757",
+      "barrio": "Valle C",
+      "domicilio": "Entre Ríos N° 137",
+      "telefono": "2975363891 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "JUNIO 12, 2026"
+    },
+    {
+      "id": "e18",
+      "nombre": "Castro Lucas",
+      "grado": "6to año",
+      "escuelaOrigen": "Escuela N° 757",
+      "barrio": "Laprida",
+      "domicilio": "Paraguay Nº 581",
+      "telefono": "2974921790 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "20-12-2026"
+    },
+    {
+      "id": "e19",
+      "nombre": "Cárcamo Jonas",
+      "grado": "3er año",
+      "escuelaOrigen": "Escuela N° 757",
+      "barrio": "Barrio Moreno - KM 3",
+      "domicilio": "Ortiz Ocampo Nº 147",
+      "telefono": "2974033201 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "30-04-2026"
+    },
+    {
+      "id": "e20",
+      "nombre": "Vidal Agustín Ignacio",
+      "grado": "4to año",
+      "escuelaOrigen": "Escuela Nº 722",
+      "barrio": "Próspero Palazzo",
+      "domicilio": "Teniente Merlo Nº 1909",
+      "telefono": "2975062941 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "DICIEMBRE 20, 2026"
+    },
+    {
+      "id": "e21",
+      "nombre": "Pérez Carolina",
+      "grado": "6to año",
+      "escuelaOrigen": "Escuela Nº 7702",
+      "barrio": "Pte. Ortíz KM 5",
+      "domicilio": "Ferrocarril Patagónico N° 343",
+      "telefono": "2975155641 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "MARZO 30, 2026"
+    },
+    {
+      "id": "e22",
+      "nombre": "González Maza Muriel",
+      "grado": "4to año",
+      "escuelaOrigen": "Escuela Nº 7702",
+      "barrio": "Laprida",
+      "domicilio": "Alaska N° 580",
+      "telefono": "2974057995 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "JUNIO 28, 2026"
+    },
+    {
+      "id": "e26",
+      "nombre": "Gonzalez Román Antonio",
+      "grado": "2do año",
+      "escuelaOrigen": "Escuela Nº 7704",
+      "barrio": "Ara San Juan (KM 12)",
+      "domicilio": "Calle 3045 casa Nº 463",
+      "telefono": "2976239600 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "ABRIL 30, 2026"
+    },
+    {
+      "id": "e27",
+      "nombre": "Olivera Herrera Martina Francesca",
+      "grado": "2do año",
+      "escuelaOrigen": "Escuela Nº 7704",
+      "barrio": "Diadema Argentina",
+      "domicilio": "Lago Fontana Nro.570 - Casa Nro.155",
+      "telefono": "2974583345 mamá",
+      "nivel": "Secundaria",
+      "vencimientoCertificado": "ABRIL 26, 2026"
+    }
+  ],
+  "novedades": [
+    {
+      "id": "nov1",
+      "estudianteId": "e2",
+      "dia": "Miércoles",
+      "horaInicio": "15:00",
+      "horaFin": "17:00",
+      "motivo": "Turno médico"
+    },
+    {
+      "id": "nov2",
+      "estudianteId": "e8",
+      "dia": "Martes",
+      "horaInicio": "00:00",
+      "horaFin": "15:00",
+      "motivo": "Solo disponible desde 15hs"
+    }
+  ],
+  "asignaciones": [
+    {
+      "id": "as_soto_1",
+      "docenteId": "d9",
+      "estudianteId": "e19",
+      "dia": "Lunes",
+      "horaInicio": "13:20",
+      "horaFin": "14:40"
+    },
+    {
+      "id": "as_soto_2",
+      "docenteId": "d9",
+      "estudianteId": "e17",
+      "dia": "Martes",
+      "horaInicio": "13:20",
+      "horaFin": "14:40"
+    },
+    {
+      "id": "as_soto_3",
+      "docenteId": "d9",
+      "estudianteId": "e16",
+      "dia": "Martes",
+      "horaInicio": "15:20",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_soto_4",
+      "docenteId": "d9",
+      "estudianteId": "e20",
+      "dia": "Miércoles",
+      "horaInicio": "15:30",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_soto_5",
+      "docenteId": "d9",
+      "estudianteId": "e18",
+      "dia": "Jueves",
+      "horaInicio": "13:20",
+      "horaFin": "14:40"
+    },
+    {
+      "id": "as_soto_6",
+      "docenteId": "d9",
+      "estudianteId": "e21",
+      "dia": "Jueves",
+      "horaInicio": "15:10",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_ricardo_1",
+      "docenteId": "d19",
+      "estudianteId": "e22",
+      "dia": "Lunes",
+      "horaInicio": "15:00",
+      "horaFin": "16:00"
+    },
+    {
+      "id": "as_ricardo_2",
+      "docenteId": "d19",
+      "estudianteId": "e19",
+      "dia": "Jueves",
+      "horaInicio": "13:20",
+      "horaFin": "14:40"
+    },
+    {
+      "id": "as_pablomat_1",
+      "docenteId": "d10",
+      "estudianteId": "e15",
+      "dia": "Lunes",
+      "horaInicio": "14:00",
+      "horaFin": "15:10"
+    },
+    {
+      "id": "as_pablomat_2",
+      "docenteId": "d10",
+      "estudianteId": "e16",
+      "dia": "Lunes",
+      "horaInicio": "15:30",
+      "horaFin": "17:20"
+    },
+    {
+      "id": "as_pablomat_3",
+      "docenteId": "d10",
+      "estudianteId": "e18",
+      "dia": "Martes",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_pablomat_4",
+      "docenteId": "d10",
+      "estudianteId": "e17",
+      "dia": "Martes",
+      "horaInicio": "15:40",
+      "horaFin": "17:00"
+    },
+    {
+      "id": "as_pablomat_5",
+      "docenteId": "d10",
+      "estudianteId": "e19",
+      "dia": "Miércoles",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_pablomat_6",
+      "docenteId": "d10",
+      "estudianteId": "e21",
+      "dia": "Miércoles",
+      "horaInicio": "15:40",
+      "horaFin": "17:00"
+    },
+    {
+      "id": "as_ana_1",
+      "docenteId": "d11",
+      "estudianteId": "e16",
+      "dia": "Miércoles",
+      "horaInicio": "13:20",
+      "horaFin": "15:10"
+    },
+    {
+      "id": "as_ana_2",
+      "docenteId": "d11",
+      "estudianteId": "e20",
+      "dia": "Miércoles",
+      "horaInicio": "16:00",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_ana_3",
+      "docenteId": "d11",
+      "estudianteId": "e17",
+      "dia": "Jueves",
+      "horaInicio": "13:20",
+      "horaFin": "14:40"
+    },
+    {
+      "id": "as_ana_4",
+      "docenteId": "d11",
+      "estudianteId": "e19",
+      "dia": "Jueves",
+      "horaInicio": "15:10",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_ana_5",
+      "docenteId": "d11",
+      "estudianteId": "e18",
+      "dia": "Viernes",
+      "horaInicio": "13:20",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_ana_6",
+      "docenteId": "d11",
+      "estudianteId": "e21",
+      "dia": "Viernes",
+      "horaInicio": "16:00",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_vanina_1",
+      "docenteId": "d12",
+      "estudianteId": "e15",
+      "dia": "Lunes",
+      "horaInicio": "15:20",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_vanina_2",
+      "docenteId": "d12",
+      "estudianteId": "e17",
+      "dia": "Martes",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_vanina_3",
+      "docenteId": "d12",
+      "estudianteId": "e18",
+      "dia": "Martes",
+      "horaInicio": "15:40",
+      "horaFin": "17:00"
+    },
+    {
+      "id": "as_vanina_4",
+      "docenteId": "d12",
+      "estudianteId": "e21",
+      "dia": "Miércoles",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_vanina_5",
+      "docenteId": "d12",
+      "estudianteId": "e16",
+      "dia": "Jueves",
+      "horaInicio": "14:00",
+      "horaFin": "15:00"
+    },
+    {
+      "id": "as_vanina_6",
+      "docenteId": "d12",
+      "estudianteId": "e26",
+      "dia": "Viernes",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_maxi_1",
+      "docenteId": "d20",
+      "estudianteId": "e20",
+      "dia": "Miércoles",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_maxi_2",
+      "docenteId": "d20",
+      "estudianteId": "e21",
+      "dia": "Jueves",
+      "horaInicio": "14:00",
+      "horaFin": "15:00"
+    },
+    {
+      "id": "as_maxi_3",
+      "docenteId": "d20",
+      "estudianteId": "e15",
+      "dia": "Jueves",
+      "horaInicio": "15:30",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_maxi_4",
+      "docenteId": "d20",
+      "estudianteId": "e17",
+      "dia": "Viernes",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "as_maxi_5",
+      "docenteId": "d20",
+      "estudianteId": "e18",
+      "dia": "Viernes",
+      "horaInicio": "15:40",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "as_karina_1",
+      "docenteId": "d14",
+      "estudianteId": "e19",
+      "dia": "Jueves",
+      "horaInicio": "13:20",
+      "horaFin": "15:00"
+    },
+    {
+      "id": "as_karina_2",
+      "docenteId": "d14",
+      "estudianteId": "e26",
+      "dia": "Jueves",
+      "horaInicio": "15:30",
+      "horaFin": "17:00"
+    },
+    {
+      "id": "as_karina_3",
+      "docenteId": "d14",
+      "estudianteId": "e27",
+      "dia": "Viernes",
+      "horaInicio": "13:20",
+      "horaFin": "15:00"
+    },
+    {
+      "id": "as_karina_4",
+      "docenteId": "d14",
+      "estudianteId": "e16",
+      "dia": "Viernes",
+      "horaInicio": "15:30",
+      "horaFin": "17:20"
+    },
+    {
+      "id": "a5",
+      "docenteId": "d10",
+      "estudianteId": "e15",
+      "dia": "Lunes",
+      "horaInicio": "14:00",
+      "horaFin": "15:10"
+    },
+    {
+      "id": "a6",
+      "docenteId": "d10",
+      "estudianteId": "e16",
+      "dia": "Lunes",
+      "horaInicio": "15:30",
+      "horaFin": "17:20"
+    },
+    {
+      "id": "a7",
+      "docenteId": "d10",
+      "estudianteId": "e18",
+      "dia": "Martes",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "a8",
+      "docenteId": "d10",
+      "estudianteId": "e17",
+      "dia": "Martes",
+      "horaInicio": "15:40",
+      "horaFin": "17:00"
+    },
+    {
+      "id": "a9",
+      "docenteId": "d10",
+      "estudianteId": "e19",
+      "dia": "Miércoles",
+      "horaInicio": "14:00",
+      "horaFin": "15:20"
+    },
+    {
+      "id": "a10",
+      "docenteId": "d10",
+      "estudianteId": "e21",
+      "dia": "Miércoles",
+      "horaInicio": "15:40",
+      "horaFin": "17:00"
+    },
+    {
+      "id": "a20",
+      "docenteId": "d9",
+      "estudianteId": "e17",
+      "dia": "Martes",
+      "horaInicio": "13:20",
+      "horaFin": "14:40"
+    },
+    {
+      "id": "a21",
+      "docenteId": "d9",
+      "estudianteId": "e19",
+      "dia": "Martes",
+      "horaInicio": "15:20",
+      "horaFin": "16:40"
+    },
+    {
+      "id": "a22",
+      "docenteId": "d9",
+      "estudianteId": "e18",
+      "dia": "Jueves",
+      "horaInicio": "13:20",
+      "horaFin": "14:40"
+    },
+    {
+      "id": "a23",
+      "docenteId": "d9",
+      "estudianteId": "e21",
+      "dia": "Jueves",
+      "horaInicio": "15:10",
+      "horaFin": "16:40"
+    }
+  ]
+}

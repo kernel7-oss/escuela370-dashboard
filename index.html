@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escuela 370 - Consola de Mando</title>
+  <meta name="description" content="Sistema de gestión de horarios para la Escuela Domiciliaria y Hospitalaria 370">
+  <link rel="stylesheet" href="css/styles.css?v=16">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h1>🛰️ ESCUELA 370</h1>
+    <p>Consola de Mando • Nivel Secundario</p>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" data-page="dashboard">
+      <span class="icon">📊</span>
+      <span class="nav-label">Dashboard</span>
+      <span class="nav-badge" id="conflict-badge" style="display:none">0</span>
+    </button>
+    <button class="nav-item" data-page="horarios">
+      <span class="icon">📅</span>
+      <span class="nav-label">Horarios</span>
+    </button>
+    <button class="nav-item" data-page="docentes">
+      <span class="icon">👨‍🏫</span>
+      <span class="nav-label">Docentes</span>
+    </button>
+    <button class="nav-item" data-page="estudiantes">
+      <span class="icon">🎓</span>
+      <span class="nav-label">Estudiantes</span>
+    </button>
+    <button class="nav-item" data-page="alertas">
+      <span class="icon">🚨</span>
+      <span class="nav-label">Alertas Médicas</span>
+    </button>
+    <button class="nav-item" data-page="novedades">
+      <span class="icon">📢</span>
+      <span class="nav-label">Novedades</span>
+    </button>
+    <button class="nav-item" data-page="historial">
+      <span class="icon">📚</span>
+      <span class="nav-label">Historial</span>
+    </button>
+    <button class="nav-item" data-page="config">
+      <span class="icon">⚙️</span>
+      <span class="nav-label">Configuración</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    Semana: 11 al 15 de Mayo
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div>
+        <h2 id="dashboard-title">Dashboard Operativo</h2>
+        <p class="subtitle" id="dashboard-subtitle">Semana del 11 al 15 de Mayo - 2026</p>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card" onclick="showDetailModal('A la espera')" style="cursor: pointer;">
+        <div class="stat-label">En Espera</div>
+        <div class="stat-value" id="stat-espera">0</div>
+        <div class="stat-icon" style="background: var(--warning); opacity: 0.2;"></div>
+      </div>
+      <div class="stat-card" onclick="navigate('alertas')" style="cursor: pointer;">
+        <div class="stat-icon">👨‍🏫</div>
+        <div class="stat-value" id="stat-docentes">0</div>
+        <div class="stat-label">Docentes Activos</div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-value" id="stat-estudiantes">0</div>
+        <div class="stat-label">Estudiantes Totales</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="stat-icon">🩺</div>
+        <div class="stat-value" id="stat-vencimientos">0</div>
+        <div class="stat-label">Vencimientos Próximos</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-icon">🚨</div>
+        <div class="stat-value" id="stat-conflictos">0</div>
+        <div class="stat-label">Conflictos Detectados</div>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+      <!-- Columna Principal: Conflictos -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">🔍 Análisis de Rutas y Conflictos</h3>
+        </div>
+        <div id="conflict-list" class="conflict-list" style="padding: 10px;">
+          <p style="padding: 20px; color: var(--text-secondary); text-align: center;">Iniciando auditoría de rutas...</p>
+        </div>
+      </div>
+
+      <!-- Columna Lateral: Escuelas de Origen -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">🏫 Escuelas de Origen</h3>
+        </div>
+        <div id="origins-list" style="padding: 20px;">
+          <!-- Se carga dinámicamente -->
+        </div>
+      </div>
+      <div class="card" style="margin-top: 20px; grid-column: 1 / -1;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="card-title">⏳ Estudiantes en Espera (Derivaciones por Sobrecarga / Sin Cupo)</h3>
+          <button class="btn btn-primary btn-sm" onclick="openEstudianteEsperaModal()">➕ Cargar Estudiante en Espera</button>
+        </div>
+        <div id="wait-list-container" style="padding: 15px;">
+          <!-- JS populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTAS MÉDICAS (Nueva Sección) -->
+  <div class="page" id="page-alertas">
+    <div class="page-header">
+      <div>
+        <h2>🚨 Alertas de Certificados</h2>
+        <p class="subtitle">Monitoreo de vencimientos y trámites pendientes</p>
+      </div>
+    </div>
+    <div class="card">
+      <div style="padding: 20px;">
+        <div id="alertas-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HORARIOS -->
+  <div class="page" id="page-horarios">
+    <div class="page-header">
+      <div>
+        <h2>📅 Grilla de Planificación</h2>
+        <p class="subtitle" id="horarios-subtitle">Visualización semanal por docente</p>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-secondary" onclick="exportData()">📤 Exportar</button>
+        <button class="btn btn-primary" onclick="openAsignacionModal()">➕ Asignar</button>
+      </div>
+    </div>
+    <div class="card" style="padding: 20px;">
+      <div class="filters" style="margin-bottom: 20px;">
+        <select class="form-select" id="filter-docente" onchange="renderHorarios()" style="max-width: 300px;">
+          <option value="">Todos los docentes</option>
+        </select>
+      </div>
+      <div id="horarios-grid"></div>
+    </div>
+  </div>
+
+  <!-- DOCENTES -->
+  <div class="page" id="page-docentes">
+    <div class="page-header">
+      <div>
+        <h2>👨‍🏫 Plantel Docente</h2>
+        <p class="subtitle">Personal activo y disponibilidades</p>
+      </div>
+      <button class="btn btn-primary" onclick="openDocenteModal()">➕ Nuevo</button>
+    </div>
+    <div id="docentes-list"></div>
+  </div>
+
+  <!-- ESTUDIANTES -->
+  <div class="page" id="page-estudiantes">
+    <div class="page-header">
+      <div>
+        <h2>🎓 Matrícula de Estudiantes</h2>
+        <p class="subtitle">Datos de contacto y ubicación</p>
+      </div>
+      <button class="btn btn-primary" onclick="openEstudianteModal()">➕ Nuevo</button>
+    </div>
+    <div id="estudiantes-list"></div>
+  </div>
+
+  <!-- NOVEDADES -->
+  <div class="page" id="page-novedades">
+    <div class="page-header">
+      <div>
+        <h2>📢 Novedades</h2>
+        <p class="subtitle">Excepciones temporales al calendario</p>
+      </div>
+      <button class="btn btn-primary" onclick="openNovedadModal()">➕ Nueva</button>
+    </div>
+    <div id="novedades-list"></div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="page" id="page-historial">
+    <div class="page-header">
+      <div>
+        <h2>📚 Historial de Semanas</h2>
+        <p class="subtitle">Registro histórico de clases y novedades cerradas</p>
+      </div>
+    </div>
+    <div id="historial-list"></div>
+  </div>
+
+  <!-- CONFIG -->
+  <div class="page" id="page-config">
+    <div class="page-header">
+      <h2>⚙️ Configuración</h2>
+    </div>
+    <div class="settings-section">
+      <div class="card" style="padding: 24px;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Rango de Semana Actual</label>
+            <input class="form-input" type="text" id="config-semana" value="18 al 22 de Mayo de 2026">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tiempo Estimado de Traslado (Minutos)</label>
+            <input class="form-input" type="number" id="config-traslado" value="20" min="5" max="120">
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top: 10px;">
+          <button class="btn btn-primary" onclick="saveConfig()">Guardar Cambios</button>
+          <button class="btn btn-secondary" style="background: var(--accent-pink); color: white;" onclick="handleArchiveWeek()">🔒 Cerrar y Archivar Semana</button>
+        </div>
+      </div>
+      <div class="card" style="padding: 24px;">
+        <h3 style="margin-bottom: 15px;">💾 Mantenimiento de Datos</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="exportData()">📤 Exportar Backup (JSON)</button>
+          <button class="btn btn-secondary" onclick="importData()">📥 Importar Backup (JSON)</button>
+          <button class="btn btn-danger" onclick="resetData()">🔄 Restaurar Datos por Defecto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Modal</h3>
+      <button class="modal-close" onclick="closeModal()" style="background:none; border:none; cursor:pointer; font-size:1.5rem;">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-save-btn" onclick="saveModal()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
