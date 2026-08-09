@@ -356,17 +356,19 @@ const DEFAULT_DATA = {
       "nombre": "CORTES AARON TIZIANO",
       "nivel": "Secundaria",
       "barrio": "Ceferino Namuncura",
-      "escuelaOrigen": "N° 711",
+      "escuelaOrigen": "Escuela N° 711",
       "grado": "3° Año",
       "estado": "En Espera",
-      "fechaRemision": "2026-08-05",
+      "fechaRemision": "2026-08-09",
       "fechaCertificado": "2026-08-01",
       "diasCobertura": 45,
       "certificadoVence": "2026-12-30",
       "domicilio": "La Ferrere N° 3283",
       "telefono": "2976246194",
       "contacto": "mamá (WhatsApp)",
-      "conectividad": "Wi-Fi: SI – 3G: SI"
+      "conectividad": "Wi-Fi: SI – 3G: SI",
+      "motivoEspera": "Derivación por sobrecarga de matrícula docente / Próximo Ingreso",
+      "diasReposo": 145
     },
     {
       "id": "e29",
@@ -377,19 +379,6 @@ const DEFAULT_DATA = {
       "grado": "2° Año",
       "estado": "Activo",
       "certificadoVence": "2026-10-20"
-    },
-    {
-      "id": "ew1",
-      "nombre": "MENDOZA FACUNDO",
-      "nivel": "Secundaria",
-      "barrio": "Standard Norte",
-      "escuelaOrigen": "N° 770",
-      "grado": "4° Año",
-      "estado": "En Espera",
-      "fechaRemision": "2026-08-04",
-      "fechaCertificado": "2026-08-01",
-      "diasCobertura": 45,
-      "certificadoVence": "2026-09-15"
     },
     {
       "id": "e30",
@@ -406,7 +395,7 @@ const DEFAULT_DATA = {
       "nombre": "FLORES SANTINO BENJAMIN",
       "nivel": "Secundaria",
       "grado": "1° Año",
-      "escuelaOrigen": "N° 1706",
+      "escuelaOrigen": "Escuela N° 1706",
       "domicilio": "Polonia N° 1504",
       "barrio": "Moure",
       "telefono": "2975171402",
@@ -1342,7 +1331,7 @@ const DEFAULT_DATA = {
 const DB = {
   data: null,
   load() {
-    const saved = localStorage.getItem('escuela370_data_v34');
+    const saved = localStorage.getItem('escuela370_data_v35');
     if (saved) {
       this.data = JSON.parse(saved);
       // Limpiar licencias/novedades del objeto docente de la semana pasada si quedaron persistidas
@@ -1412,7 +1401,7 @@ const DB = {
     }
   },
   save() {
-    localStorage.setItem('escuela370_data_v34', JSON.stringify(this.data));
+    localStorage.setItem('escuela370_data_v35', JSON.stringify(this.data));
   },
   archiveWeek() {
     const weekData = {
