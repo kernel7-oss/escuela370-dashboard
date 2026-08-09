@@ -1317,22 +1317,35 @@ function renderHorarios() {
         const isConflict = conflictIds.has(a.id);
         const isWait = a.status === 'espera';
         const isCancelada = a.estadoSemana && a.estadoSemana !== 'Normal';
-        const canceladaStyle = isCancelada ? 'opacity: 0.65; background: repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.08), rgba(148, 163, 184, 0.08) 10px, rgba(148, 163, 184, 0.18) 10px, rgba(148, 163, 184, 0.18) 20px); border: 1.5px dashed var(--text-secondary); border-radius: 8px;' : '';
+        const isSinHorario = !!a.sinHorario;
+        
+        let slotStyle = `border-left: 4px solid ${doc.color || '#ccc'}; `;
+        if (isWait) slotStyle += 'opacity: 0.6; background: #fffbeb; ';
+        if (isCancelada) {
+          slotStyle += 'opacity: 0.65; background: repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.08), rgba(148, 163, 184, 0.08) 10px, rgba(148, 163, 184, 0.18) 10px, rgba(148, 163, 184, 0.18) 20px); border: 1.5px dashed var(--text-secondary); border-radius: 8px; ';
+        } else if (isSinHorario) {
+          slotStyle += 'background: rgba(99, 102, 241, 0.05); border: 1.5px dashed rgba(99, 102, 241, 0.35); ';
+        }
+        if (isHistorical) slotStyle += 'cursor:default; ';
+
         const canceladaBadge = isCancelada ? `<span style="color:var(--text-secondary); font-size:0.6rem; display:block; margin-top:2px; font-weight:bold;">🚫 ${a.estadoSemana}</span>` : '';
+        const asentadoBadge = isSinHorario ? `<span style="color:var(--primary); font-size:0.62rem; display:block; margin-top:2px; font-weight:800;">📋 ASENTADO ${a.nota ? `(${a.nota})` : ''}</span>` : '';
         const estAlert = est && est.alertaClases ? `<span title="${est.detalleAlerta || 'Clases Pendientes'}" style="font-size:0.8rem; margin-left:4px;">⚠️</span>` : '';
         const slotClick = isHistorical ? '' : `onclick="event.stopPropagation(); openAsignacionModal('${a.id}')"`;
+        const timeDisplay = isSinHorario ? `<span style="font-size:0.65rem; color:var(--text-secondary); font-style:italic;">Día no presencial / Sin traslado</span>` : `${a.horaInicio} - ${a.horaFin}`;
 
         html += `
-          <div class="schedule-slot ${isConflict ? 'conflict' : ''} ${isWait ? 'waiting' : ''}" 
-               style="border-left: 4px solid ${doc.color || '#ccc'}; ${isWait ? 'opacity: 0.6; background: #fffbeb;' : ''} ${canceladaStyle} ${isHistorical ? 'cursor:default;' : ''}"
+          <div class="schedule-slot ${isConflict ? 'conflict' : ''} ${isWait ? 'waiting' : ''} ${isSinHorario ? 'asentado' : ''}" 
+               style="${slotStyle}"
                ${slotClick}>
             ${isHistorical ? '' : `<button class="delete-slot-btn" onclick="event.stopPropagation(); deleteAsignacionSlot('${a.id}')" title="Eliminar estudiante asignado">🗑️</button>`}
             <div class="slot-student" style="font-weight: 700; font-size: 0.75rem; padding-right: 18px; ${isCancelada ? 'text-decoration: line-through; color: var(--text-secondary);' : ''}">
               ${est ? est.nombre : 'S/D'} ${estAlert}
               ${isWait ? '<span style="color:var(--warning); font-size:0.6rem; display:block">⏳ EN ESPERA</span>' : ''}
               ${canceladaBadge}
+              ${asentadoBadge}
             </div>
-            <div class="slot-time" style="${isCancelada ? 'color: var(--text-secondary); font-style: italic;' : ''}">${a.horaInicio} - ${a.horaFin}</div>
+            <div class="slot-time" style="${isCancelada ? 'color: var(--text-secondary); font-style: italic;' : ''}">${timeDisplay}</div>
           </div>`;
       });
 
@@ -1405,6 +1418,15 @@ function openAsignacionModal(asigId = null, docenteId = '', dia = 'Lunes') {
           <option value="Estudiante sin clases esta semana" ${a?.estadoSemana === 'Estudiante sin clases esta semana' ? 'selected' : ''}>🚫 Estudiante sin clases esta semana</option>
         </select>
         <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 5px;">Al archivar la semana, se generará un alerta automática si la clase fue cancelada.</p>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top: 10px; background: rgba(99, 102, 241, 0.06); padding: 10px; border-radius: 8px; border-left: 3px solid var(--primary);">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; font-size:0.85rem; color:var(--text-main);">
+        <input type="checkbox" id="f-sin-horario" ${a?.sinHorario ? 'checked' : ''} onchange="document.getElementById('sin-horario-note-container').style.display = this.checked ? 'block' : 'none'">
+        📋 Dejar asentado estudiante en día no presencial (Seguimiento / T.P. / Sin horario de visita)
+      </label>
+      <div id="sin-horario-note-container" style="margin-top:8px; ${a?.sinHorario ? '' : 'display:none;'}">
+        <input class="form-input" id="f-nota-asentado" value="${a?.nota || ''}" placeholder="Nota opcional (ej: T. P. / BS AS / Virtual / Sin traslado)">
       </div>
     </div>
     <div id="preview-conflicts" style="margin-top:12px"></div>
@@ -1537,13 +1559,17 @@ window.autoSugerirHorario = function() {
 };
 
 function saveAsignacion() {
+  const sinHorario = document.getElementById('f-sin-horario')?.checked || false;
+  const nota = document.getElementById('f-nota-asentado')?.value?.trim() || '';
   const data = {
     docenteId: document.getElementById('f-docente').value,
     estudianteId: document.getElementById('f-estudiante').value,
     dia: document.getElementById('f-dia').value,
-    horaInicio: document.getElementById('f-hinicio').value,
-    horaFin: document.getElementById('f-hfin').value,
-    estadoSemana: document.getElementById('f-estado-semana').value
+    horaInicio: document.getElementById('f-hinicio').value || '14:00',
+    horaFin: document.getElementById('f-hfin').value || '15:00',
+    estadoSemana: document.getElementById('f-estado-semana').value,
+    sinHorario,
+    nota
   };
   if (!data.horaInicio || !data.horaFin) { showToast('Completá los horarios', 'error'); return; }
   if (editingId) { Asignaciones.update(editingId, data); showToast('Asignación actualizada'); }

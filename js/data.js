@@ -406,7 +406,8 @@ const DEFAULT_DATA = {
       "dia": "Lunes",
       "horaInicio": "14:40",
       "horaFin": "15:40",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d30_Lunes_2",
@@ -415,7 +416,8 @@ const DEFAULT_DATA = {
       "dia": "Lunes",
       "horaInicio": "15:50",
       "horaFin": "16:50",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d30_Lunes_3",
@@ -424,7 +426,9 @@ const DEFAULT_DATA = {
       "dia": "Lunes",
       "horaInicio": "17:00",
       "horaFin": "18:00",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true,
+      "nota": "T. P."
     },
     {
       "id": "as_d30_Miercoles_1",
@@ -487,7 +491,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "13:20",
       "horaFin": "14:20",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d18_Viernes_2",
@@ -496,7 +501,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "14:20",
       "horaFin": "15:20",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d18_Viernes_3",
@@ -505,7 +511,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "15:20",
       "horaFin": "16:20",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d18_Viernes_4",
@@ -514,7 +521,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "16:20",
       "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d15_Lunes_1",
@@ -559,7 +567,9 @@ const DEFAULT_DATA = {
       "dia": "Jueves",
       "horaInicio": "14:00",
       "horaFin": "14:50",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true,
+      "nota": "BS AS"
     },
     {
       "id": "as_d15_Jueves_2",
@@ -568,7 +578,9 @@ const DEFAULT_DATA = {
       "dia": "Jueves",
       "horaInicio": "14:50",
       "horaFin": "15:40",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true,
+      "nota": "T. P."
     },
     {
       "id": "as_d15_Jueves_3",
@@ -577,7 +589,8 @@ const DEFAULT_DATA = {
       "dia": "Jueves",
       "horaInicio": "15:40",
       "horaFin": "16:30",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d15_Jueves_4",
@@ -586,7 +599,8 @@ const DEFAULT_DATA = {
       "dia": "Jueves",
       "horaInicio": "16:30",
       "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d17_Lunes_1",
@@ -613,7 +627,8 @@ const DEFAULT_DATA = {
       "dia": "Martes",
       "horaInicio": "13:20",
       "horaFin": "14:20",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d17_Martes_2",
@@ -622,7 +637,8 @@ const DEFAULT_DATA = {
       "dia": "Martes",
       "horaInicio": "14:30",
       "horaFin": "15:30",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d17_Martes_3",
@@ -631,7 +647,8 @@ const DEFAULT_DATA = {
       "dia": "Martes",
       "horaInicio": "15:40",
       "horaFin": "16:40",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d17_Miercoles_1",
@@ -730,7 +747,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "14:00",
       "horaFin": "15:00",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d14_Viernes_2",
@@ -739,7 +757,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "15:10",
       "horaFin": "16:10",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d14_Viernes_3",
@@ -748,7 +767,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "16:20",
       "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d16_Lunes_1",
@@ -757,7 +777,8 @@ const DEFAULT_DATA = {
       "dia": "Lunes",
       "horaInicio": "14:00",
       "horaFin": "14:50",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d16_Lunes_2",
@@ -766,7 +787,8 @@ const DEFAULT_DATA = {
       "dia": "Lunes",
       "horaInicio": "14:50",
       "horaFin": "15:40",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d16_Lunes_3",
@@ -775,7 +797,8 @@ const DEFAULT_DATA = {
       "dia": "Lunes",
       "horaInicio": "15:40",
       "horaFin": "16:40",
-      "estadoSemana": "Normal"
+      "estadoSemana": "Normal",
+      "sinHorario": true
     },
     {
       "id": "as_d16_Miercoles_1",
@@ -945,7 +968,8 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "14:40",
           "horaFin": "15:50",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d30_Vie_2",
@@ -954,7 +978,9 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "16:00",
           "horaFin": "17:10",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true,
+          "nota": "T. P."
         },
         {
           "id": "h_d18_Lun_1",
@@ -981,7 +1007,8 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "13:20",
           "horaFin": "14:20",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d18_Vie_2",
@@ -990,7 +1017,8 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "14:20",
           "horaFin": "15:20",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d18_Vie_3",
@@ -999,7 +1027,8 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "15:20",
           "horaFin": "16:20",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d18_Vie_4",
@@ -1008,7 +1037,8 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "16:20",
           "horaFin": "17:20",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d15_Lun_1",
@@ -1053,7 +1083,9 @@ const DEFAULT_DATA = {
           "dia": "Jueves",
           "horaInicio": "14:00",
           "horaFin": "15:00",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true,
+          "nota": "BS AS"
         },
         {
           "id": "h_d15_Jue_2",
@@ -1062,7 +1094,9 @@ const DEFAULT_DATA = {
           "dia": "Jueves",
           "horaInicio": "15:10",
           "horaFin": "16:10",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true,
+          "nota": "T. P."
         },
         {
           "id": "h_d17_Lun_1",
@@ -1089,7 +1123,8 @@ const DEFAULT_DATA = {
           "dia": "Martes",
           "horaInicio": "13:20",
           "horaFin": "14:40",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d17_Mar_2",
@@ -1098,7 +1133,8 @@ const DEFAULT_DATA = {
           "dia": "Martes",
           "horaInicio": "14:50",
           "horaFin": "15:40",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d17_Mar_3",
@@ -1107,7 +1143,8 @@ const DEFAULT_DATA = {
           "dia": "Martes",
           "horaInicio": "15:40",
           "horaFin": "16:40",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d17_Mie_1",
@@ -1197,7 +1234,8 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "14:00",
           "horaFin": "15:20",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d14_Vie_2",
@@ -1206,7 +1244,8 @@ const DEFAULT_DATA = {
           "dia": "Viernes",
           "horaInicio": "15:30",
           "horaFin": "16:50",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d16_Lun_1",
@@ -1215,7 +1254,8 @@ const DEFAULT_DATA = {
           "dia": "Lunes",
           "horaInicio": "14:00",
           "horaFin": "15:00",
-          "estadoSemana": "Normal"
+          "estadoSemana": "Normal",
+          "sinHorario": true
         },
         {
           "id": "h_d16_Jue_1",
@@ -1280,7 +1320,7 @@ const DEFAULT_DATA = {
 const DB = {
   data: null,
   load() {
-    const saved = localStorage.getItem('escuela370_data_v32');
+    const saved = localStorage.getItem('escuela370_data_v33');
     if (saved) {
       this.data = JSON.parse(saved);
       // Limpiar licencias/novedades del objeto docente de la semana pasada si quedaron persistidas
@@ -1350,7 +1390,7 @@ const DB = {
     }
   },
   save() {
-    localStorage.setItem('escuela370_data_v32', JSON.stringify(this.data));
+    localStorage.setItem('escuela370_data_v33', JSON.stringify(this.data));
   },
   archiveWeek() {
     const weekData = {
@@ -1468,8 +1508,8 @@ function timeToMin(t) {
 }
 
 function detectConflicts() {
-  // Las clases canceladas o suspendidas no deben generar conflictos (superposiciones o traslados)
-  const asigs = DB.asignaciones.filter(a => a.status !== 'espera' && (!a.estadoSemana || a.estadoSemana === 'Normal'));
+  // Las clases canceladas o asentadas sin horario presencial no deben generar conflictos
+  const asigs = DB.asignaciones.filter(a => a.status !== 'espera' && (!a.estadoSemana || a.estadoSemana === 'Normal') && !a.sinHorario);
   const conflicts = [];
   DB.docentes.forEach(d => {
     DIAS.forEach(dia => {
