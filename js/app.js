@@ -1960,10 +1960,38 @@ function closeModal() {
 function handlePhotoUpload(input) {
   const file = input.files[0];
   if (!file) return;
+  
   const reader = new FileReader();
   reader.onload = function(e) {
-    document.getElementById('f-photo-preview').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
-    document.getElementById('modal-overlay').dataset.tempPhoto = e.target.result;
+    const img = new Image();
+    img.onload = function() {
+      // Redimensionar automáticamente a tamaño óptimo (máx 300px) para evitar desbordar el límite de localStorage
+      const maxDim = 300;
+      let width = img.width;
+      let height = img.height;
+      if (width > height) {
+        if (width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        }
+      } else {
+        if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+      document.getElementById('f-photo-preview').innerHTML = `<img src="${optimizedBase64}" style="width:100%; height:100%; object-fit:cover;">`;
+      document.getElementById('modal-overlay').dataset.tempPhoto = optimizedBase64;
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
