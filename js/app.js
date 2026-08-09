@@ -1955,17 +1955,16 @@ function getProfShortName(doc) {
 }
 
 function exportWordPorNivel() {
-  const nivel = activeEstudiantesTab;
-  const estudiantes = Estudiantes.getAll().filter(e => e.nivel === nivel && e.estado !== 'Alta Médica');
+  const estudiantes = Estudiantes.getAll().filter(e => e.estado !== 'Alta Médica' && e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso');
   const assignments = Asignaciones.getAll();
   const teachers = Docentes.getAll();
   
   if (estudiantes.length === 0) {
-    showToast(`No hay estudiantes activos en el nivel ${nivel}`, 'warning');
+    showToast('No hay estudiantes activos para generar el cuadernillo', 'warning');
     return;
   }
 
-  showToast(`Generando cuadernillo para ${nivel}...`, 'info');
+  showToast('Generando cuadernillo de horarios de estudiantes...', 'info');
   
   // Format date utility
   const formatCertDate = (dateStr) => {
@@ -1985,7 +1984,7 @@ function exportWordPorNivel() {
     <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
     <head>
       <meta charset="utf-8">
-      <title>Horarios de Estudiantes - ${nivel}</title>
+      <title>Horarios de Estudiantes - Escuela 370</title>
       <style>
         body { font-family: 'Segoe UI', 'Arial', sans-serif; padding: 20px; color: #000; font-size: 14px; background: #f8fafc; }
         .ficha-container { max-width: 900px; margin: 0 auto; }
