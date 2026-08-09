@@ -773,89 +773,84 @@ function openEstudianteModal(id = null) {
   const e = id ? Estudiantes.getById(id) : null;
   document.getElementById('modal-title').textContent = e ? 'Editar Estudiante' : 'Nuevo Estudiante';
   document.getElementById('modal-body').innerHTML = `
-    <div style="display:flex; gap:15px; margin-bottom:15px; align-items:center;">
-      <div id="f-photo-preview" style="width:80px; height:80px; border:2px dashed var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--bg-secondary);">
-        ${e?.foto ? `<img src="${e.foto}" style="width:100%; height:100%; object-fit:cover;">` : '<span style="font-size:1.5rem;">👤</span>'}
+    <div style="display:flex; gap:15px; margin-bottom:15px; align-items:center; background:var(--bg-secondary); padding:12px; border-radius:10px;">
+      <div id="f-photo-preview" style="width:85px; height:85px; border:2px dashed var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff;">
+        ${e?.foto ? `<img src="${e.foto}" style="width:100%; height:100%; object-fit:cover;">` : '<span style="font-size:2rem;">👤</span>'}
       </div>
       <div style="flex:1">
-        <label class="form-label">Foto del Estudiante</label>
+        <label class="form-label" style="font-weight:700;">Foto del Estudiante (Para Ficha / Word)</label>
         <input type="file" id="f-photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
-        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('f-photo-input').click()">📷 Seleccionar Imagen</button>
-        <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:5px;">Tamaño sugerido: cuadrado (1:1)</p>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('f-photo-input').click()">📷 Seleccionar Foto</button>
+        <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:4px;">Se incluirá automáticamente en la cabecera de la ficha</p>
       </div>
     </div>
-    <div class="form-group"><label class="form-label">Nombre completo</label><input class="form-input" id="f-nombre" value="${e?.nombre || ''}"></div>
-    <div class="form-group"><label class="form-label">Escuela de Origen</label><input class="form-input" id="f-escuela" value="${e?.escuelaOrigen || ''}" placeholder="Ej: Escuela N° 161"></div>
+
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-bottom:8px; letter-spacing:0.5px;">📋 Datos Principales</div>
+    <div class="form-group"><label class="form-label">Nombre y Apellido Completo</label><input class="form-input" id="f-nombre" value="${e?.nombre || ''}" placeholder="Ej: DIAZ THORP VICTORIA ANGELINA"></div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Grado/Año</label><input class="form-input" id="f-grado" value="${e?.grado || ''}"></div>
-      <div class="form-group"><label class="form-label">Nivel</label>
-        <select class="form-select" id="f-nivel">${['Secundaria'].map(n => `<option ${e?.nivel === n ? 'selected' : ''}>${n}</option>`).join('')}</select>
-      </div>
+      <div class="form-group"><label class="form-label">Curso / Año Escolar</label><input class="form-input" id="f-grado" value="${e?.grado || ''}" placeholder="Ej: 1er año, 2° año"></div>
+      <div class="form-group"><label class="form-label">Escuela de Origen</label><input class="form-input" id="f-escuela" value="${e?.escuelaOrigen || ''}" placeholder="Ej: Escuela N° 796"></div>
+    </div>
+
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">🏠 Domicilio y Contacto Familiar</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Domicilio</label><input class="form-input" id="f-domicilio" value="${e?.domicilio || ''}" placeholder="Ej: Alvear N° 421"></div>
+      <div class="form-group"><label class="form-label">Barrio</label><input class="form-input" id="f-barrio" value="${e?.barrio || ''}" placeholder="Ej: Centro"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Barrio</label><input class="form-input" id="f-barrio" value="${e?.barrio || ''}"></div>
-      <div class="form-group"><label class="form-label">Teléfono Familia</label><input class="form-input" id="f-telefono" value="${e?.telefono || ''}"></div>
+      <div class="form-group"><label class="form-label">Teléfono de la Familia</label><input class="form-input" id="f-telefono" value="${e?.telefono || ''}" placeholder="Ej: 2974260193"></div>
+      <div class="form-group"><label class="form-label">Titular / WhatsApp</label><input class="form-input" id="f-contacto" value="${e?.contacto || 'mamá (WhatsApp)'}" placeholder="Ej: mamá (WhatsApp)"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Teléfono de Emergencias</label><input class="form-input" id="f-emergencia" value="${e?.emergencia || ''}" placeholder="Ej: 2974XXXXXX"></div>
-      <div class="form-group"><label class="form-label">Vencimiento Certificado</label><input class="form-input" id="f-vence" value="${e?.vencimientoCertificado || ''}" placeholder="Ej: ABRIL 23, 2026"></div>
-    </div>
+    <div class="form-group"><label class="form-label">Teléfono de Emergencias</label><input class="form-input" id="f-emergencia" value="${e?.emergencia || ''}" placeholder="Ej: 2974XXXXXX o vacío"></div>
+
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📶 Conectividad y Certificado Médico</div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Wi-Fi</label>
         <select class="form-select" id="f-wifi">
-          <option value="SI" ${e?.wifi === 'SI' ? 'selected' : ''}>SI</option>
+          <option value="SI" ${e?.wifi === 'SI' || !e?.wifi ? 'selected' : ''}>SI</option>
           <option value="NO" ${e?.wifi === 'NO' ? 'selected' : ''}>NO</option>
         </select>
       </div>
-      <div class="form-group"><label class="form-label">3G/4G</label>
+      <div class="form-group"><label class="form-label">3G / 4G</label>
         <select class="form-select" id="f-conectividad">
-          <option value="SI" ${e?.conectividad === 'SI' ? 'selected' : ''}>SI</option>
+          <option value="SI" ${e?.conectividad === 'SI' || !e?.conectividad ? 'selected' : ''}>SI</option>
           <option value="NO" ${e?.conectividad === 'NO' ? 'selected' : ''}>NO</option>
         </select>
       </div>
+      <div class="form-group" style="flex:2;"><label class="form-label">Vencimiento Certificado</label><input class="form-input" id="f-vence" value="${e?.certificadoVence || e?.vencimientoCertificado || ''}" placeholder="Ej: DICIEMBRE 30, 2026 o 2026-12-30"></div>
     </div>
+
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📋 Matrícula y Estado</div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Domicilio</label><input class="form-input" id="f-domicilio" value="${e?.domicilio || ''}"></div>
-      <div class="form-group"><label class="form-label">Coordenadas GPS (Lat, Lng)</label><input class="form-input" id="f-coordenadas" placeholder="-45.81595, -67.45211" value="${e?.coordenadas ? `${e.coordenadas.lat}, ${e.coordenadas.lng}` : ''}"></div>
-    </div>
-    <div class="form-row" style="background:var(--bg-secondary); padding: 10px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid var(--danger);">
-      <div class="form-group" style="margin-bottom:0;">
-        <label class="form-label">Estado</label>
-        <select class="form-select" id="f-estado" onchange="document.getElementById('f-fecha-alta-container').style.display = this.value === 'Alta Médica' ? 'block' : 'none'">
-          <option value="Activo" ${e?.estado !== 'Alta Médica' && e?.estado !== 'Próximo Ingreso' ? 'selected' : ''}>Activo (En clases)</option>
-          <option value="Próximo Ingreso" ${e?.estado === 'Próximo Ingreso' ? 'selected' : ''}>Próximo Ingreso</option>
-          <option value="Alta Médica" ${e?.estado === 'Alta Médica' ? 'selected' : ''}>Alta Médica (Finalizado)</option>
+      <div class="form-group">
+        <label class="form-label">Nivel</label>
+        <select class="form-select" id="f-nivel">
+          <option value="Secundaria" ${e?.nivel === 'Secundaria' || !e?.nivel ? 'selected' : ''}>Secundaria</option>
         </select>
       </div>
-      <div class="form-group" id="f-fecha-alta-container" style="display: ${e?.estado === 'Alta Médica' ? 'block' : 'none'}; margin-bottom:0;">
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select class="form-select" id="f-estado" onchange="document.getElementById('f-fecha-alta-container').style.display = this.value === 'Alta Médica' ? 'block' : 'none'">
+          <option value="Activo" ${e?.estado !== 'Alta Médica' && e?.estado !== 'En Espera' && e?.estado !== 'Próximo Ingreso' ? 'selected' : ''}>🎓 Matrícula Activa</option>
+          <option value="En Espera" ${e?.estado === 'En Espera' || e?.estado === 'Próximo Ingreso' ? 'selected' : ''}>⏳ Lista de Espera (Próximo Ingreso)</option>
+          <option value="Alta Médica" ${e?.estado === 'Alta Médica' ? 'selected' : ''}>🏥 Alta Médica (Finalizado)</option>
+        </select>
+      </div>
+      <div class="form-group" id="f-fecha-alta-container" style="display: ${e?.estado === 'Alta Médica' ? 'block' : 'none'};">
         <label class="form-label">Fecha de Alta</label>
         <input class="form-input" type="date" id="f-fecha-alta" value="${e?.fechaAlta || ''}">
       </div>
     </div>
-    <div class="form-row" style="background:var(--bg-secondary); padding: 10px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid var(--warning);">
+
+    <div class="form-row" style="background:var(--bg-secondary); padding: 10px; border-radius: 8px; margin-top: 10px; border-left: 3px solid var(--warning);">
       <div class="form-group" style="margin-bottom:0; width: 100%;">
         <label class="form-label" style="display:flex; align-items:center; gap:8px;">
           <input type="checkbox" id="f-alerta-clases" ${e?.alertaClases ? 'checked' : ''} onchange="document.getElementById('f-detalle-alerta-container').style.display = this.checked ? 'block' : 'none'">
           ⚠️ Alerta de Inasistencia / Clases Pendientes
         </label>
         <div id="f-detalle-alerta-container" style="display: ${e?.alertaClases ? 'block' : 'none'}; margin-top: 10px;">
-          <input class="form-input" id="f-detalle-alerta" value="${e?.detalleAlerta || ''}" placeholder="Ej: Faltó a Plástica por Paro (Recuperar)">
-          <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:4px;">Este alerta se activa automáticamente si una clase se cancela durante la semana y se archiva el historial.</p>
+          <input class="form-input" id="f-detalle-alerta" value="${e?.detalleAlerta || ''}" placeholder="Ej: Faltó a clase por Paro Docente (Recuperar)">
         </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Disponibilidad Horaria (Opcional)</label>
-      <div id="disp-fields">
-        ${DIAS.map(dia => {
-          const d = e?.disponibilidad?.[dia];
-          return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-            <label style="width:90px;font-size:0.8rem;color:var(--text-secondary)">${dia}</label>
-            <input class="form-input" type="time" id="disp-${dia}-i" value="${d?.i || ''}" style="width:auto">
-            <span style="color:var(--text-muted)">a</span>
-            <input class="form-input" type="time" id="disp-${dia}-f" value="${d?.f || ''}" style="width:auto">
-          </div>`;
-        }).join('')}
       </div>
     </div>`;
   modal.classList.add('active');
@@ -865,7 +860,7 @@ function editEstudiante(id) {
   try {
     openEstudianteModal(id);
   } catch(e) {
-    alert("Error al abrir lapiz: " + e.message + "\nLínea: " + e.stack);
+    alert("Error al abrir: " + e.message);
   }
 }
 
@@ -873,33 +868,18 @@ function saveEstudiante() {
   const nombre = document.getElementById('f-nombre').value.trim();
   if (!nombre) { showToast('El nombre es obligatorio', 'error'); return; }
 
-  const disponibilidad = {};
-  DIAS.forEach(dia => {
-    const i = document.getElementById(`disp-${dia}-i`).value;
-    const f = document.getElementById(`disp-${dia}-f`).value;
-    if (i && f) disponibilidad[dia] = { i, f };
-  });
-
   const estado = document.getElementById('f-estado').value;
   const fechaAlta = estado === 'Alta Médica' ? document.getElementById('f-fecha-alta').value : null;
 
-  let coordenadas = null;
-  const coordsStr = document.getElementById('f-coordenadas').value.trim();
-  if (coordsStr) {
-    const match = coordsStr.match(/(-?\d+\.\d+)[\s,]+(-?\d+\.\d+)/);
-    if (match) {
-      coordenadas = { lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
-    }
-  }
-
   const data = {
     nombre,
-    grado: document.getElementById('f-grado').value.trim(),
-    escuelaOrigen: document.getElementById('f-escuela').value.trim(),
+    grado: document.getElementById('f-grado').value.trim() || '1er año',
+    escuelaOrigen: document.getElementById('f-escuela').value.trim() || 'S/D',
     nivel: document.getElementById('f-nivel').value,
-    barrio: document.getElementById('f-barrio').value.trim(),
-    telefono: document.getElementById('f-telefono').value.trim(),
-    domicilio: document.getElementById('f-domicilio').value.trim(),
+    barrio: document.getElementById('f-barrio').value.trim() || 'S/D',
+    telefono: document.getElementById('f-telefono').value.trim() || 'S/D',
+    contacto: document.getElementById('f-contacto').value.trim() || 'mamá (WhatsApp)',
+    domicilio: document.getElementById('f-domicilio').value.trim() || 'S/D',
     estado,
     fechaAlta,
     vencimientoCertificado: document.getElementById('f-vence').value.trim(),
@@ -908,8 +888,6 @@ function saveEstudiante() {
     wifi: document.getElementById('f-wifi').value,
     conectividad: document.getElementById('f-conectividad').value,
     foto: document.getElementById('modal-overlay').dataset.tempPhoto || (editingId ? Estudiantes.getById(editingId).foto : null),
-    coordenadas,
-    disponibilidad,
     alertaClases: document.getElementById('f-alerta-clases').checked,
     detalleAlerta: document.getElementById('f-detalle-alerta').value.trim()
   };
@@ -1960,14 +1938,30 @@ function handlePhotoUpload(input) {
   reader.readAsDataURL(file);
 }
 
+
+function getProfShortName(doc) {
+  if (!doc || !doc.nombre) return '';
+  const n = doc.nombre.toUpperCase();
+  if (n.includes('KARINA')) return 'Prof. Karina';
+  if (n.includes('ANA')) return 'Prof. Ana';
+  if (n.includes('MAXIMILIANO') || n.includes('GALVÁN')) return 'Prof. Maxi';
+  if (n.includes('SILVIA')) return 'Prof. Silvia';
+  if (n.includes('TORANZOS') || n.includes('PABLO')) return 'Prof. Pablo';
+  if (n.includes('BULACIOS') || n.includes('VANINA')) return 'Prof. Vanina';
+  if (n.includes('VENTER') || n.includes('RICARDO')) return 'Prof. Ricardo';
+  if (n.includes('AYBAR') || n.includes('SEBASTIAN')) return 'Prof. Sebastián';
+  const first = doc.nombre.split(' ')[0];
+  return 'Prof. ' + first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+}
+
 function exportWordPorNivel() {
   const nivel = activeEstudiantesTab;
-  const estudiantes = Estudiantes.getAll().filter(e => e.nivel === nivel);
+  const estudiantes = Estudiantes.getAll().filter(e => e.nivel === nivel && e.estado !== 'Alta Médica');
   const assignments = Asignaciones.getAll();
   const teachers = Docentes.getAll();
   
   if (estudiantes.length === 0) {
-    showToast(`No hay estudiantes en el nivel ${nivel}`, 'warning');
+    showToast(`No hay estudiantes activos en el nivel ${nivel}`, 'warning');
     return;
   }
 
@@ -1977,42 +1971,49 @@ function exportWordPorNivel() {
   const formatCertDate = (dateStr) => {
     if (!dateStr) return 'S/D';
     if (dateStr === 'PERMANENTE' || dateStr === 'EN PROCESO') return dateStr;
+    if (dateStr.includes('DICIEMBRE') || dateStr.includes('NOVIEMBRE') || dateStr.includes('OCTUBRE') || dateStr.includes('SEPTIEMBRE') || dateStr.includes('AGOSTO')) {
+      return dateStr.toUpperCase();
+    }
     const [y, m, d] = dateStr.split('-');
-    if (!y || !m || !d) return dateStr;
+    if (!y || !m || !d) return dateStr.toUpperCase();
     const months = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
     return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
   };
 
   let html = `
     <!DOCTYPE html>
-    <html>
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
     <head>
-      <title>Horarios - ${nivel}</title>
+      <meta charset="utf-8">
+      <title>Horarios de Estudiantes - ${nivel}</title>
       <style>
-        body { font-family: 'Arial', sans-serif; padding: 20px; color: #000; font-size: 14px; }
-        .ficha { width: 100%; margin-bottom: 30px; page-break-inside: avoid; }
-        .ficha-table { width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; border: 1px solid #000; }
-        .ficha-table th, .ficha-table td { border: 1px solid #000; vertical-align: top; }
-        .photo-cell { width: 110px; text-align: center; vertical-align: middle !important; padding: 5px; }
-        .photo-cell img { width: 95px; height: 115px; object-fit: cover; }
-        .info-cell { padding: 10px; text-align: justify; line-height: 1.4; vertical-align: middle !important; font-size: 14px; }
-        .info-label { font-weight: bold; }
-        .link-text { color: #0563c1; text-decoration: underline; }
-        .emergencia-row { text-align: center; color: #e3000f; font-weight: bold; font-style: italic; padding: 4px; font-size: 14px; }
-        .ficha-table th { background: #e6e6ea; text-transform: uppercase; font-weight: bold; padding: 4px; font-size: 14px; }
-        .schedule-cell { height: 120px; vertical-align: top; text-align: center; padding: 5px; }
-        .vencimiento-row { text-align: center; color: #5b2c6f; font-weight: bold; padding: 4px; font-size: 14px; text-transform: uppercase; }
-        .footer-row { text-align: center; font-weight: bold; padding: 4px; font-size: 14px; }
-        .print-btn { display: block; margin: 0 auto 20px; padding: 12px 24px; font-size: 16px; cursor: pointer; background: #2b5797; color: white; border: none; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .print-btn:hover { background: #1e3f70; }
-        @media print { .print-btn { display: none; } body { padding: 0; } }
+        body { font-family: 'Segoe UI', 'Arial', sans-serif; padding: 20px; color: #000; font-size: 14px; background: #f8fafc; }
+        .ficha-container { max-width: 900px; margin: 0 auto; }
+        .ficha { width: 100%; margin-bottom: 35px; page-break-inside: avoid; background: #fff; }
+        .ficha-table { width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; border: 1.5px solid #7030a0; }
+        .ficha-table th, .ficha-table td { border: 1.5px solid #7030a0; }
+        .photo-cell { width: 115px; text-align: center; vertical-align: middle !important; padding: 5px; border: 1.5px solid #7030a0; }
+        .photo-cell img { width: 100px; height: 105px; object-fit: cover; border-radius: 4px; }
+        .info-cell { padding: 8px 12px; text-align: left; line-height: 1.5; vertical-align: middle !important; font-size: 14px; border: 1.5px solid #7030a0; }
+        .link-text { color: #0070c0; text-decoration: underline; font-weight: bold; }
+        .emergencia-row { text-align: center; color: #c00000; font-weight: bold; font-style: italic; padding: 4px; font-size: 14px; border: 1.5px solid #7030a0; }
+        .ficha-table th { background: #fce4d6; color: #000; font-weight: bold; padding: 6px; font-size: 13px; text-transform: uppercase; border: 1.5px solid #7030a0; }
+        .schedule-cell { height: 125px; vertical-align: top; text-align: center; padding: 8px 4px; border: 1.5px solid #7030a0; }
+        .vencimiento-row { text-align: center; color: #7030a0; font-weight: bold; padding: 5px; font-size: 14px; text-transform: uppercase; border: 1.5px solid #7030a0; }
+        .proximo-ingreso-row { background: #ffff00; color: #c00000; font-weight: 900; text-align: center; padding: 6px; font-size: 14px; text-transform: uppercase; border: 1.5px solid #7030a0; }
+        .footer-row { text-align: center; font-weight: bold; padding: 4px; font-size: 13px; border: 1.5px solid #7030a0; text-transform: uppercase; }
+        .btn-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+        .action-btn { padding: 10px 20px; font-size: 15px; cursor: pointer; background: #2b5797; color: white; border: none; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .action-btn:hover { background: #1e3f70; }
+        @media print { .btn-bar { display: none; } body { padding: 0; background: #fff; } .ficha-container { max-width: 100%; } }
       </style>
     </head>
     <body>
-      <button class="print-btn" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
-      <h2 style="text-align: center; margin-bottom: 30px; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px; display: inline-block; margin-left: auto; margin-right: auto; width: 100%;">
-        ${nivel} - DOCENTES Y HORARIOS - SEMANA ACTUAL
-      </h2>
+      <div class="ficha-container">
+        <div class="btn-bar">
+          <button class="action-btn" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+          <button class="action-btn" style="background:#107c41;" onclick="downloadDoc()">📥 Descargar en Formato Word (.doc)</button>
+        </div>
   `;
 
   estudiantes.forEach(e => {
@@ -2021,18 +2022,21 @@ function exportWordPorNivel() {
     let diasHTML = '';
     
     dias.forEach(dia => {
-      // Find all classes for this day (in case there are multiple, like 'Martes1' and 'Martes2' logic, but here we just take all matching the 'dia')
       const classesForDay = asigs.filter(a => a.dia === dia).sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
       
       if (classesForDay.length > 0) {
         diasHTML += `<td class="schedule-cell">`;
         classesForDay.forEach(c => {
           const doc = teachers.find(t => t.id === c.docenteId);
+          const isAsentado = !!c.sinHorario;
+          const timeText = isAsentado ? (c.nota ? `(${c.nota})` : 'ASENTADO') : `${c.horaInicio} a ${c.horaFin}`;
+          const timeColor = isAsentado ? '#ea580c' : '#c00000';
+          
           diasHTML += `
-            <div style="margin-bottom: 12px;">
-              <div style="font-weight:bold; font-size:14px;">${doc ? doc.nombre.split(' ')[0].toUpperCase() : ''}</div>
-              <div style="font-size:14px;">${doc ? doc.materia.toUpperCase() : ''}</div>
-              <div style="margin-top:2px; font-weight:bold; font-size:14px;">${c.horaInicio} a ${c.horaFin}</div>
+            <div style="margin-bottom: 10px;">
+              <div style="font-weight:800; font-size:13px; color:#000000; text-transform:uppercase; margin-bottom:3px; line-height:1.2;">${doc ? doc.materia : 'MATERIA'}</div>
+              <div style="font-weight:800; font-size:14px; color:${timeColor}; margin-bottom:3px;">${timeText}</div>
+              <div style="font-weight:800; font-size:13px; color:#7030a0;">${getProfShortName(doc)}</div>
             </div>
           `;
         });
@@ -2042,21 +2046,31 @@ function exportWordPorNivel() {
       }
     });
 
+    const isWaitlist = e.estado === 'En Espera' || e.estado === 'Próximo Ingreso';
+
     html += `
       <div class="ficha">
         <table class="ficha-table">
           <tr>
             <td class="photo-cell">
-              ${e.foto ? `<img src="${e.foto}" alt="Foto">` : `<div style="width:95px; height:115px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#999; font-size:12px; border:1px solid #ccc;">Sin foto</div>`}
+              ${e.foto ? `<img src="${e.foto}" alt="Foto">` : `<div style="width:100px; height:105px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#999; font-size:12px; border:1px dashed #7030a0;">Sin foto</div>`}
             </td>
-            <td class="info-cell" colspan="4" style="line-height: 1.6;">
-              <span style="font-size: 16px; font-weight: bold; font-style: italic;">${e.nombre.toUpperCase()}:</span> <span style="font-size: 16px;">${e.grado || e.nivel}.</span> 
-              <span style="font-size: 15px; font-style: italic;">ESC. DE ORIGEN:</span> <span style="font-size: 18px; font-weight: bold;">${e.escuelaOrigen || 'S/D'}</span> - 
-              <span style="font-size: 15px; font-style: italic;">DOMICILIO:</span> <span class="link-text" style="font-size: 16px;">${e.domicilio || 'S/D'}</span> - 
-              <span style="font-size: 15px; font-style: italic;">BARRIO:</span> <span style="font-size: 16px;">${e.barrio || 'S/D'}</span> - 
-              <span style="font-size: 15px; font-style: italic;">TELÉFONO:</span> <span class="link-text" style="font-size: 16px;">${e.telefono || 'S/D'}</span> - 
-              <span style="font-size: 15px; font-style: italic;">WI-FI:</span> <span class="info-label" style="font-size: 16px;">${e.wifi || 'S/D'}</span> 
-              <span style="font-size: 15px; font-style: italic;">3G/4G:</span> <span class="info-label" style="font-size: 16px;">${e.conectividad || 'S/D'}</span> –
+            <td class="info-cell" colspan="4">
+              <div style="margin-bottom:4px;">
+                <span style="font-weight: bold; font-style: italic; font-size: 16px;">${e.nombre.toUpperCase()} - ${e.grado || '1er año'}</span> 
+                <span style="font-style: italic; font-size: 15px;">ESC. DE ORIGEN:</span> 
+                <span style="font-weight: bold; font-size: 16px;">${e.escuelaOrigen || 'S/D'}</span> -
+              </div>
+              <div>
+                <span style="font-style: italic; font-size: 15px;">DOMICILIO:</span> 
+                <span class="link-text" style="font-size: 15px;">${e.domicilio || 'S/D'}</span> 
+                <span style="font-style: italic; font-size: 15px;">-BARRIO:</span> 
+                <span style="font-weight: bold; font-size: 15px;">${e.barrio || 'S/D'}</span> 
+                <span style="font-style: italic; font-size: 15px;">-TELÉFONO:</span> 
+                <span class="link-text" style="font-size: 15px;">${e.telefono || 'S/D'}</span> 
+                <span style="font-size: 15px; font-weight:600;">${e.contacto || 'mamá (WhatsApp)'}</span>- 
+                <span style="font-style: italic; font-size: 15px;">Wi-Fi: ${e.wifi || 'SI'} – 3G:${e.conectividad || 'SI'}</span>
+              </div>
             </td>
           </tr>
           <tr>
@@ -2070,6 +2084,7 @@ function exportWordPorNivel() {
           <tr>
             ${diasHTML}
           </tr>
+          ${isWaitlist ? `<tr><td colspan="5" class="proximo-ingreso-row">PRÓXIMO INGRESO</td></tr>` : ''}
           <tr>
             <td colspan="5" class="vencimiento-row">
               VENCIMIENTO CERTIFICADO: ${formatCertDate(e.certificadoVence)}
@@ -2077,7 +2092,7 @@ function exportWordPorNivel() {
           </tr>
           <tr>
             <td colspan="5" class="footer-row">
-              HORARIOS SUJETOS A MODIFICACIONES.
+              HORARIOS SUJETOS A MODIFICACIONES
             </td>
           </tr>
         </table>
@@ -2085,7 +2100,26 @@ function exportWordPorNivel() {
     `;
   });
 
-  html += `</body></html>`;
+  html += `
+      </div>
+      <script>
+        function downloadDoc() {
+          const content = document.querySelector('.ficha-container').innerHTML;
+          const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Cuadernillo</title><style>body{font-family:Arial;font-size:14px;}.ficha-table{width:100%;border-collapse:collapse;border:1.5px solid #7030a0;}.ficha-table td,.ficha-table th{border:1.5px solid #7030a0;padding:5px;}.btn-bar{display:none;}</style></head><body>";
+          const footer = "</body></html>";
+          const sourceHTML = header + content + footer;
+          const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+          const fileDownload = document.createElement("a");
+          document.body.appendChild(fileDownload);
+          fileDownload.href = source;
+          fileDownload.download = 'Cuadernillo_Horarios_Escuela370.doc';
+          fileDownload.click();
+          document.body.removeChild(fileDownload);
+        }
+      </script>
+    </body>
+    </html>
+  `;
   
   // Open in a new tab
   const win = window.open('', '_blank');
