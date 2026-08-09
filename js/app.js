@@ -1075,20 +1075,63 @@ function openEstudianteEsperaModal(id = null) {
   const hoy = new Date().toISOString().slice(0, 10);
   
   document.getElementById('modal-body').innerHTML = `
-    <div class="form-group"><label class="form-label">Nombre Completo del Estudiante</label><input class="form-input" id="f-wait-nombre" value="${e?.nombre || ''}" placeholder="Ej: MENDOZA FACUNDO"></div>
+    <div style="display:flex; gap:15px; margin-bottom:15px; align-items:center; background:var(--bg-secondary); padding:12px; border-radius:10px;">
+      <div id="f-photo-preview" style="width:85px; height:85px; border:2px dashed var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff;">
+        ${e?.foto ? `<img src="${e.foto}" style="width:100%; height:100%; object-fit:cover;">` : '<span style="font-size:2rem;">👤</span>'}
+      </div>
+      <div style="flex:1">
+        <label class="form-label" style="font-weight:700;">Foto del Estudiante (Para Ficha / Word)</label>
+        <input type="file" id="f-photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('f-photo-input').click()">📷 Seleccionar Foto</button>
+        <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:4px;">Se incluirá automáticamente en la ficha institucional</p>
+      </div>
+    </div>
+
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-bottom:8px; letter-spacing:0.5px;">📋 Datos Principales</div>
+    <div class="form-group"><label class="form-label">Nombre y Apellido Completo</label><input class="form-input" id="f-wait-nombre" value="${e?.nombre || ''}" placeholder="Ej: CORTES AARON TIZIANO"></div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Escuela de Origen</label><input class="form-input" id="f-wait-escuela" value="${e?.escuelaOrigen || ''}" placeholder="Ej: N° 766"></div>
-      <div class="form-group"><label class="form-label">Grado / Año</label><input class="form-input" id="f-wait-grado" value="${e?.grado || ''}" placeholder="Ej: 3° Año"></div>
+      <div class="form-group"><label class="form-label">Curso / Año Escolar</label><input class="form-input" id="f-wait-grado" value="${e?.grado || ''}" placeholder="Ej: 3° Año"></div>
+      <div class="form-group"><label class="form-label">Escuela de Origen</label><input class="form-input" id="f-wait-escuela" value="${e?.escuelaOrigen || ''}" placeholder="Ej: Escuela N° 711"></div>
+    </div>
+
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">🏠 Domicilio y Contacto Familiar</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Domicilio</label><input class="form-input" id="f-wait-domicilio" value="${e?.domicilio || ''}" placeholder="Ej: La Ferrere N° 3283"></div>
+      <div class="form-group"><label class="form-label">Barrio</label><input class="form-input" id="f-wait-barrio" value="${e?.barrio || ''}" placeholder="Ej: Ceferino Namuncura"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Barrio</label><input class="form-input" id="f-wait-barrio" value="${e?.barrio || ''}" placeholder="Ej: Standard Norte"></div>
-      <div class="form-group"><label class="form-label">Domicilio</label><input class="form-input" id="f-wait-domicilio" value="${e?.domicilio || ''}"></div>
+      <div class="form-group"><label class="form-label">Teléfono de la Familia</label><input class="form-input" id="f-wait-telefono" value="${e?.telefono || ''}" placeholder="Ej: 2976246194"></div>
+      <div class="form-group"><label class="form-label">Titular / WhatsApp</label>
+        <input class="form-input" id="f-wait-contacto" list="sugerencias-contacto-wait" value="${e?.contacto || 'mamá (WhatsApp)'}" placeholder="Ej: mamá (WhatsApp)">
+        <datalist id="sugerencias-contacto-wait">
+          <option value="mamá (WhatsApp)">
+          <option value="papá (WhatsApp)">
+          <option value="mamá">
+          <option value="papá">
+          <option value="tutor (WhatsApp)">
+          <option value="familiar (WhatsApp)">
+        </datalist>
+      </div>
     </div>
+    <div class="form-group"><label class="form-label">Teléfono de Emergencias</label><input class="form-input" id="f-wait-emergencia" value="${e?.emergencia || ''}" placeholder="Ej: 2974XXXXXX o vacío"></div>
+
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📶 Conectividad</div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Teléfono Familia</label><input class="form-input" id="f-wait-telefono" value="${e?.telefono || ''}"></div>
-      <div class="form-group"><label class="form-label">Teléfono Emergencia</label><input class="form-input" id="f-wait-emergencia" value="${e?.emergencia || ''}"></div>
+      <div class="form-group"><label class="form-label">Wi-Fi</label>
+        <select class="form-select" id="f-wait-wifi">
+          <option value="SI" ${e?.wifi === 'SI' || !e?.wifi ? 'selected' : ''}>SI</option>
+          <option value="NO" ${e?.wifi === 'NO' ? 'selected' : ''}>NO</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">3G / 4G</label>
+        <select class="form-select" id="f-wait-conectividad">
+          <option value="SI" ${e?.conectividad === 'SI' || !e?.conectividad ? 'selected' : ''}>SI</option>
+          <option value="NO" ${e?.conectividad === 'NO' ? 'selected' : ''}>NO</option>
+        </select>
+      </div>
     </div>
-    <div style="background: var(--bg-main); padding: 14px; border-radius: 10px; margin-top: 10px; border-left: 4px solid var(--warning);">
+
+    <div style="background: var(--bg-main); padding: 14px; border-radius: 10px; margin-top: 14px; border-left: 4px solid var(--warning);">
       <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:10px; color:var(--text-main);">📋 Datos de Remisión y Reposo Médico</h4>
       <div class="form-row">
         <div class="form-group">
@@ -1100,9 +1143,15 @@ function openEstudianteEsperaModal(id = null) {
           <input type="date" class="form-input" id="f-wait-cert-date" value="${e?.fechaCertificado || hoy}">
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:0;">
-        <label class="form-label">⏳ Días de Cobertura / Reposo (Días corridos)</label>
-        <input type="number" class="form-input" id="f-wait-dias-cobertura" value="${e?.diasCobertura || 30}" min="1" max="365" placeholder="Ej: 30, 45, 60">
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">⏳ Días de Cobertura / Reposo</label>
+          <input type="number" class="form-input" id="f-wait-dias-cobertura" value="${e?.diasCobertura || 30}" min="1" max="365" placeholder="Ej: 30, 45, 60">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">📅 Vencimiento de Cobertura (Almanaque)</label>
+          <input type="date" class="form-input" id="f-wait-vence" value="${formatDateForInput(e?.certificadoVence || e?.vencimientoCertificado)}">
+        </div>
       </div>
     </div>
     <div style="margin-top:20px; text-align:right;">
@@ -1120,9 +1169,10 @@ function saveEstudianteEspera() {
   
   const fechaCertificado = document.getElementById('f-wait-cert-date').value;
   const diasCobertura = parseInt(document.getElementById('f-wait-dias-cobertura').value) || 30;
+  const manualVence = document.getElementById('f-wait-vence').value.trim();
   
-  let certificadoVence = '';
-  if (fechaCertificado) {
+  let certificadoVence = manualVence;
+  if (!certificadoVence && fechaCertificado) {
     const certDate = new Date(fechaCertificado);
     const venceDate = new Date(certDate.getTime() + (diasCobertura * 24 * 60 * 60 * 1000));
     certificadoVence = venceDate.toISOString().slice(0, 10);
@@ -1130,12 +1180,16 @@ function saveEstudianteEspera() {
 
   const data = {
     nombre,
-    escuelaOrigen: document.getElementById('f-wait-escuela').value.trim(),
-    grado: document.getElementById('f-wait-grado').value.trim(),
-    barrio: document.getElementById('f-wait-barrio').value.trim(),
-    domicilio: document.getElementById('f-wait-domicilio').value.trim(),
-    telefono: document.getElementById('f-wait-telefono').value.trim(),
+    escuelaOrigen: document.getElementById('f-wait-escuela').value.trim() || 'S/D',
+    grado: document.getElementById('f-wait-grado').value.trim() || 'Secundaria',
+    barrio: document.getElementById('f-wait-barrio').value.trim() || 'S/D',
+    domicilio: document.getElementById('f-wait-domicilio').value.trim() || 'S/D',
+    telefono: document.getElementById('f-wait-telefono').value.trim() || 'S/D',
+    contacto: document.getElementById('f-wait-contacto').value.trim() || 'mamá (WhatsApp)',
     emergencia: document.getElementById('f-wait-emergencia').value.trim(),
+    wifi: document.getElementById('f-wait-wifi').value,
+    conectividad: document.getElementById('f-wait-conectividad').value,
+    foto: document.getElementById('modal-overlay').dataset.tempPhoto || (editingId ? Estudiantes.getById(editingId).foto : null),
     fechaRemision: document.getElementById('f-wait-remision').value,
     fechaCertificado,
     diasCobertura,
