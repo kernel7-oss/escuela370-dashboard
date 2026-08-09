@@ -766,6 +766,21 @@ function renderEstudiantes() {
   el.innerHTML = html;
 }
 
+function formatDateForInput(val) {
+  if (!val) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  const months = {'ENERO':'01','FEBRERO':'02','MARZO':'03','ABRIL':'04','MAYO':'05','JUNIO':'06','JULIO':'07','AGOSTO':'08','SEPTIEMBRE':'09','OCTUBRE':'10','NOVIEMBRE':'11','DICIEMBRE':'12'};
+  const m = val.match(/([A-Za-zÁÉÍÓÚáéíóú]+)\s+(\d{1,2}),?\s+(\d{4})/i);
+  if (m) {
+    const mName = m[1].toUpperCase();
+    const mNum = months[mName] || '01';
+    const day = m[2].padStart(2, '0');
+    const year = m[3];
+    return `${year}-${mNum}-${day}`;
+  }
+  return '';
+}
+
 function openEstudianteModal(id = null) {
   editingId = id;
   modalType = 'estudiante';
@@ -799,7 +814,17 @@ function openEstudianteModal(id = null) {
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Teléfono de la Familia</label><input class="form-input" id="f-telefono" value="${e?.telefono || ''}" placeholder="Ej: 2974260193"></div>
-      <div class="form-group"><label class="form-label">Titular / WhatsApp</label><input class="form-input" id="f-contacto" value="${e?.contacto || 'mamá (WhatsApp)'}" placeholder="Ej: mamá (WhatsApp)"></div>
+      <div class="form-group"><label class="form-label">Titular / WhatsApp</label>
+        <input class="form-input" id="f-contacto" list="sugerencias-contacto" value="${e?.contacto || 'mamá (WhatsApp)'}" placeholder="Ej: mamá (WhatsApp)">
+        <datalist id="sugerencias-contacto">
+          <option value="mamá (WhatsApp)">
+          <option value="papá (WhatsApp)">
+          <option value="mamá">
+          <option value="papá">
+          <option value="tutor (WhatsApp)">
+          <option value="familiar (WhatsApp)">
+        </datalist>
+      </div>
     </div>
     <div class="form-group"><label class="form-label">Teléfono de Emergencias</label><input class="form-input" id="f-emergencia" value="${e?.emergencia || ''}" placeholder="Ej: 2974XXXXXX o vacío"></div>
 
@@ -817,7 +842,10 @@ function openEstudianteModal(id = null) {
           <option value="NO" ${e?.conectividad === 'NO' ? 'selected' : ''}>NO</option>
         </select>
       </div>
-      <div class="form-group" style="flex:2;"><label class="form-label">Vencimiento Certificado</label><input class="form-input" id="f-vence" value="${e?.certificadoVence || e?.vencimientoCertificado || ''}" placeholder="Ej: DICIEMBRE 30, 2026 o 2026-12-30"></div>
+      <div class="form-group" style="flex:2;">
+        <label class="form-label">📅 Vencimiento Certificado (Almanaque)</label>
+        <input class="form-input" type="date" id="f-vence-date" value="${formatDateForInput(e?.certificadoVence || e?.vencimientoCertificado)}" style="font-weight:700;">
+      </div>
     </div>
 
     <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📋 Matrícula y Estado</div>
@@ -870,6 +898,8 @@ function saveEstudiante() {
 
   const estado = document.getElementById('f-estado').value;
   const fechaAlta = estado === 'Alta Médica' ? document.getElementById('f-fecha-alta').value : null;
+  const venceDate = document.getElementById('f-vence-date').value.trim();
+  const finalVence = venceDate || (editingId ? Estudiantes.getById(editingId)?.certificadoVence : '2026-12-31');
 
   const data = {
     nombre,
@@ -882,8 +912,8 @@ function saveEstudiante() {
     domicilio: document.getElementById('f-domicilio').value.trim() || 'S/D',
     estado,
     fechaAlta,
-    vencimientoCertificado: document.getElementById('f-vence').value.trim(),
-    certificadoVence: document.getElementById('f-vence').value.trim(),
+    vencimientoCertificado: finalVence,
+    certificadoVence: finalVence,
     emergencia: document.getElementById('f-emergencia').value.trim(),
     wifi: document.getElementById('f-wifi').value,
     conectividad: document.getElementById('f-conectividad').value,
