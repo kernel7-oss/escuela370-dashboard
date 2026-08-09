@@ -1177,9 +1177,48 @@ function setHorariosTab(tab) {
   renderHorarios();
 }
 
-function renderHorarios() {
-  const filterDocente = document.getElementById('filter-docente')?.value || '';
+let currentViewingWeek = 'ACTUAL';
 
+function changeViewingWeek(weekId) {
+  currentViewingWeek = weekId;
+  renderHorarios();
+}
+
+function populateWeekSelector() {
+  const selectEl = document.getElementById('filter-semana');
+  if (!selectEl) return;
+
+  let html = `<option value="ACTUAL" ${currentViewingWeek === 'ACTUAL' ? 'selected' : ''}>⭐ Semana Activa: ${CONFIG.semana}</option>`;
+  
+  if (DB.data?.historial && DB.data.historial.length > 0) {
+    DB.data.historial.forEach(h => {
+      html += `<option value="${h.id}" ${currentViewingWeek === h.id ? 'selected' : ''}>📁 Historial: ${h.rangoSemana}</option>`;
+    });
+  }
+  selectEl.innerHTML = html;
+}
+
+function renderHorarios() {
+  populateWeekSelector();
+
+  const isHistorical = currentViewingWeek !== 'ACTUAL';
+  const histWeek = isHistorical ? DB.data?.historial?.find(h => h.id === currentViewingWeek) : null;
+  
+  // Status indicator
+  const statusIndicator = document.getElementById('semana-status-indicator');
+  if (statusIndicator) {
+    if (isHistorical && histWeek) {
+      statusIndicator.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge badge-warning" style="font-size:0.75rem; font-weight:700; padding:6px 10px;">👁️ Historial: ${histWeek.rangoSemana}</span>
+          <button class="btn btn-secondary btn-sm" onclick="changeViewingWeek('ACTUAL')" style="font-size:0.7rem; padding:4px 8px;">⭐ Volver a Activa</button>
+        </div>`;
+    } else {
+      statusIndicator.innerHTML = `<span class="badge badge-success" style="font-size:0.75rem; font-weight:700; padding:6px 10px;">🟢 Semana Activa en Curso</span>`;
+    }
+  }
+
+  const filterDocente = document.getElementById('filter-docente')?.value || '';
   let docentes = Docentes.getAll().filter(d => d.nivel === 'Secundaria');
 
   // Populate docente filter only with the current tab's docentes
@@ -1198,12 +1237,11 @@ function renderHorarios() {
   // Apply docente filter
   if (filterDocente) docentes = docentes.filter(d => d.id === filterDocente);
 
-  const conflicts = detectConflicts();
+  const conflicts = isHistorical ? [] : detectConflicts();
   const conflictIds = new Set();
   conflicts.forEach(c => c.ids.forEach(id => conflictIds.add(id)));
 
   const grid = document.getElementById('horarios-grid');
-  
   let html = ``;
 
   if (!docentes.length) {
@@ -1219,14 +1257,25 @@ function renderHorarios() {
   docentes.forEach(doc => {
     html += `<div class="schedule-row-label">${doc.nombre}<span class="materia">${doc.materia}</span></div>`;
     DIAS.forEach(dia => {
-      const asigs = Asignaciones.getByDocente(doc.id).filter(a => a.dia === dia)
-        .sort((a, b) => timeToMin(a.horaInicio) - timeToMin(b.horaInicio));
+      let asigs = [];
+      let docNov = null;
+
+      if (isHistorical && histWeek) {
+        asigs = (histWeek.asignaciones || []).filter(a => a.docenteId === doc.id && a.dia === dia)
+          .sort((a, b) => timeToMin(a.horaInicio) - timeToMin(b.horaInicio));
+        docNov = histWeek.docentesNovedades?.[doc.id]?.[dia] || null;
+      } else {
+        asigs = Asignaciones.getByDocente(doc.id).filter(a => a.dia === dia)
+          .sort((a, b) => timeToMin(a.horaInicio) - timeToMin(b.horaInicio));
+        docNov = doc.novedades?.[dia] || null;
+      }
       
-      html += `<div class="schedule-cell" onclick="openAsignacionModal(null,'${doc.id}','${dia}')">`;
+      const cellClick = isHistorical ? '' : `onclick="openAsignacionModal(null,'${doc.id}','${dia}')"`;
+      html += `<div class="schedule-cell" ${cellClick} style="${isHistorical ? 'cursor:default;' : ''}">`;
       
       // Mostrar Paro, Retención de Servicios, Licencia o Status Especial si existe
-      if (doc.novedades && doc.novedades[dia]) {
-        const nov = doc.novedades[dia];
+      if (docNov) {
+        const nov = docNov;
         let novBg = 'rgba(239, 68, 68, 0.12)';
         let novBorder = 'var(--danger)';
         let novColor = '#dc2626';
@@ -1242,7 +1291,7 @@ function renderHorarios() {
 
         html += `<div style="background: ${novBg}; color: ${novColor}; font-weight: 800; font-size: 0.68rem; padding: 6px 8px; border-radius: 8px; text-align: center; border: 1.5px solid ${novBorder}; margin-bottom: 6px; display:flex; align-items:center; justify-content:space-between;">
           <span>${icon} ${nov.toUpperCase()}</span>
-          <button onclick="event.stopPropagation(); clearDocenteNovedad('${doc.id}', '${dia}')" style="background:none; border:none; color:${novColor}; cursor:pointer; font-weight:bold; font-size:0.8rem; margin-left:4px;" title="Quitar novedad">✕</button>
+          ${isHistorical ? '' : `<button onclick="event.stopPropagation(); clearDocenteNovedad('${doc.id}', '${dia}')" style="background:none; border:none; color:${novColor}; cursor:pointer; font-weight:bold; font-size:0.8rem; margin-left:4px;" title="Quitar novedad">✕</button>`}
         </div>`;
       }
 
@@ -1269,12 +1318,13 @@ function renderHorarios() {
         const canceladaStyle = isCancelada ? 'opacity: 0.65; background: repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.08), rgba(148, 163, 184, 0.08) 10px, rgba(148, 163, 184, 0.18) 10px, rgba(148, 163, 184, 0.18) 20px); border: 1.5px dashed var(--text-secondary); border-radius: 8px;' : '';
         const canceladaBadge = isCancelada ? `<span style="color:var(--text-secondary); font-size:0.6rem; display:block; margin-top:2px; font-weight:bold;">🚫 ${a.estadoSemana}</span>` : '';
         const estAlert = est && est.alertaClases ? `<span title="${est.detalleAlerta || 'Clases Pendientes'}" style="font-size:0.8rem; margin-left:4px;">⚠️</span>` : '';
+        const slotClick = isHistorical ? '' : `onclick="event.stopPropagation(); openAsignacionModal('${a.id}')"`;
 
         html += `
           <div class="schedule-slot ${isConflict ? 'conflict' : ''} ${isWait ? 'waiting' : ''}" 
-               style="border-left: 4px solid ${doc.color || '#ccc'}; ${isWait ? 'opacity: 0.6; background: #fffbeb;' : ''} ${canceladaStyle}"
-               onclick="event.stopPropagation(); openAsignacionModal('${a.id}')">
-            <button class="delete-slot-btn" onclick="event.stopPropagation(); deleteAsignacionSlot('${a.id}')" title="Eliminar estudiante asignado">🗑️</button>
+               style="border-left: 4px solid ${doc.color || '#ccc'}; ${isWait ? 'opacity: 0.6; background: #fffbeb;' : ''} ${canceladaStyle} ${isHistorical ? 'cursor:default;' : ''}"
+               ${slotClick}>
+            ${isHistorical ? '' : `<button class="delete-slot-btn" onclick="event.stopPropagation(); deleteAsignacionSlot('${a.id}')" title="Eliminar estudiante asignado">🗑️</button>`}
             <div class="slot-student" style="font-weight: 700; font-size: 0.75rem; padding-right: 18px; ${isCancelada ? 'text-decoration: line-through; color: var(--text-secondary);' : ''}">
               ${est ? est.nombre : 'S/D'} ${estAlert}
               ${isWait ? '<span style="color:var(--warning); font-size:0.6rem; display:block">⏳ EN ESPERA</span>' : ''}
@@ -1283,10 +1333,14 @@ function renderHorarios() {
             <div class="slot-time" style="${isCancelada ? 'color: var(--text-secondary); font-style: italic;' : ''}">${a.horaInicio} - ${a.horaFin}</div>
           </div>`;
       });
-      html += `<div style="display:flex; gap:4px; margin-top:4px;">
-        <button class="add-slot-btn" style="flex:1;" onclick="event.stopPropagation();openAsignacionModal(null,'${doc.id}','${dia}')">+ Agregar</button>
-        <button class="btn btn-secondary" onclick="event.stopPropagation();setNovedadRapidaDocente('${doc.id}','${dia}')" style="padding: 3px 6px; font-size: 0.65rem; border-radius:6px; white-space:nowrap;" title="Cargar Paro, Retención de Servicios o Licencia Docente">📢 Novedad</button>
-      </div></div>`;
+
+      if (!isHistorical) {
+        html += `<div style="display:flex; gap:4px; margin-top:4px;">
+          <button class="add-slot-btn" style="flex:1;" onclick="event.stopPropagation();openAsignacionModal(null,'${doc.id}','${dia}')">+ Agregar</button>
+          <button class="btn btn-secondary" onclick="event.stopPropagation();setNovedadRapidaDocente('${doc.id}','${dia}')" style="padding: 3px 6px; font-size: 0.65rem; border-radius:6px; white-space:nowrap;" title="Cargar Paro, Retención de Servicios o Licencia Docente">📢 Novedad</button>
+        </div>`;
+      }
+      html += `</div>`;
     });
   });
 
