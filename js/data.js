@@ -1532,7 +1532,7 @@ function detectConflicts() {
         
         if (gap < 0) {
           conflicts.push({ severity: 'error', message: `Superposición: ${d.nombre} el ${dia}`, ids: [dayAsigs[i].id, dayAsigs[i+1].id] });
-        } else {
+        } else if (gap > 0) {
           const est1 = DB.estudiantes.find(e => e.id === dayAsigs[i].estudianteId);
           const est2 = DB.estudiantes.find(e => e.id === dayAsigs[i+1].estudianteId);
           const mismoBarrio = est1 && est2 && est1.barrio === est2.barrio && est1.barrio !== '';
