@@ -1,7 +1,7 @@
 // CONFIGURACIÓN GLOBAL
 const CONFIG = {
   nombreEscuela: "Escuela DyH N° 370",
-  semana: "18 al 22 de Mayo de 2026",
+  semana: "10 al 14 de Agosto de 2026",
   tiempoTraslado: 20,
   barrios: ['Centro', 'Km 3', 'Km 5', 'Km 8', 'Km 12', 'Km 17', 'Prospero Palazzo', 'Standard Norte', 'Ciudadela', 'Laprida', 'Diadema', 'Valle C', 'Sede', 'Gesta De Malvinas', 'Las Orquideas', 'Presidente Ortiz', 'Don Bosco']
 };
@@ -12,7 +12,7 @@ const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const DEFAULT_DATA = {
   "config": {
     "nombreEscuela": "Escuela DyH N° 370",
-    "semana": "11 al 15 de Mayo",
+    "semana": "10 al 14 de Agosto de 2026",
     "tiempoTraslado": 20,
     "barrios": [
       "Diadema",
@@ -697,8 +697,13 @@ const DB = {
       this.save();
     }
     // Sincronizar constante de configuración global con base de datos activa
-    if (this.data.config.semana) {
-      CONFIG.semana = this.data.config.semana;
+    if (this.data.config) {
+      if (this.data.config.semana && !this.data.config.semana.includes('Mayo')) {
+        CONFIG.semana = this.data.config.semana;
+      } else {
+        this.data.config.semana = CONFIG.semana;
+        this.save();
+      }
     }
   },
   save() {
