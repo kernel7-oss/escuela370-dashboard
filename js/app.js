@@ -1287,6 +1287,8 @@ function renderHorarios() {
           icon = '🛑'; novBg = 'rgba(245, 158, 11, 0.12)'; novBorder = '#f59e0b'; novColor = '#d97706';
         } else if (nov.includes('Licencia')) {
           icon = '🏥'; novBg = 'rgba(139, 92, 246, 0.12)'; novBorder = '#8b5cf6'; novColor = '#7c3aed';
+        } else if (nov.includes('Jornada') || nov.includes('jornada')) {
+          icon = '🏢'; novBg = 'rgba(14, 165, 233, 0.12)'; novBorder = '#0ea5e9'; novColor = '#0284c7';
         }
 
         html += `<div style="background: ${novBg}; color: ${novColor}; font-weight: 800; font-size: 0.68rem; padding: 6px 8px; border-radius: 8px; text-align: center; border: 1.5px solid ${novBorder}; margin-bottom: 6px; display:flex; align-items:center; justify-content:space-between;">
@@ -1394,6 +1396,7 @@ function openAsignacionModal(asigId = null, docenteId = '', dia = 'Lunes') {
         <label class="form-label">Estado de la Clase (Esta Semana)</label>
         <select class="form-select" id="f-estado-semana">
           <option value="Normal" ${a?.estadoSemana === 'Normal' || !a?.estadoSemana ? 'selected' : ''}>✅ Normal (Clase activa)</option>
+          <option value="Jornada Docente" ${a?.estadoSemana === 'Jornada Docente' ? 'selected' : ''}>🏢 Jornada Docente / Institucional</option>
           <option value="Paro Docente" ${a?.estadoSemana === 'Paro Docente' ? 'selected' : ''}>✊ Paro Docente</option>
           <option value="Retención de Servicios" ${a?.estadoSemana === 'Retención de Servicios' ? 'selected' : ''}>🛑 Retención de Servicios</option>
           <option value="Licencia Docente" ${a?.estadoSemana === 'Licencia Docente' ? 'selected' : ''}>🏥 Licencia Docente</option>
@@ -1602,6 +1605,11 @@ function setNovedadRapidaDocente(docId, dia) {
         Selecciona la situación o novedad laboral para <strong>${doc.nombre}</strong> el día <strong>${dia}</strong>:
       </p>
       <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn ${actualNov === 'Jornada Docente' ? 'btn-primary' : 'btn-secondary'}" 
+                onclick="applyNovedadDocente('${docId}', '${dia}', 'Jornada Docente')"
+                style="justify-content:flex-start; padding:12px; font-weight:700; border-left:4px solid var(--primary);">
+          🏢 JORNADA DOCENTE / INSTITUCIONAL
+        </button>
         <button class="btn ${actualNov === 'Paro Docente' ? 'btn-primary' : 'btn-secondary'}" 
                 onclick="applyNovedadDocente('${docId}', '${dia}', 'Paro Docente')"
                 style="justify-content:flex-start; padding:12px; font-weight:700; border-left:4px solid var(--danger);">
