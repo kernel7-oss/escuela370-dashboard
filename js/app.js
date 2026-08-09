@@ -675,12 +675,13 @@ function renderEstudiantes() {
     return;
   }
   
-  const estsActivos = allEstudiantes.filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso');
+  const estsActivos = allEstudiantes.filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso' && e.estado !== 'Alta Médica');
   const estsEspera = allEstudiantes.filter(e => e.estado === 'En Espera' || e.estado === 'Próximo Ingreso');
+  const estsAltas = allEstudiantes.filter(e => e.estado === 'Alta Médica');
   
-  // Render tabs para separar 100% Matrícula Activa de Lista de Espera
+  // Render tabs para separar 100% Matrícula Activa, Lista de Espera y Altas Médicas
   let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap:wrap; gap:10px;">
-    <div style="display:flex; gap:10px;">
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
       <button class="btn ${activeEstudiantesTab === 'Activos' ? 'btn-primary' : 'btn-secondary'}" 
               onclick="setEstudiantesTab('Activos')"
               style="border-radius: 20px; white-space: nowrap; padding: 6px 18px; font-weight: 700;">
@@ -690,6 +691,11 @@ function renderEstudiantes() {
               onclick="setEstudiantesTab('Espera')"
               style="border-radius: 20px; white-space: nowrap; padding: 6px 18px; font-weight: 700; background: ${activeEstudiantesTab === 'Espera' ? 'var(--warning)' : ''}; color: ${activeEstudiantesTab === 'Espera' ? '#000' : ''};">
         ⏳ Lista de Espera (${estsEspera.length})
+      </button>
+      <button class="btn ${activeEstudiantesTab === 'Altas' ? 'btn-primary' : 'btn-secondary'}" 
+              onclick="setEstudiantesTab('Altas')"
+              style="border-radius: 20px; white-space: nowrap; padding: 6px 18px; font-weight: 700; background: ${activeEstudiantesTab === 'Altas' ? '#10b981' : ''}; color: ${activeEstudiantesTab === 'Altas' ? '#fff' : ''};">
+        🏥 Altas Médicas (${estsAltas.length})
       </button>
     </div>
     ${activeEstudiantesTab === 'Activos' ? `<button class="btn btn-secondary" onclick="exportWordPorNivel()" style="background-color: #2b5797; color: white; border-radius: 20px;">📄 Generar Word (Matrícula Activa)</button>` : ''}
@@ -706,6 +712,54 @@ function renderEstudiantes() {
         waitContainer.innerHTML = origEl ? origEl.innerHTML : '';
       }
     }, 10);
+    return;
+  }
+
+  if (activeEstudiantesTab === 'Altas') {
+    if (estsAltas.length === 0) {
+      html += `<div style="padding: 40px; text-align: center; color: var(--text-secondary); background: var(--bg-card); border-radius: 12px; border: 1px dashed var(--border-color);"><p>🏥 No hay estudiantes dados de alta médica en el historial.</p></div>`;
+    } else {
+      html += `<div class="data-grid">
+        ${estsAltas.map(e => `
+          <div class="data-card" style="border-top: 4px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main); margin-bottom: 2px;">${e.nombre}</div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary);">${e.grado || 'Secundaria'} • ${e.escuelaOrigen || 'Escuela de Origen'}</div>
+              </div>
+              <span class="badge" style="background:#10b981; color:#fff; font-weight:800; font-size:0.75rem;">🏥 ALTA MÉDICA</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0;">
+              <div style="background: #f0fdf4; padding: 10px; border-radius: 10px; border: 1px solid #bbf7d0;">
+                <div style="font-size: 0.65rem; color: #166534; text-transform: uppercase; font-weight:700;">Fecha de Alta</div>
+                <div style="font-size: 0.9rem; font-weight: 800; color: #15803d;">${formatDateDDMMYYYY(e.fechaAlta || e.certificadoVence)}</div>
+              </div>
+              <div style="background: #f8fafc; padding: 10px; border-radius: 10px;">
+                <div style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase;">Barrio</div>
+                <div style="font-size: 0.85rem; font-weight: 700;">${e.barrio || 'Centro'}</div>
+              </div>
+            </div>
+
+            <div style="margin: 10px 0; background: var(--bg-secondary); padding: 10px; border-radius: 8px; border-left: 3px solid #10b981;">
+              <div style="font-size: 0.7rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 3px;">📋 Seguimiento Posterior:</div>
+              <div style="font-size: 0.85rem; color: var(--text-main); font-style: italic;">"${e.observacionesSeguimiento || 'Alta médica otorgada. Reincorporado a su escuela regular.'}"</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
+              <button class="btn btn-secondary btn-sm" onclick="reactivarEstudiante('${e.id}')" style="background:#ecfdf5; color:#065f46; font-weight:700; border:1px solid #a7f3d0;" title="Reincorporar a Matrícula Activa">
+                🔄 Reactivar Matrícula
+              </button>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary btn-sm" onclick="editEstudiante('${e.id}')">✏️ Editar / Seguimiento</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteEstudiante('${e.id}')">🗑️</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+    el.innerHTML = html;
     return;
   }
   
@@ -764,6 +818,18 @@ function renderEstudiantes() {
   }
   
   el.innerHTML = html;
+}
+
+function reactivarEstudiante(id) {
+  const e = Estudiantes.getById(id);
+  if (!e) return;
+  if (confirm(`¿Reactivar a ${e.nombre} en la Matrícula Activa?`)) {
+    e.estado = 'Activo';
+    delete e.fechaAlta;
+    Estudiantes.update(id, e);
+    showToast(`${e.nombre} reincorporado a Matrícula Activa`, 'success');
+    renderEstudiantes();
+  }
 }
 
 function formatDateForInput(val) {
@@ -864,9 +930,17 @@ function openEstudianteModal(id = null) {
           <option value="Alta Médica" ${e?.estado === 'Alta Médica' ? 'selected' : ''}>🏥 Alta Médica (Finalizado)</option>
         </select>
       </div>
-      <div class="form-group" id="f-fecha-alta-container" style="display: ${e?.estado === 'Alta Médica' ? 'block' : 'none'};">
-        <label class="form-label">Fecha de Alta</label>
-        <input class="form-input" type="date" id="f-fecha-alta" value="${e?.fechaAlta || ''}">
+      <div class="form-group" id="f-fecha-alta-container" style="display: ${e?.estado === 'Alta Médica' ? 'block' : 'none'}; width: 100%; background: var(--bg-secondary); padding: 12px; border-radius: 8px; border-left: 3px solid #10b981; margin-top: 10px;">
+        <div class="form-row">
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700; color: #15803d;">📅 Fecha de Alta Médica</label>
+            <input class="form-input" type="date" id="f-fecha-alta" value="${formatDateForInput(e?.fechaAlta || e?.certificadoVence)}">
+          </div>
+          <div class="form-group" style="flex: 2; margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 700;">📋 Seguimiento Posterior / Observaciones</label>
+            <input class="form-input" id="f-observaciones-seguimiento" value="${e?.observacionesSeguimiento || ''}" placeholder="Ej: Alta médica otorgada. Reincorporado a Escuela N° 704">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -897,7 +971,8 @@ function saveEstudiante() {
   if (!nombre) { showToast('El nombre es obligatorio', 'error'); return; }
 
   const estado = document.getElementById('f-estado').value;
-  const fechaAlta = estado === 'Alta Médica' ? document.getElementById('f-fecha-alta').value : null;
+  const fechaAlta = estado === 'Alta Médica' ? (document.getElementById('f-fecha-alta')?.value || new Date().toISOString().split('T')[0]) : null;
+  const observacionesSeguimiento = estado === 'Alta Médica' ? (document.getElementById('f-observaciones-seguimiento')?.value.trim() || 'Alta médica otorgada. Reincorporado a su escuela regular.') : null;
   const venceDate = document.getElementById('f-vence-date').value.trim();
   const finalVence = venceDate || (editingId ? Estudiantes.getById(editingId)?.certificadoVence : '2026-12-31');
 
@@ -912,6 +987,7 @@ function saveEstudiante() {
     domicilio: document.getElementById('f-domicilio').value.trim() || 'S/D',
     estado,
     fechaAlta,
+    observacionesSeguimiento,
     vencimientoCertificado: finalVence,
     certificadoVence: finalVence,
     emergencia: document.getElementById('f-emergencia').value.trim(),

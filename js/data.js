@@ -388,7 +388,9 @@ const DEFAULT_DATA = {
       "barrio": "Centro",
       "escuelaOrigen": "N° 704",
       "grado": "2° Año",
-      "estado": "Activo",
+      "estado": "Alta Médica",
+      "fechaAlta": "2026-08-07",
+      "observacionesSeguimiento": "Alta médica otorgada. Reincorporado a su escuela regular N° 704.",
       "certificadoVence": "2026-10-30"
     },
     {
