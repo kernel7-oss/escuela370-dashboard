@@ -1334,7 +1334,7 @@ const DEFAULT_DATA = {
 const DB = {
   data: null,
   load() {
-    const saved = localStorage.getItem('escuela370_data_v35');
+    const saved = localStorage.getItem('escuela370_data_v37');
     if (saved) {
       this.data = JSON.parse(saved);
       // Limpiar licencias/novedades del objeto docente de la semana pasada si quedaron persistidas
@@ -1347,11 +1347,30 @@ const DB = {
           }
         });
       }
-      // Asegurar que si los datos vienen de la clave anterior (escuela302), se guarden en la nueva clave (escuela370)
+      // Sincronizar estudiantes oficiales (Cortes Aaron, Flores Santino, Miranda Lian, Diaz Thorp)
+      if (this.data.estudiantes) {
+        DEFAULT_DATA.estudiantes.forEach(defEst => {
+          const exists = this.data.estudiantes.find(e => e.id === defEst.id || e.nombre.toUpperCase() === defEst.nombre.toUpperCase());
+          if (!exists) {
+            this.data.estudiantes.push(JSON.parse(JSON.stringify(defEst)));
+          } else {
+            if (defEst.foto && !exists.foto) exists.foto = defEst.foto;
+            if (defEst.estado === 'Alta Médica' && exists.estado !== 'Alta Médica') {
+              exists.estado = 'Alta Médica';
+              exists.fechaAlta = defEst.fechaAlta;
+              exists.observacionesSeguimiento = defEst.observacionesSeguimiento;
+            }
+            if (defEst.estado === 'En Espera' && (exists.nombre.includes('CORTES') || exists.nombre.includes('FLORES'))) {
+              exists.estado = 'En Espera';
+            }
+          }
+        });
+        this.data.estudiantes = this.data.estudiantes.filter(e => !e.nombre.toUpperCase().includes('MENDOZA FACUNDO'));
+      }
       this.save();
     } else {
       // Intentar migración desde claves anteriores si no existe la versión actual
-      const prevKeys = ['escuela370_data_v34', 'escuela370_data_v33', 'escuela370_data_v32', 'escuela370_data_v31', 'escuela302_data_v30', 'escuela302_data_v29', 'escuela302_data_v28'];
+      const prevKeys = ['escuela370_data_v36', 'escuela370_data_v35', 'escuela370_data_v34', 'escuela370_data_v33', 'escuela370_data_v32', 'escuela302_data_v30'];
       let oldSaved = null;
       for (const k of prevKeys) {
         const val = localStorage.getItem(k);
@@ -1368,6 +1387,24 @@ const DB = {
             historial: oldData.historial || [],
             config: oldData.config || { tiempoTraslado: 20, semana: CONFIG.semana }
           };
+          // Asegurar inclusión de estudiantes de DEFAULT_DATA y depurar Mendoza Facundo
+          DEFAULT_DATA.estudiantes.forEach(defEst => {
+            const exists = this.data.estudiantes.find(e => e.id === defEst.id || e.nombre.toUpperCase() === defEst.nombre.toUpperCase());
+            if (!exists) {
+              this.data.estudiantes.push(JSON.parse(JSON.stringify(defEst)));
+            } else {
+              if (defEst.foto && !exists.foto) exists.foto = defEst.foto;
+              if (defEst.estado === 'Alta Médica') {
+                exists.estado = 'Alta Médica';
+                exists.fechaAlta = defEst.fechaAlta;
+                exists.observacionesSeguimiento = defEst.observacionesSeguimiento;
+              }
+              if (defEst.estado === 'En Espera' && (exists.nombre.includes('CORTES') || exists.nombre.includes('FLORES'))) {
+                exists.estado = 'En Espera';
+              }
+            }
+          });
+          this.data.estudiantes = this.data.estudiantes.filter(e => !e.nombre.toUpperCase().includes('MENDOZA FACUNDO'));
           this.save();
         } catch (err) {
           console.error("Fallo al migrar versión anterior, cargando DEFAULT_DATA:", err);
@@ -1410,7 +1447,7 @@ const DB = {
   },
   save() {
     try {
-      localStorage.setItem('escuela370_data_v35', JSON.stringify(this.data));
+      localStorage.setItem('escuela370_data_v37', JSON.stringify(this.data));
     } catch (err) {
       console.error("Error al guardar en localStorage:", err);
       if (typeof showToast === 'function') {
