@@ -83,7 +83,7 @@ function renderDashboard() {
   const estudiantes = DB.estudiantes;
   const docentes = DB.docentes;
 
-  const estudiantesActivos = estudiantes.filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso');
+  const estudiantesActivos = estudiantes.filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso' && e.estado !== 'Alta Médica');
   // Actualizar Stats
   document.getElementById('stat-docentes').textContent = docentes.length;
   document.getElementById('stat-estudiantes').textContent = estudiantesActivos.length;
