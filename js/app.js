@@ -2209,20 +2209,17 @@ function exportWordPorNivel() {
     let diasHTML = '';
     
     dias.forEach(dia => {
-      const classesForDay = asigs.filter(a => a.dia === dia).sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
+      // Para las fichas de horarios que se envían a las familias, se muestran ÚNICAMENTE las clases presenciales con horario establecido (excluyendo registros internos de seguimiento / sin horario)
+      const classesForDay = asigs.filter(a => a.dia === dia && !a.sinHorario && a.horaInicio && a.horaFin).sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
       
       if (classesForDay.length > 0) {
         diasHTML += `<td class="schedule-cell">`;
         classesForDay.forEach(c => {
           const doc = teachers.find(t => t.id === c.docenteId);
-          const isAsentado = !!c.sinHorario;
-          const timeText = isAsentado ? (c.nota ? `(${c.nota})` : 'ASENTADO') : `${c.horaInicio} a ${c.horaFin}`;
-          const timeColor = isAsentado ? '#ea580c' : '#c00000';
-          
           diasHTML += `
             <div style="margin-bottom: 10px;">
               <div style="font-weight:800; font-size:13px; color:#000000; text-transform:uppercase; margin-bottom:3px; line-height:1.2;">${doc ? doc.materia : 'MATERIA'}</div>
-              <div style="font-weight:800; font-size:14px; color:${timeColor}; margin-bottom:3px;">${timeText}</div>
+              <div style="font-weight:800; font-size:14px; color:#c00000; margin-bottom:3px;">${c.horaInicio} a ${c.horaFin}</div>
               <div style="font-weight:800; font-size:13px; color:#7030a0;">${getProfShortName(doc)}</div>
             </div>
           `;
