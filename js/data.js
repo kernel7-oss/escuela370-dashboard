@@ -289,10 +289,11 @@ const DEFAULT_DATA = {
       "nombre": "QUIROGA JUAN BAUTISTA",
       "nivel": "Secundaria",
       "barrio": "Km 3",
-      "escuelaOrigen: ": "N° 704",
       "escuelaOrigen": "N° 704",
       "grado": "2° Año",
       "estado": "Activo",
+      "alertaClases": true,
+      "detalleAlerta": "No disponible esta semana por cuestiones médicas",
       "certificadoVence": "2026-10-15"
     },
     {

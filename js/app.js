@@ -1393,7 +1393,76 @@ function renderHorarios() {
     ${DIAS.map(d => `<div class="schedule-header">${d}</div>`).join('')}`;
 
   docentes.forEach(doc => {
-    html += `<div class="schedule-row-label">${doc.nombre}<span class="materia">${doc.materia}</span></div>`;
+    // Obtener todas las asignaciones del docente en esta semana
+    const allDocAsigs = (isHistorical && histWeek)
+      ? (histWeek.asignaciones || []).filter(a => a.docenteId === doc.id)
+      : Asignaciones.getByDocente(doc.id);
+    
+    // Obtener la lista única de estudiantes asignados a este docente
+    const uniqueEstIds = [...new Set(allDocAsigs.map(a => a.estudianteId))];
+    const docStudents = uniqueEstIds.map(id => {
+      const est = Estudiantes.getById(id);
+      const estAsigs = allDocAsigs.filter(a => a.estudianteId === id);
+      const hasPresencial = estAsigs.some(a => !a.sinHorario && (!a.estadoSemana || a.estadoSemana === 'Normal'));
+      const hasAsentado = estAsigs.some(a => !!a.sinHorario);
+      const isMedicaNoDisp = est && est.alertaClases;
+      const diasPresenciales = estAsigs.filter(a => !a.sinHorario).map(a => a.dia.slice(0, 2)).join(', ');
+      return { est, estAsigs, hasPresencial, hasAsentado, isMedicaNoDisp, diasPresenciales };
+    });
+
+    // Formatear resumen de jornada
+    let jornadaResumen = 'Sin jornada registrada';
+    if (doc.jornada) {
+      const diasJ = Object.entries(doc.jornada).filter(([_, h]) => h && h.i && h.f);
+      if (diasJ.length > 0) {
+        jornadaResumen = diasJ.map(([d, h]) => `<strong>${d.slice(0, 3)}:</strong> ${h.i} a ${h.f}`).join('<br>');
+      }
+    }
+
+    html += `
+      <div class="schedule-row-label">
+        <div style="font-size:0.92rem; font-weight:800; color:var(--text-main); line-height:1.2;">${doc.nombre}</div>
+        <span class="materia" style="font-weight:700; color:var(--primary); margin-bottom:6px;">${doc.materia}</span>
+        
+        <!-- Jornada Laboral -->
+        <div style="font-size:0.68rem; color:var(--text-secondary); margin-bottom:8px; background:var(--bg-main); padding:6px 8px; border-radius:6px; border-left:3px solid var(--primary); line-height:1.3;">
+          <span style="font-weight:800; text-transform:uppercase; font-size:0.6rem; color:var(--primary); display:block; margin-bottom:2px;">🕒 Jornada Docente:</span>
+          ${jornadaResumen}
+        </div>
+
+        <!-- Nómina de Estudiantes del Docente -->
+        <div class="docente-alumnos-box" style="margin-top:2px; padding-top:6px; border-top:1px dashed var(--border-color);">
+          <div style="font-size:0.65rem; font-weight:800; text-transform:uppercase; color:var(--text-secondary); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>👥 Nómina de Alumnos (${docStudents.length}):</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            ${docStudents.length === 0 ? '<span style="font-size:0.65rem; color:var(--text-secondary); font-style:italic;">Sin alumnos asignados</span>' : docStudents.map(({ est, estAsigs, hasPresencial, hasAsentado, isMedicaNoDisp, diasPresenciales }) => {
+              if (!est) return '';
+              let badgeColor = '#10b981';
+              let badgeBg = 'rgba(16, 185, 129, 0.08)';
+              let statusText = `🟢 ${diasPresenciales || 'Presencial'}`;
+              
+              if (isMedicaNoDisp) {
+                badgeColor = '#ef4444';
+                badgeBg = 'rgba(239, 68, 68, 0.1)';
+                statusText = '🏥 No disponible (Salud)';
+              } else if (hasAsentado && !hasPresencial) {
+                badgeColor = '#ea580c';
+                badgeBg = 'rgba(234, 88, 12, 0.08)';
+                statusText = '🟠 Asentado / T.P.';
+              }
+              
+              return `
+                <div style="background:${badgeBg}; border:1px solid ${badgeColor}; border-radius:6px; padding:4px 6px; font-size:0.68rem; display:flex; flex-direction:column; gap:1px;" title="${est.detalleAlerta || est.nombre}">
+                  <strong style="color:var(--text-main); font-size:0.7rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${est.nombre}</strong>
+                  <span style="color:${badgeColor}; font-size:0.6rem; font-weight:800;">${statusText}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
     DIAS.forEach(dia => {
       let asigs = [];
       let docNov = null;
