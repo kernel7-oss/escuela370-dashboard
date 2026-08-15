@@ -2441,16 +2441,18 @@ function getProfShortName(doc) {
 }
 
 function exportWordPorNivel() {
-  const estudiantes = Estudiantes.getAll().filter(e => e.estado !== 'Alta Médica' && e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso');
+  const allEstudiantes = Estudiantes.getAll();
+  const estudiantesActivos = allEstudiantes.filter(e => e.estado !== 'Alta Médica' && e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso');
+  const estudiantesEspera = allEstudiantes.filter(e => e.estado === 'En Espera' || e.estado === 'Próximo Ingreso');
   const assignments = Asignaciones.getAll();
   const teachers = Docentes.getAll();
   
-  if (estudiantes.length === 0) {
-    showToast('No hay estudiantes activos para generar el cuadernillo', 'warning');
+  if (estudiantesActivos.length === 0 && estudiantesEspera.length === 0) {
+    showToast('No hay estudiantes para generar el cuadernillo', 'warning');
     return;
   }
 
-  showToast('Generando cuadernillo de horarios de estudiantes...', 'info');
+  showToast('Generando cuadernillo oficial de horarios...', 'info');
   
   // Format date utility
   const formatCertDate = (dateStr) => {
@@ -2462,96 +2464,75 @@ function exportWordPorNivel() {
     const [y, m, d] = dateStr.split('-');
     if (!y || !m || !d) return dateStr.toUpperCase();
     const months = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
-    return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+    return `${months[parseInt(m)-1]} ${parseInt(d).toString().padStart(2, '0')}, ${y}`;
   };
 
-  let html = `
-    <!DOCTYPE html>
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head>
-      <meta charset="utf-8">
-      <title>Horarios de Estudiantes - Escuela 370</title>
-      <style>
-        body { font-family: 'Segoe UI', 'Arial', sans-serif; padding: 20px; color: #000; font-size: 14px; background: #f8fafc; }
-        .ficha-container { max-width: 900px; margin: 0 auto; }
-        .ficha { width: 100%; margin-bottom: 35px; page-break-inside: avoid; background: #fff; }
-        .ficha-table { width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; border: 1.5px solid #7030a0; }
-        .ficha-table th, .ficha-table td { border: 1.5px solid #7030a0; }
-        .photo-cell { width: 115px; text-align: center; vertical-align: middle !important; padding: 5px; border: 1.5px solid #7030a0; }
-        .photo-cell img { width: 100px; height: 105px; object-fit: cover; border-radius: 4px; }
-        .info-cell { padding: 8px 12px; text-align: left; line-height: 1.5; vertical-align: middle !important; font-size: 14px; border: 1.5px solid #7030a0; }
-        .link-text { color: #0070c0; text-decoration: underline; font-weight: bold; }
-        .emergencia-row { text-align: center; color: #c00000; font-weight: bold; font-style: italic; padding: 4px; font-size: 14px; border: 1.5px solid #7030a0; }
-        .ficha-table th { background: #fce4d6; color: #000; font-weight: bold; padding: 6px; font-size: 13px; text-transform: uppercase; border: 1.5px solid #7030a0; }
-        .schedule-cell { height: 125px; vertical-align: top; text-align: center; padding: 8px 4px; border: 1.5px solid #7030a0; }
-        .vencimiento-row { text-align: center; color: #7030a0; font-weight: bold; padding: 5px; font-size: 14px; text-transform: uppercase; border: 1.5px solid #7030a0; }
-        .proximo-ingreso-row { background: #ffff00; color: #c00000; font-weight: 900; text-align: center; padding: 6px; font-size: 14px; text-transform: uppercase; border: 1.5px solid #7030a0; }
-        .footer-row { text-align: center; font-weight: bold; padding: 4px; font-size: 13px; border: 1.5px solid #7030a0; text-transform: uppercase; }
-        .btn-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
-        .action-btn { padding: 10px 20px; font-size: 15px; cursor: pointer; background: #2b5797; color: white; border: none; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .action-btn:hover { background: #1e3f70; }
-        @media print { .btn-bar { display: none; } body { padding: 0; background: #fff; } .ficha-container { max-width: 100%; } }
-      </style>
-    </head>
-    <body>
-      <div class="ficha-container">
-        <div class="btn-bar">
-          <button class="action-btn" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
-          <button class="action-btn" style="background:#107c41;" onclick="downloadDoc()">📥 Descargar en Formato Word (.doc)</button>
-        </div>
-  `;
+  const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
-  estudiantes.forEach(e => {
+  const buildFichaEstudiante = (e, isWaitlist = false) => {
     const asigs = assignments.filter(a => a.estudianteId === e.id);
-    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
     let diasHTML = '';
     
     dias.forEach(dia => {
-      // Para las fichas de horarios que se envían a las familias, se muestran ÚNICAMENTE las clases presenciales con horario establecido (excluyendo registros internos de seguimiento / sin horario)
+      // Clases presenciales con horario establecido
       const classesForDay = asigs.filter(a => a.dia === dia && !a.sinHorario && a.horaInicio && a.horaFin).sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
       
-      if (classesForDay.length > 0) {
+      // Chequear si hay notas de salud o inasistencia especial
+      let noteHTML = '';
+      if (e.nombre.includes('QUIROGA') && dia === 'Miércoles') {
+        noteHTML = `<div style="color:#c00000; font-weight:800; font-size:11px; margin-top:3px; line-height:1.2;">18/07 al 25/08<br>INTERNADO POR QUIMIOTERAPIAS.</div>`;
+      } else if (e.nombre.includes('VIDAL') && dia === 'Jueves') {
+        noteHTML = `<div style="color:#c00000; font-weight:800; font-size:11px; margin-top:3px; line-height:1.2;">AUSENTE POR TRATAMIENTO MÉDICO (BS. AS.)</div>`;
+      } else if (e.nombre.includes('CASTRO') && dia === 'Miércoles') {
+        noteHTML = `<div style="color:#0070c0; font-weight:800; font-size:11px; margin-bottom:4px;">CLASES desde 16:00 HS.</div>`;
+      } else if (e.modalidad === 'Ausente Salud' && dia === 'Lunes' && e.detalleAlerta) {
+        noteHTML = `<div style="color:#c00000; font-weight:800; font-size:11px; margin-top:3px; line-height:1.2;">${e.detalleAlerta.toUpperCase()}</div>`;
+      }
+
+      if (classesForDay.length > 0 || noteHTML) {
         diasHTML += `<td class="schedule-cell">`;
+        if (noteHTML && (e.nombre.includes('CASTRO'))) diasHTML += noteHTML;
+
         classesForDay.forEach(c => {
           const doc = teachers.find(t => t.id === c.docenteId);
           diasHTML += `
-            <div style="margin-bottom: 10px;">
-              <div style="font-weight:800; font-size:13px; color:#000000; text-transform:uppercase; margin-bottom:3px; line-height:1.2;">${doc ? doc.materia : 'MATERIA'}</div>
-              <div style="font-weight:800; font-size:14px; color:#c00000; margin-bottom:3px;">${c.horaInicio} a ${c.horaFin}</div>
-              <div style="font-weight:800; font-size:13px; color:#7030a0;">${getProfShortName(doc)}</div>
+            <div style="margin-bottom: 8px;">
+              <div style="font-weight:800; font-size:12px; color:#000000; text-transform:uppercase; margin-bottom:2px; line-height:1.2;">${doc ? doc.materia : 'MATERIA'}</div>
+              <div style="font-weight:800; font-size:13px; color:#c00000; margin-bottom:2px;">${c.horaInicio} a ${c.horaFin}</div>
+              <div style="font-weight:800; font-size:12px; color:#7030a0;">${getProfShortName(doc)}</div>
             </div>
           `;
         });
+
+        if (noteHTML && !e.nombre.includes('CASTRO')) diasHTML += noteHTML;
         diasHTML += `</td>`;
       } else {
         diasHTML += `<td class="schedule-cell"></td>`;
       }
     });
 
-    const isWaitlist = e.estado === 'En Espera' || e.estado === 'Próximo Ingreso';
-
-    html += `
+    return `
       <div class="ficha">
         <table class="ficha-table">
           <tr>
             <td class="photo-cell">
-              ${e.foto ? `<img src="${e.foto}" alt="Foto">` : `<div style="width:100px; height:105px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#999; font-size:12px; border:1px dashed #7030a0;">Sin foto</div>`}
+              ${e.foto ? `<img src="${e.foto}" alt="Foto">` : `<div style="width:100px; height:105px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#999; font-size:11px; border:1px dashed #7030a0;">Sin foto</div>`}
             </td>
             <td class="info-cell" colspan="4">
               <div style="margin-bottom:4px;">
-                <span style="font-weight: bold; font-style: italic; font-size: 16px;">${e.nombre.toUpperCase()} - ${e.grado || '1er año'}</span> 
-                <span style="font-style: italic; font-size: 15px;">ESC. DE ORIGEN:</span> 
-                <span style="font-weight: bold; font-size: 16px;">${e.escuelaOrigen || 'S/D'}</span> -
+                <span style="font-weight: bold; font-style: italic; font-size: 15px;">${e.nombre.toUpperCase()} - ${e.grado || '1er año'}</span> 
+                <span style="font-style: italic; font-size: 14px;">ESC. DE ORIGEN:</span> 
+                <span style="font-weight: bold; font-size: 15px;">${e.escuelaOrigen || 'S/D'}</span> -
               </div>
               <div>
-                <span style="font-style: italic; font-size: 15px;">DOMICILIO:</span> 
-                <span class="link-text" style="font-size: 15px;">${e.domicilio || 'S/D'}</span> 
-                <span style="font-style: italic; font-size: 15px;">-BARRIO:</span> 
-                <span style="font-weight: bold; font-size: 15px;">${e.barrio || 'S/D'}</span> 
-                <span style="font-style: italic; font-size: 15px;">-TELÉFONO:</span> 
-                <span class="link-text" style="font-size: 15px;">${e.telefono || 'S/D'}</span> 
-                <span style="font-size: 15px; font-weight:600;">${e.contacto || 'mamá (WhatsApp)'}</span>- 
-                <span style="font-style: italic; font-size: 15px;">Wi-Fi: ${e.wifi || 'SI'} – 3G:${e.conectividad || 'SI'}</span>
+                <span style="font-style: italic; font-size: 14px;">DOMICILIO:</span> 
+                <span class="link-text" style="font-size: 14px;">${e.domicilio || 'S/D'}</span> 
+                <span style="font-style: italic; font-size: 14px;"> -BARRIO:</span> 
+                <span style="font-weight: bold; font-size: 14px;">${e.barrio || 'S/D'}</span> 
+                <span style="font-style: italic; font-size: 14px;"> -TELÉFONO:</span> 
+                <span class="link-text" style="font-size: 14px;">${e.telefono || 'S/D'}</span> 
+                <span style="font-size: 14px; font-weight:600;">${e.contacto || 'mamá (WhatsApp)'}</span>- 
+                <span style="font-style: italic; font-size: 14px;">Wi-Fi: ${e.wifi || 'SI'} – 3G:${e.conectividad || 'SI'}</span>
               </div>
             </td>
           </tr>
@@ -2569,7 +2550,7 @@ function exportWordPorNivel() {
           ${isWaitlist ? `<tr><td colspan="5" class="proximo-ingreso-row">PRÓXIMO INGRESO</td></tr>` : ''}
           <tr>
             <td colspan="5" class="vencimiento-row">
-              VENCIMIENTO CERTIFICADO: ${formatCertDate(e.certificadoVence)}
+              VENCIMIENTO CERTIFICADO: ${formatCertDate(e.certificadoVence || e.vencimientoCertificado)}
             </td>
           </tr>
           <tr>
@@ -2580,21 +2561,83 @@ function exportWordPorNivel() {
         </table>
       </div>
     `;
+  };
+
+  let html = `
+    <!DOCTYPE html>
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head>
+      <meta charset="utf-8">
+      <title>ZONA NORTE -Secundaria- DOCENTES Y HORARIOS - ${CONFIG.semana}</title>
+      <style>
+        body { font-family: 'Segoe UI', 'Calibri', 'Arial', sans-serif; padding: 20px; color: #000; font-size: 13px; background: #f8fafc; }
+        .ficha-container { max-width: 920px; margin: 0 auto; }
+        .main-header-box { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #7030a0; }
+        .main-title { font-size: 20px; font-weight: 900; color: #000; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .main-stats { display: flex; justify-content: center; gap: 30px; font-size: 14px; font-weight: 800; color: #7030a0; }
+        .ficha { width: 100%; margin-bottom: 30px; page-break-inside: avoid; background: #fff; }
+        .ficha-table { width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; border: 1.5px solid #7030a0; }
+        .ficha-table th, .ficha-table td { border: 1.5px solid #7030a0; }
+        .photo-cell { width: 110px; text-align: center; vertical-align: middle !important; padding: 4px; border: 1.5px solid #7030a0; }
+        .photo-cell img { width: 95px; height: 100px; object-fit: cover; border-radius: 4px; }
+        .info-cell { padding: 6px 10px; text-align: left; line-height: 1.45; vertical-align: middle !important; font-size: 13.5px; border: 1.5px solid #7030a0; }
+        .link-text { color: #0070c0; text-decoration: underline; font-weight: bold; }
+        .emergencia-row { text-align: center; color: #c00000; font-weight: bold; font-style: italic; padding: 3px; font-size: 13.5px; border: 1.5px solid #7030a0; }
+        .ficha-table th { background: #fce4d6; color: #000; font-weight: bold; padding: 5px; font-size: 12.5px; text-transform: uppercase; border: 1.5px solid #7030a0; }
+        .schedule-cell { height: 115px; vertical-align: top; text-align: center; padding: 6px 3px; border: 1.5px solid #7030a0; }
+        .vencimiento-row { text-align: center; color: #7030a0; font-weight: bold; padding: 4px; font-size: 13.5px; text-transform: uppercase; border: 1.5px solid #7030a0; }
+        .proximo-ingreso-row { background: #ffff00; color: #c00000; font-weight: 900; text-align: center; padding: 5px; font-size: 13.5px; text-transform: uppercase; border: 1.5px solid #7030a0; }
+        .footer-row { text-align: center; font-weight: bold; padding: 3px; font-size: 12.5px; border: 1.5px solid #7030a0; text-transform: uppercase; }
+        .btn-bar { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+        .action-btn { padding: 10px 22px; font-size: 14px; cursor: pointer; background: #2b5797; color: white; border: none; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .action-btn:hover { background: #1e3f70; }
+        @media print { .btn-bar { display: none; } body { padding: 0; background: #fff; } .ficha-container { max-width: 100%; } .ficha { page-break-inside: avoid; } }
+      </style>
+    </head>
+    <body>
+      <div class="ficha-container">
+        <div class="btn-bar">
+          <button class="action-btn" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+          <button class="action-btn" style="background:#107c41;" onclick="downloadDoc()">📥 Descargar Word Oficial (.doc)</button>
+        </div>
+
+        <div class="main-header-box">
+          <div class="main-title">HORARIOS: ${CONFIG.semana.toUpperCase()}</div>
+          <div class="main-stats">
+            <div>TOTAL ESTUDIANTES ACTIVOS: <span style="color:#000;">${estudiantesActivos.length}</span></div>
+            <div>PRÓXIMOS INGRESOS: <span style="color:#000;">${estudiantesEspera.length}</span></div>
+          </div>
+        </div>
+  `;
+
+  // 1. Estudiantes Activos
+  estudiantesActivos.forEach(e => {
+    html += buildFichaEstudiante(e, false);
   });
+
+  // 2. Estudiantes en Espera (Próximos Ingresos)
+  if (estudiantesEspera.length > 0) {
+    html += `<div style="text-align:center; font-size:16px; font-weight:900; color:#7030a0; text-transform:uppercase; margin:35px 0 15px 0; border-top:2px dashed #7030a0; padding-top:15px;">⏳ PRÓXIMOS INGRESOS (${estudiantesEspera.length})</div>`;
+    estudiantesEspera.forEach(e => {
+      html += buildFichaEstudiante(e, true);
+    });
+  }
+
+  const fileName = `ZONA NORTE -Secundaria- DOCENTES Y HORARIOS -${CONFIG.semana.replace(/\s+/g, ' ')}-2026.doc`;
 
   html += `
       </div>
       <script>
         function downloadDoc() {
           const content = document.querySelector('.ficha-container').innerHTML;
-          const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Cuadernillo</title><style>body{font-family:Arial;font-size:14px;}.ficha-table{width:100%;border-collapse:collapse;border:1.5px solid #7030a0;}.ficha-table td,.ficha-table th{border:1.5px solid #7030a0;padding:5px;}.btn-bar{display:none;}</style></head><body>";
+          const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Cuadernillo Horarios</title><style>body{font-family:'Segoe UI',Calibri,Arial,sans-serif;font-size:13px;}.main-header-box{text-align:center;margin-bottom:20px;border-bottom:2px solid #7030a0;padding-bottom:10px;}.main-title{font-size:18px;font-weight:900;text-transform:uppercase;}.main-stats{display:flex;justify-content:center;gap:30px;font-weight:bold;color:#7030a0;}.ficha-table{width:100%;border-collapse:collapse;border:1.5px solid #7030a0;margin-bottom:25px;}.ficha-table td,.ficha-table th{border:1.5px solid #7030a0;padding:4px;}.photo-cell{width:100px;text-align:center;}.link-text{color:#0070c0;text-decoration:underline;font-weight:bold;}.emergencia-row{text-align:center;color:#c00000;font-weight:bold;font-style:italic;}.ficha-table th{background:#fce4d6;color:#000;font-weight:bold;text-transform:uppercase;}.schedule-cell{height:110px;vertical-align:top;text-align:center;}.vencimiento-row{text-align:center;color:#7030a0;font-weight:bold;text-transform:uppercase;}.proximo-ingreso-row{background:#ffff00;color:#c00000;font-weight:900;text-align:center;text-transform:uppercase;}.footer-row{text-align:center;font-weight:bold;text-transform:uppercase;}.btn-bar{display:none;}</style></head><body>";
           const footer = "</body></html>";
           const sourceHTML = header + content + footer;
           const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
           const fileDownload = document.createElement("a");
           document.body.appendChild(fileDownload);
           fileDownload.href = source;
-          fileDownload.download = 'Cuadernillo_Horarios_Escuela370.doc';
+          fileDownload.download = '${fileName}';
           fileDownload.click();
           document.body.removeChild(fileDownload);
         }
