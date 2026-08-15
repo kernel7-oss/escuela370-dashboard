@@ -1,7 +1,7 @@
 // CONFIGURACIÓN GLOBAL
 const CONFIG = {
   nombreEscuela: "Escuela DyH N° 370",
-  semana: "10 al 14 de Agosto de 2026",
+  semana: "17 al 21 de Agosto de 2026",
   tiempoTraslado: 20,
   barrios: ['Centro', 'Km 3', 'Km 5', 'Km 8', 'Km 12', 'Km 17', 'Prospero Palazzo', 'Standard Norte', 'Ciudadela', 'Laprida', 'Diadema', 'Valle C', 'Sede', 'Gesta De Malvinas', 'Las Orquideas', 'Presidente Ortiz', 'Don Bosco']
 };
@@ -12,7 +12,7 @@ const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const DEFAULT_DATA = {
   "config": {
     "nombreEscuela": "Escuela DyH N° 370",
-    "semana": "10 al 14 de Agosto de 2026",
+    "semana": "17 al 21 de Agosto de 2026",
     "tiempoTraslado": 20,
     "barrios": [
       "Diadema",
@@ -94,13 +94,9 @@ const DEFAULT_DATA = {
           "i": "13:20",
           "f": "17:20"
         },
-        "Martes": {
-          "i": "13:20",
-          "f": "17:20"
-        },
         "Miércoles": {
           "i": "13:20",
-          "f": "17:20"
+          "f": "14:20"
         },
         "Jueves": {
           "i": "13:20",
@@ -152,19 +148,15 @@ const DEFAULT_DATA = {
       "jornada": {
         "Lunes": {
           "i": "13:20",
-          "f": "16:40"
-        },
-        "Martes": {
-          "i": "13:20",
-          "f": "16:40"
+          "f": "17:20"
         },
         "Miércoles": {
           "i": "13:20",
-          "f": "16:40"
+          "f": "15:20"
         },
         "Viernes": {
           "i": "13:20",
-          "f": "16:40"
+          "f": "17:20"
         }
       }
     },
@@ -182,21 +174,17 @@ const DEFAULT_DATA = {
           "i": "15:20",
           "f": "17:20"
         },
-        "Martes": {
-          "i": "14:00",
-          "f": "17:20"
-        },
         "Miércoles": {
           "i": "14:00",
-          "f": "15:20"
+          "f": "17:20"
         },
         "Jueves": {
           "i": "14:00",
-          "f": "17:20"
+          "f": "15:20"
         },
         "Viernes": {
           "i": "14:00",
-          "f": "17:20"
+          "f": "15:20"
         }
       }
     },
@@ -210,10 +198,6 @@ const DEFAULT_DATA = {
       "color": "#f59e0b",
       "nivel": "Secundaria",
       "jornada": {
-        "Lunes": {
-          "i": "14:00",
-          "f": "16:40"
-        },
         "Miércoles": {
           "i": "14:00",
           "f": "16:40"
@@ -416,145 +400,162 @@ const DEFAULT_DATA = {
     {
       "id": "as_d30_Lunes_1",
       "docenteId": "d30",
-      "estudianteId": "e18",
+      "estudianteId": "e2",
       "dia": "Lunes",
       "horaInicio": "14:40",
       "horaFin": "15:40",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d30_Lunes_2",
       "docenteId": "d30",
-      "estudianteId": "e14",
+      "estudianteId": "e22",
       "dia": "Lunes",
       "horaInicio": "15:50",
       "horaFin": "16:50",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d30_Lunes_3",
       "docenteId": "d30",
-      "estudianteId": "e13",
+      "estudianteId": "e23",
       "dia": "Lunes",
       "horaInicio": "17:00",
       "horaFin": "18:00",
-      "estadoSemana": "Normal",
       "sinHorario": true,
       "nota": "T. P."
     },
     {
-      "id": "as_d30_Miercoles_1",
+      "id": "as_d30_Martes_1",
       "docenteId": "d30",
-      "estudianteId": "e23",
-      "dia": "Miércoles",
-      "horaInicio": "15:30",
-      "horaFin": "16:30",
-      "estadoSemana": "Normal"
+      "estudianteId": "e24",
+      "dia": "Martes",
+      "horaInicio": "14:40",
+      "horaFin": "15:50",
+      "sinHorario": null,
+      "nota": null
     },
     {
-      "id": "as_d30_Miercoles_2",
+      "id": "as_d30_Martes_2",
       "docenteId": "d30",
-      "estudianteId": "e22",
+      "estudianteId": "e20",
+      "dia": "Martes",
+      "horaInicio": "16:20",
+      "horaFin": "17:40",
+      "sinHorario": null,
+      "nota": null
+    },
+    {
+      "id": "as_d30_Miercoles_1",
+      "docenteId": "d30",
+      "estudianteId": "e21",
       "dia": "Miércoles",
       "horaInicio": "16:50",
       "horaFin": "18:00",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d30_Jueves_1",
       "docenteId": "d30",
-      "estudianteId": "e24",
+      "estudianteId": "e1",
       "dia": "Jueves",
-      "horaInicio": "14:40",
-      "horaFin": "15:50",
-      "estadoSemana": "Normal"
-    },
-    {
-      "id": "as_d30_Jueves_2",
-      "docenteId": "d30",
-      "estudianteId": "e17",
-      "dia": "Jueves",
-      "horaInicio": "16:20",
-      "horaFin": "17:40",
-      "estadoSemana": "Normal"
-    },
-    {
-      "id": "as_d18_Lunes_1",
-      "docenteId": "d18",
-      "estudianteId": "e27",
-      "dia": "Lunes",
-      "horaInicio": "13:20",
-      "horaFin": "14:20",
-      "estadoSemana": "Normal"
+      "horaInicio": "16:50",
+      "horaFin": "18:00",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d18_Miercoles_1",
       "docenteId": "d18",
-      "estudianteId": "e13",
+      "estudianteId": "e23",
       "dia": "Miércoles",
       "horaInicio": "13:20",
       "horaFin": "14:20",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
+    },
+    {
+      "id": "as_d18_Jueves_1",
+      "docenteId": "d18",
+      "estudianteId": "e27",
+      "dia": "Jueves",
+      "horaInicio": "13:20",
+      "horaFin": "14:20",
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d18_Viernes_1",
       "docenteId": "d18",
-      "estudianteId": "e18",
+      "estudianteId": "e29",
       "dia": "Viernes",
       "horaInicio": "13:20",
       "horaFin": "14:20",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d18_Viernes_2",
       "docenteId": "d18",
-      "estudianteId": "e23",
+      "estudianteId": "e21",
       "dia": "Viernes",
       "horaInicio": "14:20",
       "horaFin": "15:20",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d18_Viernes_3",
       "docenteId": "d18",
-      "estudianteId": "e17",
+      "estudianteId": "e2",
       "dia": "Viernes",
       "horaInicio": "15:20",
       "horaFin": "16:20",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d18_Viernes_4",
       "docenteId": "d18",
-      "estudianteId": "e14",
+      "estudianteId": "e20",
       "dia": "Viernes",
       "horaInicio": "16:20",
       "horaFin": "17:20",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
-      "id": "as_d15_Lunes_1",
-      "docenteId": "d15",
-      "estudianteId": "e18",
-      "dia": "Lunes",
-      "horaInicio": "14:00",
-      "horaFin": "15:20",
-      "estadoSemana": "Normal"
-    },
-    {
-      "id": "as_d15_Lunes_2",
-      "docenteId": "d15",
+      "id": "as_d18_Viernes_5",
+      "docenteId": "d18",
       "estudianteId": "e22",
-      "dia": "Lunes",
-      "horaInicio": "15:50",
-      "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "dia": "Viernes",
+      "horaInicio": "17:20",
+      "horaFin": "18:20",
+      "sinHorario": true,
+      "nota": null
+    },
+    {
+      "id": "as_d15_Martes_1",
+      "docenteId": "d15",
+      "estudianteId": "e25",
+      "dia": "Martes",
+      "horaInicio": "14:00",
+      "horaFin": "14:40",
+      "sinHorario": null,
+      "nota": null
+    },
+    {
+      "id": "as_d15_Martes_2",
+      "docenteId": "d15",
+      "estudianteId": "e1",
+      "dia": "Martes",
+      "horaInicio": "15:00",
+      "horaFin": "16:20",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d15_Miercoles_1",
@@ -563,7 +564,8 @@ const DEFAULT_DATA = {
       "dia": "Miércoles",
       "horaInicio": "14:00",
       "horaFin": "15:30",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d15_Miercoles_2",
@@ -572,247 +574,268 @@ const DEFAULT_DATA = {
       "dia": "Miércoles",
       "horaInicio": "16:00",
       "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d15_Jueves_1",
       "docenteId": "d15",
-      "estudianteId": "e14",
+      "estudianteId": "e22",
       "dia": "Jueves",
       "horaInicio": "14:00",
-      "horaFin": "14:50",
-      "estadoSemana": "Normal",
+      "horaFin": "15:00",
       "sinHorario": true,
       "nota": "BS AS"
     },
     {
       "id": "as_d15_Jueves_2",
       "docenteId": "d15",
-      "estudianteId": "e13",
+      "estudianteId": "e23",
       "dia": "Jueves",
-      "horaInicio": "14:50",
-      "horaFin": "15:40",
-      "estadoSemana": "Normal",
+      "horaInicio": "15:00",
+      "horaFin": "16:00",
       "sinHorario": true,
       "nota": "T. P."
     },
     {
-      "id": "as_d15_Jueves_3",
+      "id": "as_d15_Viernes_1",
       "docenteId": "d15",
-      "estudianteId": "e23",
-      "dia": "Jueves",
-      "horaInicio": "15:40",
-      "horaFin": "16:30",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "estudianteId": "e2",
+      "dia": "Viernes",
+      "horaInicio": "14:00",
+      "horaFin": "15:00",
+      "sinHorario": true,
+      "nota": null
     },
     {
-      "id": "as_d15_Jueves_4",
+      "id": "as_d15_Viernes_2",
       "docenteId": "d15",
-      "estudianteId": "e17",
-      "dia": "Jueves",
-      "horaInicio": "16:30",
-      "horaFin": "17:20",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "estudianteId": "e20",
+      "dia": "Viernes",
+      "horaInicio": "15:00",
+      "horaFin": "16:00",
+      "sinHorario": true,
+      "nota": null
     },
     {
-      "id": "as_d17_Lunes_1",
-      "docenteId": "d17",
-      "estudianteId": "e26",
-      "dia": "Lunes",
-      "horaInicio": "13:20",
-      "horaFin": "15:20",
-      "estadoSemana": "Normal"
-    },
-    {
-      "id": "as_d17_Lunes_2",
-      "docenteId": "d17",
-      "estudianteId": "e18",
-      "dia": "Lunes",
-      "horaInicio": "15:40",
-      "horaFin": "16:40",
-      "estadoSemana": "Normal"
+      "id": "as_d15_Viernes_3",
+      "docenteId": "d15",
+      "estudianteId": "e21",
+      "dia": "Viernes",
+      "horaInicio": "16:00",
+      "horaFin": "17:00",
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d17_Martes_1",
       "docenteId": "d17",
-      "estudianteId": "e14",
+      "estudianteId": "e22",
       "dia": "Martes",
       "horaInicio": "13:20",
       "horaFin": "14:20",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d17_Martes_2",
       "docenteId": "d17",
-      "estudianteId": "e13",
+      "estudianteId": "e23",
       "dia": "Martes",
       "horaInicio": "14:30",
       "horaFin": "15:30",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d17_Martes_3",
       "docenteId": "d17",
-      "estudianteId": "e23",
+      "estudianteId": "e2",
       "dia": "Martes",
       "horaInicio": "15:40",
       "horaFin": "16:40",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d17_Miercoles_1",
       "docenteId": "d17",
-      "estudianteId": "e22",
+      "estudianteId": "e1",
       "dia": "Miércoles",
       "horaInicio": "13:20",
-      "horaFin": "15:00",
-      "estadoSemana": "Normal"
+      "horaFin": "15:20",
+      "sinHorario": null,
+      "nota": null
     },
     {
-      "id": "as_d17_Miercoles_2",
+      "id": "as_d17_Jueves_1",
       "docenteId": "d17",
       "estudianteId": "e25",
-      "dia": "Miércoles",
-      "horaInicio": "15:40",
-      "horaFin": "16:20",
-      "estadoSemana": "Normal"
+      "dia": "Jueves",
+      "horaInicio": "13:20",
+      "horaFin": "14:20",
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d17_Viernes_1",
       "docenteId": "d17",
-      "estudianteId": "e17",
+      "estudianteId": "e26",
       "dia": "Viernes",
       "horaInicio": "13:20",
-      "horaFin": "14:40",
-      "estadoSemana": "Normal"
+      "horaFin": "15:20",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d17_Viernes_2",
       "docenteId": "d17",
+      "estudianteId": "e21",
+      "dia": "Viernes",
+      "horaInicio": "15:40",
+      "horaFin": "16:40",
+      "sinHorario": null,
+      "nota": null
+    },
+    {
+      "id": "as_d17_Viernes_3",
+      "docenteId": "d17",
+      "estudianteId": "e20",
+      "dia": "Viernes",
+      "horaInicio": "16:40",
+      "horaFin": "17:20",
+      "sinHorario": true,
+      "nota": null
+    },
+    {
+      "id": "as_d17_Viernes_4",
+      "docenteId": "d17",
       "estudianteId": "e24",
       "dia": "Viernes",
-      "horaInicio": "15:00",
-      "horaFin": "16:40",
-      "estadoSemana": "Normal"
+      "horaInicio": "17:20",
+      "horaFin": "18:00",
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d14_Lunes_1",
       "docenteId": "d14",
-      "estudianteId": "e26",
+      "estudianteId": "e21",
       "dia": "Lunes",
-      "horaInicio": "15:30",
+      "horaInicio": "15:20",
       "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d14_Martes_1",
       "docenteId": "d14",
-      "estudianteId": "e18",
+      "estudianteId": "e21",
       "dia": "Martes",
       "horaInicio": "14:00",
-      "horaFin": "15:20",
-      "estadoSemana": "Normal"
+      "horaFin": "15:00",
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d14_Martes_2",
       "docenteId": "d14",
       "estudianteId": "e22",
       "dia": "Martes",
-      "horaInicio": "15:50",
+      "horaInicio": "15:00",
+      "horaFin": "16:00",
+      "sinHorario": true,
+      "nota": null
+    },
+    {
+      "id": "as_d14_Martes_3",
+      "docenteId": "d14",
+      "estudianteId": "e23",
+      "dia": "Martes",
+      "horaInicio": "16:00",
+      "horaFin": "16:40",
+      "sinHorario": true,
+      "nota": null
+    },
+    {
+      "id": "as_d14_Martes_4",
+      "docenteId": "d14",
+      "estudianteId": "e20",
+      "dia": "Martes",
+      "horaInicio": "16:40",
       "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d14_Miercoles_1",
       "docenteId": "d14",
-      "estudianteId": "e18",
+      "estudianteId": "e21",
       "dia": "Miércoles",
       "horaInicio": "14:00",
       "horaFin": "15:20",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
+    },
+    {
+      "id": "as_d14_Miercoles_2",
+      "docenteId": "d14",
+      "estudianteId": "e1",
+      "dia": "Miércoles",
+      "horaInicio": "15:50",
+      "horaFin": "17:20",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d14_Jueves_1",
       "docenteId": "d14",
-      "estudianteId": "e17",
+      "estudianteId": "e26",
       "dia": "Jueves",
       "horaInicio": "14:00",
-      "horaFin": "15:40",
-      "estadoSemana": "Normal"
-    },
-    {
-      "id": "as_d14_Jueves_2",
-      "docenteId": "d14",
-      "estudianteId": "e24",
-      "dia": "Jueves",
-      "horaInicio": "16:00",
-      "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "horaFin": "15:20",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d14_Viernes_1",
       "docenteId": "d14",
-      "estudianteId": "e13",
+      "estudianteId": "e24",
       "dia": "Viernes",
       "horaInicio": "14:00",
-      "horaFin": "15:00",
-      "estadoSemana": "Normal",
-      "sinHorario": true
-    },
-    {
-      "id": "as_d14_Viernes_2",
-      "docenteId": "d14",
-      "estudianteId": "e14",
-      "dia": "Viernes",
-      "horaInicio": "15:10",
-      "horaFin": "16:10",
-      "estadoSemana": "Normal",
-      "sinHorario": true
-    },
-    {
-      "id": "as_d14_Viernes_3",
-      "docenteId": "d14",
-      "estudianteId": "e18",
-      "dia": "Viernes",
-      "horaInicio": "16:20",
-      "horaFin": "17:20",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "horaFin": "15:20",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d16_Lunes_1",
       "docenteId": "d16",
-      "estudianteId": "e14",
+      "estudianteId": "e22",
       "dia": "Lunes",
       "horaInicio": "14:00",
       "horaFin": "14:50",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d16_Lunes_2",
       "docenteId": "d16",
-      "estudianteId": "e13",
+      "estudianteId": "e23",
       "dia": "Lunes",
       "horaInicio": "14:50",
       "horaFin": "15:40",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d16_Lunes_3",
       "docenteId": "d16",
-      "estudianteId": "e23",
+      "estudianteId": "e2",
       "dia": "Lunes",
       "horaInicio": "15:40",
       "horaFin": "16:40",
-      "estadoSemana": "Normal",
-      "sinHorario": true
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d16_Miercoles_1",
@@ -820,53 +843,59 @@ const DEFAULT_DATA = {
       "estudianteId": "e26",
       "dia": "Miércoles",
       "horaInicio": "14:00",
-      "horaFin": "15:10",
-      "estadoSemana": "Normal"
+      "horaFin": "15:20",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d16_Miercoles_2",
       "docenteId": "d16",
-      "estudianteId": "e22",
+      "estudianteId": "e21",
       "dia": "Miércoles",
       "horaInicio": "15:40",
       "horaFin": "16:40",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d16_Jueves_1",
       "docenteId": "d16",
-      "estudianteId": "e18",
+      "estudianteId": "e25",
       "dia": "Jueves",
-      "horaInicio": "14:00",
-      "horaFin": "15:10",
-      "estadoSemana": "Normal"
+      "horaInicio": "14:20",
+      "horaFin": "15:00",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d16_Jueves_2",
       "docenteId": "d16",
-      "estudianteId": "e25",
+      "estudianteId": "e1",
       "dia": "Jueves",
       "horaInicio": "15:40",
-      "horaFin": "16:20",
-      "estadoSemana": "Normal"
+      "horaFin": "16:40",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d16_Viernes_1",
       "docenteId": "d16",
-      "estudianteId": "e24",
+      "estudianteId": "e20",
       "dia": "Viernes",
       "horaInicio": "14:00",
-      "horaFin": "14:50",
-      "estadoSemana": "Normal"
+      "horaFin": "15:10",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d16_Viernes_2",
       "docenteId": "d16",
-      "estudianteId": "e17",
+      "estudianteId": "e24",
       "dia": "Viernes",
-      "horaInicio": "15:10",
-      "horaFin": "16:30",
-      "estadoSemana": "Normal"
+      "horaInicio": "15:30",
+      "horaFin": "16:40",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d19_Jueves_1",
@@ -875,25 +904,28 @@ const DEFAULT_DATA = {
       "dia": "Jueves",
       "horaInicio": "13:20",
       "horaFin": "14:00",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d19_Jueves_2",
       "docenteId": "d19",
-      "estudianteId": "e22",
+      "estudianteId": "e1",
       "dia": "Jueves",
-      "horaInicio": "15:10",
-      "horaFin": "16:00",
-      "estadoSemana": "Normal"
+      "horaInicio": "14:20",
+      "horaFin": "15:30",
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d19_Jueves_3",
       "docenteId": "d19",
-      "estudianteId": "e23",
+      "estudianteId": "e2",
       "dia": "Jueves",
-      "horaInicio": "16:00",
-      "horaFin": "17:20",
-      "estadoSemana": "Normal"
+      "horaInicio": "15:30",
+      "horaFin": "16:30",
+      "sinHorario": true,
+      "nota": null
     },
     {
       "id": "as_d19_Viernes_1",
@@ -902,7 +934,8 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "13:20",
       "horaFin": "15:00",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
     },
     {
       "id": "as_d19_Viernes_2",
@@ -911,10 +944,44 @@ const DEFAULT_DATA = {
       "dia": "Viernes",
       "horaInicio": "15:30",
       "horaFin": "17:00",
-      "estadoSemana": "Normal"
+      "sinHorario": null,
+      "nota": null
     }
   ],
-  "novedades": [],
+  "novedades": [
+    {
+      "id": "nov_feriado_1",
+      "tipo": "Feriado",
+      "dia": "Lunes",
+      "docenteId": "d18",
+      "estado": "Licencia",
+      "nota": "Feriado Nacional (San Martín) / Licencia"
+    },
+    {
+      "id": "nov_feriado_2",
+      "tipo": "Feriado",
+      "dia": "Lunes",
+      "docenteId": "d15",
+      "estado": "Licencia",
+      "nota": "Feriado Nacional (San Martín) / Licencia"
+    },
+    {
+      "id": "nov_feriado_3",
+      "tipo": "Feriado",
+      "dia": "Lunes",
+      "docenteId": "d17",
+      "estado": "Licencia",
+      "nota": "Feriado Nacional (San Martín) / Licencia"
+    },
+    {
+      "id": "nov_feriado_4",
+      "tipo": "Feriado",
+      "dia": "Lunes",
+      "docenteId": "d14",
+      "estado": "Licencia",
+      "nota": "Feriado Nacional (San Martín) / Licencia"
+    }
+  ],
   "historial": [
     {
       "id": "week_2026_08_03",
@@ -1326,6 +1393,514 @@ const DEFAULT_DATA = {
           "estadoSemana": "Normal"
         }
       ]
+    },
+    {
+      "id": "week_1786290000000",
+      "fechaCierre": "2026-08-15T18:00:00.000Z",
+      "rangoSemana": "10 al 14 de Agosto de 2026",
+      "asignaciones": [
+        {
+          "id": "as_d30_Lunes_1",
+          "docenteId": "d30",
+          "estudianteId": "e18",
+          "dia": "Lunes",
+          "horaInicio": "14:40",
+          "horaFin": "15:40",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d30_Lunes_2",
+          "docenteId": "d30",
+          "estudianteId": "e14",
+          "dia": "Lunes",
+          "horaInicio": "15:50",
+          "horaFin": "16:50",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d30_Lunes_3",
+          "docenteId": "d30",
+          "estudianteId": "e13",
+          "dia": "Lunes",
+          "horaInicio": "17:00",
+          "horaFin": "18:00",
+          "estadoSemana": "Normal",
+          "sinHorario": true,
+          "nota": "T. P."
+        },
+        {
+          "id": "as_d30_Miercoles_1",
+          "docenteId": "d30",
+          "estudianteId": "e23",
+          "dia": "Miércoles",
+          "horaInicio": "15:30",
+          "horaFin": "16:30",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d30_Miercoles_2",
+          "docenteId": "d30",
+          "estudianteId": "e22",
+          "dia": "Miércoles",
+          "horaInicio": "16:50",
+          "horaFin": "18:00",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d30_Jueves_1",
+          "docenteId": "d30",
+          "estudianteId": "e24",
+          "dia": "Jueves",
+          "horaInicio": "14:40",
+          "horaFin": "15:50",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d30_Jueves_2",
+          "docenteId": "d30",
+          "estudianteId": "e17",
+          "dia": "Jueves",
+          "horaInicio": "16:20",
+          "horaFin": "17:40",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d18_Lunes_1",
+          "docenteId": "d18",
+          "estudianteId": "e27",
+          "dia": "Lunes",
+          "horaInicio": "13:20",
+          "horaFin": "14:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d18_Miercoles_1",
+          "docenteId": "d18",
+          "estudianteId": "e13",
+          "dia": "Miércoles",
+          "horaInicio": "13:20",
+          "horaFin": "14:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d18_Viernes_1",
+          "docenteId": "d18",
+          "estudianteId": "e18",
+          "dia": "Viernes",
+          "horaInicio": "13:20",
+          "horaFin": "14:20",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d18_Viernes_2",
+          "docenteId": "d18",
+          "estudianteId": "e23",
+          "dia": "Viernes",
+          "horaInicio": "14:20",
+          "horaFin": "15:20",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d18_Viernes_3",
+          "docenteId": "d18",
+          "estudianteId": "e17",
+          "dia": "Viernes",
+          "horaInicio": "15:20",
+          "horaFin": "16:20",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d18_Viernes_4",
+          "docenteId": "d18",
+          "estudianteId": "e14",
+          "dia": "Viernes",
+          "horaInicio": "16:20",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d15_Lunes_1",
+          "docenteId": "d15",
+          "estudianteId": "e18",
+          "dia": "Lunes",
+          "horaInicio": "14:00",
+          "horaFin": "15:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d15_Lunes_2",
+          "docenteId": "d15",
+          "estudianteId": "e22",
+          "dia": "Lunes",
+          "horaInicio": "15:50",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d15_Miercoles_1",
+          "docenteId": "d15",
+          "estudianteId": "e27",
+          "dia": "Miércoles",
+          "horaInicio": "14:00",
+          "horaFin": "15:30",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d15_Miercoles_2",
+          "docenteId": "d15",
+          "estudianteId": "e29",
+          "dia": "Miércoles",
+          "horaInicio": "16:00",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d15_Jueves_1",
+          "docenteId": "d15",
+          "estudianteId": "e14",
+          "dia": "Jueves",
+          "horaInicio": "14:00",
+          "horaFin": "14:50",
+          "estadoSemana": "Normal",
+          "sinHorario": true,
+          "nota": "BS AS"
+        },
+        {
+          "id": "as_d15_Jueves_2",
+          "docenteId": "d15",
+          "estudianteId": "e13",
+          "dia": "Jueves",
+          "horaInicio": "14:50",
+          "horaFin": "15:40",
+          "estadoSemana": "Normal",
+          "sinHorario": true,
+          "nota": "T. P."
+        },
+        {
+          "id": "as_d15_Jueves_3",
+          "docenteId": "d15",
+          "estudianteId": "e23",
+          "dia": "Jueves",
+          "horaInicio": "15:40",
+          "horaFin": "16:30",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d15_Jueves_4",
+          "docenteId": "d15",
+          "estudianteId": "e17",
+          "dia": "Jueves",
+          "horaInicio": "16:30",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d17_Lunes_1",
+          "docenteId": "d17",
+          "estudianteId": "e26",
+          "dia": "Lunes",
+          "horaInicio": "13:20",
+          "horaFin": "15:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d17_Lunes_2",
+          "docenteId": "d17",
+          "estudianteId": "e18",
+          "dia": "Lunes",
+          "horaInicio": "15:40",
+          "horaFin": "16:40",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d17_Martes_1",
+          "docenteId": "d17",
+          "estudianteId": "e14",
+          "dia": "Martes",
+          "horaInicio": "13:20",
+          "horaFin": "14:20",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d17_Martes_2",
+          "docenteId": "d17",
+          "estudianteId": "e13",
+          "dia": "Martes",
+          "horaInicio": "14:30",
+          "horaFin": "15:30",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d17_Martes_3",
+          "docenteId": "d17",
+          "estudianteId": "e23",
+          "dia": "Martes",
+          "horaInicio": "15:40",
+          "horaFin": "16:40",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d17_Miercoles_1",
+          "docenteId": "d17",
+          "estudianteId": "e22",
+          "dia": "Miércoles",
+          "horaInicio": "13:20",
+          "horaFin": "15:00",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d17_Miercoles_2",
+          "docenteId": "d17",
+          "estudianteId": "e25",
+          "dia": "Miércoles",
+          "horaInicio": "15:40",
+          "horaFin": "16:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d17_Viernes_1",
+          "docenteId": "d17",
+          "estudianteId": "e17",
+          "dia": "Viernes",
+          "horaInicio": "13:20",
+          "horaFin": "14:40",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d17_Viernes_2",
+          "docenteId": "d17",
+          "estudianteId": "e24",
+          "dia": "Viernes",
+          "horaInicio": "15:00",
+          "horaFin": "16:40",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d14_Lunes_1",
+          "docenteId": "d14",
+          "estudianteId": "e26",
+          "dia": "Lunes",
+          "horaInicio": "15:30",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d14_Martes_1",
+          "docenteId": "d14",
+          "estudianteId": "e18",
+          "dia": "Martes",
+          "horaInicio": "14:00",
+          "horaFin": "15:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d14_Martes_2",
+          "docenteId": "d14",
+          "estudianteId": "e22",
+          "dia": "Martes",
+          "horaInicio": "15:50",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d14_Miercoles_1",
+          "docenteId": "d14",
+          "estudianteId": "e18",
+          "dia": "Miércoles",
+          "horaInicio": "14:00",
+          "horaFin": "15:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d14_Jueves_1",
+          "docenteId": "d14",
+          "estudianteId": "e17",
+          "dia": "Jueves",
+          "horaInicio": "14:00",
+          "horaFin": "15:40",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d14_Jueves_2",
+          "docenteId": "d14",
+          "estudianteId": "e24",
+          "dia": "Jueves",
+          "horaInicio": "16:00",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d14_Viernes_1",
+          "docenteId": "d14",
+          "estudianteId": "e13",
+          "dia": "Viernes",
+          "horaInicio": "14:00",
+          "horaFin": "15:00",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d14_Viernes_2",
+          "docenteId": "d14",
+          "estudianteId": "e14",
+          "dia": "Viernes",
+          "horaInicio": "15:10",
+          "horaFin": "16:10",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d14_Viernes_3",
+          "docenteId": "d14",
+          "estudianteId": "e18",
+          "dia": "Viernes",
+          "horaInicio": "16:20",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d16_Lunes_1",
+          "docenteId": "d16",
+          "estudianteId": "e14",
+          "dia": "Lunes",
+          "horaInicio": "14:00",
+          "horaFin": "14:50",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d16_Lunes_2",
+          "docenteId": "d16",
+          "estudianteId": "e13",
+          "dia": "Lunes",
+          "horaInicio": "14:50",
+          "horaFin": "15:40",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d16_Lunes_3",
+          "docenteId": "d16",
+          "estudianteId": "e23",
+          "dia": "Lunes",
+          "horaInicio": "15:40",
+          "horaFin": "16:40",
+          "estadoSemana": "Normal",
+          "sinHorario": true
+        },
+        {
+          "id": "as_d16_Miercoles_1",
+          "docenteId": "d16",
+          "estudianteId": "e26",
+          "dia": "Miércoles",
+          "horaInicio": "14:00",
+          "horaFin": "15:10",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d16_Miercoles_2",
+          "docenteId": "d16",
+          "estudianteId": "e22",
+          "dia": "Miércoles",
+          "horaInicio": "15:40",
+          "horaFin": "16:40",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d16_Jueves_1",
+          "docenteId": "d16",
+          "estudianteId": "e18",
+          "dia": "Jueves",
+          "horaInicio": "14:00",
+          "horaFin": "15:10",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d16_Jueves_2",
+          "docenteId": "d16",
+          "estudianteId": "e25",
+          "dia": "Jueves",
+          "horaInicio": "15:40",
+          "horaFin": "16:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d16_Viernes_1",
+          "docenteId": "d16",
+          "estudianteId": "e24",
+          "dia": "Viernes",
+          "horaInicio": "14:00",
+          "horaFin": "14:50",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d16_Viernes_2",
+          "docenteId": "d16",
+          "estudianteId": "e17",
+          "dia": "Viernes",
+          "horaInicio": "15:10",
+          "horaFin": "16:30",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d19_Jueves_1",
+          "docenteId": "d19",
+          "estudianteId": "e25",
+          "dia": "Jueves",
+          "horaInicio": "13:20",
+          "horaFin": "14:00",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d19_Jueves_2",
+          "docenteId": "d19",
+          "estudianteId": "e22",
+          "dia": "Jueves",
+          "horaInicio": "15:10",
+          "horaFin": "16:00",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d19_Jueves_3",
+          "docenteId": "d19",
+          "estudianteId": "e23",
+          "dia": "Jueves",
+          "horaInicio": "16:00",
+          "horaFin": "17:20",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d19_Viernes_1",
+          "docenteId": "d19",
+          "estudianteId": "e27",
+          "dia": "Viernes",
+          "horaInicio": "13:20",
+          "horaFin": "15:00",
+          "estadoSemana": "Normal"
+        },
+        {
+          "id": "as_d19_Viernes_2",
+          "docenteId": "d19",
+          "estudianteId": "e29",
+          "dia": "Viernes",
+          "horaInicio": "15:30",
+          "horaFin": "17:00",
+          "estadoSemana": "Normal"
+        }
+      ],
+      "novedades": []
     }
   ]
 };
@@ -1334,7 +1909,7 @@ const DEFAULT_DATA = {
 const DB = {
   data: null,
   load() {
-    const saved = localStorage.getItem('escuela370_data_v37');
+    const saved = localStorage.getItem('escuela370_data_v40');
     if (saved) {
       this.data = JSON.parse(saved);
       // Limpiar licencias/novedades del objeto docente de la semana pasada si quedaron persistidas
@@ -1369,52 +1944,36 @@ const DB = {
       }
       this.save();
     } else {
-      // Intentar migración desde claves anteriores si no existe la versión actual
-      const prevKeys = ['escuela370_data_v36', 'escuela370_data_v35', 'escuela370_data_v34', 'escuela370_data_v33', 'escuela370_data_v32', 'escuela302_data_v30'];
-      let oldSaved = null;
+      // Cargar la nueva semana 17 al 21 de Agosto directamente con su historial respaldado
+      this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      // Si existen historiales o fotos previas en el storage del usuario, conservarlas
+      const prevKeys = ['escuela370_data_v37', 'escuela370_data_v36', 'escuela370_data_v35', 'escuela370_data_v34'];
       for (const k of prevKeys) {
         const val = localStorage.getItem(k);
-        if (val) { oldSaved = val; break; }
-      }
-      if (oldSaved) {
-        try {
-          const oldData = JSON.parse(oldSaved);
-          this.data = {
-            docentes: oldData.docentes || DEFAULT_DATA.docentes,
-            estudiantes: oldData.estudiantes || DEFAULT_DATA.estudiantes,
-            asignaciones: oldData.asignaciones || DEFAULT_DATA.asignaciones,
-            novedades: oldData.novedades || [],
-            historial: oldData.historial || [],
-            config: oldData.config || { tiempoTraslado: 20, semana: CONFIG.semana }
-          };
-          // Asegurar inclusión de estudiantes de DEFAULT_DATA y depurar Mendoza Facundo
-          DEFAULT_DATA.estudiantes.forEach(defEst => {
-            const exists = this.data.estudiantes.find(e => e.id === defEst.id || e.nombre.toUpperCase() === defEst.nombre.toUpperCase());
-            if (!exists) {
-              this.data.estudiantes.push(JSON.parse(JSON.stringify(defEst)));
-            } else {
-              if (defEst.foto && !exists.foto) exists.foto = defEst.foto;
-              if (defEst.estado === 'Alta Médica') {
-                exists.estado = 'Alta Médica';
-                exists.fechaAlta = defEst.fechaAlta;
-                exists.observacionesSeguimiento = defEst.observacionesSeguimiento;
-              }
-              if (defEst.estado === 'En Espera' && (exists.nombre.includes('CORTES') || exists.nombre.includes('FLORES'))) {
-                exists.estado = 'En Espera';
-              }
+        if (val) {
+          try {
+            const oldData = JSON.parse(val);
+            if (oldData.historial && oldData.historial.length > 0) {
+              oldData.historial.forEach(h => {
+                if (!this.data.historial.some(nh => nh.rangoSemana === h.rangoSemana)) {
+                  this.data.historial.push(h);
+                }
+              });
             }
-          });
-          this.data.estudiantes = this.data.estudiantes.filter(e => !e.nombre.toUpperCase().includes('MENDOZA FACUNDO'));
-          this.save();
-        } catch (err) {
-          console.error("Fallo al migrar versión anterior, cargando DEFAULT_DATA:", err);
-          this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-          this.save();
+            // Conservar fotos personalizadas
+            if (oldData.estudiantes) {
+              oldData.estudiantes.forEach(oe => {
+                if (oe.foto) {
+                  const ne = this.data.estudiantes.find(e => e.id === oe.id || e.nombre.toUpperCase() === oe.nombre.toUpperCase());
+                  if (ne && !ne.foto) ne.foto = oe.foto;
+                }
+              });
+            }
+          } catch(e) {}
+          break;
         }
-      } else {
-        this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-        this.save();
       }
+      this.save();
     }
     // Asegurar que todos los registros tengan nivel 'Secundaria' sin eliminar entradas cargadas por el usuario
     if (this.data) {
@@ -1436,18 +1995,15 @@ const DB = {
       this.save();
     }
     // Sincronizar constante de configuración global con base de datos activa
+    CONFIG.semana = "17 al 21 de Agosto de 2026";
     if (this.data.config) {
-      if (this.data.config.semana && !this.data.config.semana.includes('Mayo')) {
-        CONFIG.semana = this.data.config.semana;
-      } else {
-        this.data.config.semana = CONFIG.semana;
-        this.save();
-      }
+      this.data.config.semana = CONFIG.semana;
+      this.save();
     }
   },
   save() {
     try {
-      localStorage.setItem('escuela370_data_v37', JSON.stringify(this.data));
+      localStorage.setItem('escuela370_data_v40', JSON.stringify(this.data));
     } catch (err) {
       console.error("Error al guardar en localStorage:", err);
       if (typeof showToast === 'function') {
