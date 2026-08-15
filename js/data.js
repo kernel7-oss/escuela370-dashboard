@@ -44,15 +44,11 @@ const DEFAULT_DATA = {
       "jornada": {
         "Lunes": {
           "i": "13:20",
-          "f": "16:40"
-        },
-        "Miércoles": {
-          "i": "13:20",
-          "f": "14:40"
+          "f": "17:20"
         },
         "Viernes": {
           "i": "13:20",
-          "f": "16:40"
+          "f": "17:20"
         }
       },
       "nominaEstudiantes": [
@@ -1994,7 +1990,7 @@ const DEFAULT_DATA = {
 const DB = {
   data: null,
   load() {
-    const saved = localStorage.getItem('escuela370_data_v43');
+    const saved = localStorage.getItem('escuela370_data_v45');
     if (saved) {
       this.data = JSON.parse(saved);
       // Limpiar licencias/novedades del objeto docente de la semana pasada si quedaron persistidas
@@ -2004,6 +2000,9 @@ const DB = {
           const defDoc = DEFAULT_DATA.docentes.find(def => def.id === d.id);
           if (!d.jornada && defDoc && defDoc.jornada) {
             d.jornada = defDoc.jornada;
+          }
+          if (d.id === 'd26' || d.nombre.includes('AYBAR')) {
+            d.jornada = { "Lunes": { "i": "13:20", "f": "17:20" }, "Viernes": { "i": "13:20", "f": "17:20" } };
           }
           if ((!d.nominaEstudiantes || d.nominaEstudiantes.length === 0) && defDoc && defDoc.nominaEstudiantes) {
             d.nominaEstudiantes = defDoc.nominaEstudiantes;
@@ -2035,7 +2034,7 @@ const DB = {
       // Cargar la nueva semana 17 al 21 de Agosto directamente con su historial respaldado
       this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
       // Si existen historiales o fotos previas en el storage del usuario, conservarlas
-      const prevKeys = ['escuela370_data_v40', 'escuela370_data_v37', 'escuela370_data_v36', 'escuela370_data_v35'];
+      const prevKeys = ['escuela370_data_v43', 'escuela370_data_v40', 'escuela370_data_v37', 'escuela370_data_v36', 'escuela370_data_v35'];
       for (const k of prevKeys) {
         const val = localStorage.getItem(k);
         if (val) {
@@ -2066,7 +2065,12 @@ const DB = {
     // Asegurar que todos los registros tengan nivel 'Secundaria' sin eliminar entradas cargadas por el usuario
     if (this.data) {
       if (this.data.docentes) {
-        this.data.docentes.forEach(d => { if (!d.nivel) d.nivel = 'Secundaria'; });
+        this.data.docentes.forEach(d => { 
+          if (!d.nivel) d.nivel = 'Secundaria'; 
+          if (d.id === 'd26' || d.nombre.includes('AYBAR')) {
+            d.jornada = { "Lunes": { "i": "13:20", "f": "17:20" }, "Viernes": { "i": "13:20", "f": "17:20" } };
+          }
+        });
       }
       if (this.data.estudiantes) {
         this.data.estudiantes.forEach(e => { if (!e.nivel) e.nivel = 'Secundaria'; });
@@ -2091,7 +2095,7 @@ const DB = {
   },
   save() {
     try {
-      localStorage.setItem('escuela370_data_v43', JSON.stringify(this.data));
+      localStorage.setItem('escuela370_data_v45', JSON.stringify(this.data));
     } catch (err) {
       console.error("Error al guardar en localStorage:", err);
       if (typeof showToast === 'function') {
