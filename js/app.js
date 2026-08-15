@@ -1398,8 +1398,14 @@ function renderHorarios() {
       ? (histWeek.asignaciones || []).filter(a => a.docenteId === doc.id)
       : Asignaciones.getByDocente(doc.id);
     
-    // Obtener la lista única de estudiantes asignados a este docente
-    const uniqueEstIds = [...new Set(allDocAsigs.map(a => a.estudianteId))];
+    const isPOT = doc.materia.toUpperCase().includes('P.O.T.') || doc.nombre.toUpperCase().includes('VENTER');
+    const allActiveEsts = Estudiantes.getAll().filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso' && e.estado !== 'Alta Médica');
+
+    // Para el Prof. Venter (P.O.T.), siempre tiene a la totalidad de los estudiantes activos a su cargo
+    const uniqueEstIds = isPOT 
+      ? allActiveEsts.map(e => e.id)
+      : [...new Set(allDocAsigs.map(a => a.estudianteId))];
+
     const docStudents = uniqueEstIds.map(id => {
       const est = Estudiantes.getById(id);
       const estAsigs = allDocAsigs.filter(a => a.estudianteId === id);
@@ -1435,7 +1441,7 @@ function renderHorarios() {
           <div style="font-size:0.65rem; font-weight:800; text-transform:uppercase; color:var(--text-secondary); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
             <span>👥 Nómina de Alumnos (${docStudents.length}):</span>
           </div>
-          <div style="display:flex; flex-direction:column; gap:4px;">
+          <div style="display:flex; flex-direction:column; gap:4px; max-height: ${isPOT ? '220px' : 'none'}; overflow-y: ${isPOT ? 'auto' : 'visible'}; padding-right: 2px;">
             ${docStudents.length === 0 ? '<span style="font-size:0.65rem; color:var(--text-secondary); font-style:italic;">Sin alumnos asignados</span>' : docStudents.map(({ est, estAsigs, hasPresencial, hasAsentado, isMedicaNoDisp, diasPresenciales }) => {
               if (!est) return '';
               let badgeColor = '#10b981';
@@ -1450,6 +1456,10 @@ function renderHorarios() {
                 badgeColor = '#ea580c';
                 badgeBg = 'rgba(234, 88, 12, 0.08)';
                 statusText = '🟠 Asentado / T.P.';
+              } else if (!hasPresencial && !hasAsentado) {
+                badgeColor = '#6366f1';
+                badgeBg = 'rgba(99, 102, 241, 0.08)';
+                statusText = '📋 Seguimiento P.O.T.';
               }
               
               return `
