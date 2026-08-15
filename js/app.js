@@ -2385,43 +2385,198 @@ function closeModal() {
 }
 
 
+let currentCropImage = null;
+let cropState = { x: 0, y: 0, scale: 1, isDragging: false, startX: 0, startY: 0 };
+
 function handlePhotoUpload(input) {
   const file = input.files[0];
   if (!file) return;
   
   const reader = new FileReader();
   reader.onload = function(e) {
-    const img = new Image();
-    img.onload = function() {
-      // Redimensionar automáticamente a tamaño óptimo (máx 300px) para evitar desbordar el límite de localStorage
-      const maxDim = 300;
-      let width = img.width;
-      let height = img.height;
-      if (width > height) {
-        if (width > maxDim) {
-          height = Math.round((height * maxDim) / width);
-          width = maxDim;
-        }
-      } else {
-        if (height > maxDim) {
-          width = Math.round((width * maxDim) / height);
-          height = maxDim;
-        }
-      }
-
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
-
-      const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
-      document.getElementById('f-photo-preview').innerHTML = `<img src="${optimizedBase64}" style="width:100%; height:100%; object-fit:cover;">`;
-      document.getElementById('modal-overlay').dataset.tempPhoto = optimizedBase64;
-    };
-    img.src = e.target.result;
+    openPhotoCropModal(e.target.result);
   };
   reader.readAsDataURL(file);
+}
+
+function openPhotoCropModal(imageSrc) {
+  let cropOverlay = document.getElementById('photo-crop-overlay');
+  if (!cropOverlay) {
+    cropOverlay = document.createElement('div');
+    cropOverlay.id = 'photo-crop-overlay';
+    cropOverlay.style.cssText = 'position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:99999; display:flex; align-items:center; justify-content:center; padding:15px;';
+    document.body.appendChild(cropOverlay);
+  }
+  
+  cropOverlay.innerHTML = `
+    <div style="background:var(--bg-main, #ffffff); border-radius:12px; width:100%; max-width:440px; padding:20px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.5); text-align:center;">
+      <h3 style="margin:0 0 6px 0; font-size:1.1rem; color:var(--text-main); font-weight:800;">✂️ Ajustar y Recortar Foto</h3>
+      <p style="font-size:0.75rem; color:var(--text-secondary); margin:0 0 14px 0;">Arrastrá la imagen para encuadrar el rostro y usá el zoom (fondo blanco automático).</p>
+      
+      <div style="position:relative; width:260px; height:280px; margin:0 auto; overflow:hidden; border:2px solid var(--primary, #6366f1); border-radius:8px; background:#ffffff; cursor:grab;" id="crop-viewport">
+        <canvas id="crop-canvas" width="260" height="280" style="width:100%; height:100%; display:block;"></canvas>
+      </div>
+
+      <div style="margin-top:14px; display:flex; align-items:center; justify-content:center; gap:10px;">
+        <span style="font-size:0.8rem; font-weight:700; color:var(--text-main);">🔍 Zoom:</span>
+        <button class="btn btn-secondary btn-sm" onclick="adjustCropZoom(-0.15)" style="padding:2px 8px; font-weight:800;">➖</button>
+        <input type="range" id="crop-zoom-slider" min="0.3" max="3" step="0.05" value="1" style="width:140px;" oninput="setCropZoom(parseFloat(this.value))">
+        <button class="btn btn-secondary btn-sm" onclick="adjustCropZoom(0.15)" style="padding:2px 8px; font-weight:800;">➕</button>
+      </div>
+
+      <div style="margin-top:20px; display:flex; justify-content:space-between; gap:10px;">
+        <button class="btn btn-secondary" onclick="closePhotoCropModal()" style="flex:1;">Cancelar</button>
+        <button class="btn btn-primary" onclick="applyPhotoCrop()" style="flex:1; background:#10b981; font-weight:700; border:none; color:#fff;">✅ Aplicar Recorte</button>
+      </div>
+    </div>
+  `;
+  cropOverlay.style.display = 'flex';
+
+  const img = new Image();
+  img.onload = function() {
+    currentCropImage = img;
+    const targetW = 260;
+    const targetH = 280;
+    const scaleW = targetW / img.width;
+    const scaleH = targetH / img.height;
+    cropState.scale = Math.max(scaleW, scaleH);
+    cropState.x = (targetW - img.width * cropState.scale) / 2;
+    cropState.y = (targetH - img.height * cropState.scale) / 2;
+    
+    document.getElementById('crop-zoom-slider').value = cropState.scale;
+    initCropEvents();
+    renderCropCanvas();
+  };
+  img.src = imageSrc;
+}
+
+function initCropEvents() {
+  const viewport = document.getElementById('crop-viewport');
+  if (!viewport) return;
+
+  viewport.onmousedown = (e) => {
+    cropState.isDragging = true;
+    cropState.startX = e.clientX - cropState.x;
+    cropState.startY = e.clientY - cropState.y;
+    viewport.style.cursor = 'grabbing';
+  };
+
+  window.onmousemove = (e) => {
+    if (!cropState.isDragging) return;
+    cropState.x = e.clientX - cropState.startX;
+    cropState.y = e.clientY - cropState.startY;
+    renderCropCanvas();
+  };
+
+  window.onmouseup = () => {
+    cropState.isDragging = false;
+    const vp = document.getElementById('crop-viewport');
+    if (vp) vp.style.cursor = 'grab';
+  };
+
+  viewport.ontouchstart = (e) => {
+    if (e.touches.length === 1) {
+      cropState.isDragging = true;
+      cropState.startX = e.touches[0].clientX - cropState.x;
+      cropState.startY = e.touches[0].clientY - cropState.y;
+    }
+  };
+
+  window.ontouchmove = (e) => {
+    if (!cropState.isDragging || e.touches.length !== 1) return;
+    cropState.x = e.touches[0].clientX - cropState.startX;
+    cropState.y = e.touches[0].clientY - cropState.startY;
+    renderCropCanvas();
+  };
+
+  window.ontouchend = () => {
+    cropState.isDragging = false;
+  };
+}
+
+function renderCropCanvas() {
+  const canvas = document.getElementById('crop-canvas');
+  if (!canvas || !currentCropImage) return;
+  const ctx = canvas.getContext('2d');
+  
+  // Fondo blanco puro
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.save();
+  ctx.drawImage(
+    currentCropImage,
+    cropState.x,
+    cropState.y,
+    currentCropImage.width * cropState.scale,
+    currentCropImage.height * cropState.scale
+  );
+  ctx.restore();
+}
+
+function setCropZoom(val) {
+  if (!currentCropImage) return;
+  const oldScale = cropState.scale;
+  cropState.scale = val;
+  const canvas = document.getElementById('crop-canvas');
+  if (!canvas) return;
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  cropState.x = cx - (cx - cropState.x) * (cropState.scale / oldScale);
+  cropState.y = cy - (cy - cropState.y) * (cropState.scale / oldScale);
+  renderCropCanvas();
+}
+
+function adjustCropZoom(delta) {
+  const slider = document.getElementById('crop-zoom-slider');
+  if (!slider) return;
+  let newVal = Math.min(3, Math.max(0.3, cropState.scale + delta));
+  slider.value = newVal;
+  setCropZoom(newVal);
+}
+
+function closePhotoCropModal() {
+  const overlay = document.getElementById('photo-crop-overlay');
+  if (overlay) overlay.style.display = 'none';
+  const fileInput = document.getElementById('f-photo-input');
+  if (fileInput) fileInput.value = '';
+}
+
+function applyPhotoCrop() {
+  const canvas = document.getElementById('crop-canvas');
+  if (!canvas) return;
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = 240;
+  outCanvas.height = 260;
+  const outCtx = outCanvas.getContext('2d');
+  
+  outCtx.fillStyle = '#FFFFFF';
+  outCtx.fillRect(0, 0, outCanvas.width, outCanvas.height);
+  outCtx.drawImage(canvas, 0, 0, outCanvas.width, outCanvas.height);
+
+  const croppedBase64 = outCanvas.toDataURL('image/jpeg', 0.88);
+
+  const preview = document.getElementById('f-photo-preview');
+  if (preview) {
+    preview.innerHTML = `<img src="${croppedBase64}" style="width:100%; height:100%; object-fit:cover; background:#fff;">`;
+  }
+  
+  const modalOverlay = document.getElementById('modal-overlay');
+  if (modalOverlay) modalOverlay.dataset.tempPhoto = croppedBase64;
+  
+  if (editingId) {
+    const est = Estudiantes.getById(editingId);
+    if (est) {
+      est.foto = croppedBase64;
+      Estudiantes.update(editingId, est);
+      showToast('¡Foto recortada y guardada permanentemente!', 'success');
+    }
+  } else {
+    showToast('Foto recortada con éxito', 'success');
+  }
+
+  closePhotoCropModal();
 }
 
 
