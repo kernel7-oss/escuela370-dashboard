@@ -1989,104 +1989,98 @@ const DEFAULT_DATA = {
 // MANEJO DE BASE DE DATOS
 const DB = {
   data: null,
+  STORAGE_KEY: 'escuela370_main_data',
   load() {
-    const saved = localStorage.getItem('escuela370_data_v45');
-    if (saved) {
-      this.data = JSON.parse(saved);
-      // Limpiar licencias/novedades del objeto docente de la semana pasada si quedaron persistidas
-      if (this.data.docentes) {
-        this.data.docentes.forEach(d => {
-          if (d.novedades) delete d.novedades;
-          const defDoc = DEFAULT_DATA.docentes.find(def => def.id === d.id);
-          if (!d.jornada && defDoc && defDoc.jornada) {
-            d.jornada = defDoc.jornada;
-          }
-          if (d.id === 'd26' || d.nombre.includes('AYBAR')) {
-            d.jornada = { "Lunes": { "i": "13:20", "f": "17:20" }, "Viernes": { "i": "13:20", "f": "17:20" } };
-          }
-          if ((!d.nominaEstudiantes || d.nominaEstudiantes.length === 0) && defDoc && defDoc.nominaEstudiantes) {
-            d.nominaEstudiantes = defDoc.nominaEstudiantes;
-          }
-        });
-      }
-      // Sincronizar estudiantes oficiales (Cortes Aaron, Flores Santino, Miranda Lian, Diaz Thorp)
-      if (this.data.estudiantes) {
-        DEFAULT_DATA.estudiantes.forEach(defEst => {
-          const exists = this.data.estudiantes.find(e => e.id === defEst.id || e.nombre.toUpperCase() === defEst.nombre.toUpperCase());
-          if (!exists) {
-            this.data.estudiantes.push(JSON.parse(JSON.stringify(defEst)));
-          } else {
-            if (defEst.foto && !exists.foto) exists.foto = defEst.foto;
-            if (defEst.estado === 'Alta Médica' && exists.estado !== 'Alta Médica') {
-              exists.estado = 'Alta Médica';
-              exists.fechaAlta = defEst.fechaAlta;
-              exists.observacionesSeguimiento = defEst.observacionesSeguimiento;
-            }
-            if (defEst.estado === 'En Espera' && (exists.nombre.includes('CORTES') || exists.nombre.includes('FLORES'))) {
-              exists.estado = 'En Espera';
-            }
-          }
-        });
-        this.data.estudiantes = this.data.estudiantes.filter(e => !e.nombre.toUpperCase().includes('MENDOZA FACUNDO'));
-      }
-      this.save();
-    } else {
-      // Cargar la nueva semana 17 al 21 de Agosto directamente con su historial respaldado
-      this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-      // Si existen historiales o fotos previas en el storage del usuario, conservarlas
-      const prevKeys = ['escuela370_data_v43', 'escuela370_data_v40', 'escuela370_data_v37', 'escuela370_data_v36', 'escuela370_data_v35'];
-      for (const k of prevKeys) {
+    let saved = localStorage.getItem(this.STORAGE_KEY);
+    
+    // Si no existe la clave principal, buscar y migrar intacta la información de cualquier versión previa
+    if (!saved) {
+      const legacyKeys = [
+        'escuela370_data_v45',
+        'escuela370_data_v43',
+        'escuela370_data_v40',
+        'escuela370_data_v37',
+        'escuela370_data_v36',
+        'escuela370_data_v35'
+      ];
+      for (const k of legacyKeys) {
         const val = localStorage.getItem(k);
         if (val) {
           try {
-            const oldData = JSON.parse(val);
-            if (oldData.historial && oldData.historial.length > 0) {
-              oldData.historial.forEach(h => {
-                if (!this.data.historial.some(nh => nh.rangoSemana === h.rangoSemana)) {
-                  this.data.historial.push(h);
-                }
-              });
-            }
-            // Conservar fotos personalizadas
-            if (oldData.estudiantes) {
-              oldData.estudiantes.forEach(oe => {
-                if (oe.foto) {
-                  const ne = this.data.estudiantes.find(e => e.id === oe.id || e.nombre.toUpperCase() === oe.nombre.toUpperCase());
-                  if (ne && !ne.foto) ne.foto = oe.foto;
-                }
-              });
-            }
+            saved = val;
+            break;
           } catch(e) {}
-          break;
         }
       }
-      this.save();
     }
-    // Asegurar que todos los registros tengan nivel 'Secundaria' sin eliminar entradas cargadas por el usuario
-    if (this.data) {
-      if (this.data.docentes) {
-        this.data.docentes.forEach(d => { 
-          if (!d.nivel) d.nivel = 'Secundaria'; 
-          if (d.id === 'd26' || d.nombre.includes('AYBAR')) {
-            d.jornada = { "Lunes": { "i": "13:20", "f": "17:20" }, "Viernes": { "i": "13:20", "f": "17:20" } };
+
+    if (saved) {
+      try {
+        this.data = JSON.parse(saved);
+      } catch(e) {
+        console.error("Error al parsear datos guardados, usando default:", e);
+        this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      }
+
+      // Asegurar estructura base completa
+      if (!this.data.docentes) this.data.docentes = JSON.parse(JSON.stringify(DEFAULT_DATA.docentes));
+      if (!this.data.estudiantes) this.data.estudiantes = JSON.parse(JSON.stringify(DEFAULT_DATA.estudiantes));
+      if (!this.data.asignaciones) this.data.asignaciones = JSON.parse(JSON.stringify(DEFAULT_DATA.asignaciones));
+      if (!this.data.novedades) this.data.novedades = [];
+      if (!this.data.historial) this.data.historial = JSON.parse(JSON.stringify(DEFAULT_DATA.historial || []));
+
+      // Sincronizar docentes oficiales asegurando datos consistentes
+      this.data.docentes.forEach(d => {
+        if (d.novedades) delete d.novedades;
+        const defDoc = DEFAULT_DATA.docentes.find(def => def.id === d.id);
+        if (!d.jornada && defDoc && defDoc.jornada) {
+          d.jornada = defDoc.jornada;
+        }
+        if (d.id === 'd26' || (d.nombre && d.nombre.includes('AYBAR'))) {
+          d.jornada = { "Lunes": { "i": "13:20", "f": "17:20" }, "Viernes": { "i": "13:20", "f": "17:20" } };
+        }
+        if ((!d.nominaEstudiantes || d.nominaEstudiantes.length === 0) && defDoc && defDoc.nominaEstudiantes) {
+          d.nominaEstudiantes = defDoc.nominaEstudiantes;
+        }
+        if (!d.nivel) d.nivel = 'Secundaria';
+      });
+
+      // Sincronizar estudiantes oficiales (Cortes Aaron, Flores Santino, Miranda Lian)
+      DEFAULT_DATA.estudiantes.forEach(defEst => {
+        const exists = this.data.estudiantes.find(e => e.id === defEst.id || (e.nombre && e.nombre.toUpperCase() === defEst.nombre.toUpperCase()));
+        if (!exists) {
+          this.data.estudiantes.push(JSON.parse(JSON.stringify(defEst)));
+        } else {
+          if (defEst.foto && !exists.foto) exists.foto = defEst.foto;
+          if (defEst.estado === 'Alta Médica' && exists.estado !== 'Alta Médica') {
+            exists.estado = 'Alta Médica';
+            exists.fechaAlta = defEst.fechaAlta;
+            exists.observacionesSeguimiento = defEst.observacionesSeguimiento;
           }
-        });
-      }
-      if (this.data.estudiantes) {
-        this.data.estudiantes.forEach(e => { if (!e.nivel) e.nivel = 'Secundaria'; });
-      }
-      if (this.data.asignaciones) {
-        const docIds = new Set((this.data.docentes || []).map(d => d.id));
-        const estIds = new Set((this.data.estudiantes || []).map(e => e.id));
-        this.data.asignaciones = this.data.asignaciones.filter(a => docIds.has(a.docenteId) && estIds.has(a.estudianteId));
-      }
+          if (defEst.estado === 'En Espera' && (exists.nombre.includes('CORTES') || exists.nombre.includes('FLORES'))) {
+            exists.estado = 'En Espera';
+          }
+        }
+      });
+      this.data.estudiantes = this.data.estudiantes.filter(e => !(e.nombre && e.nombre.toUpperCase().includes('MENDOZA FACUNDO')));
+      this.data.estudiantes.forEach(e => { if (!e.nivel) e.nivel = 'Secundaria'; });
+
+      // Proteger asignaciones
+      const docIds = new Set(this.data.docentes.map(d => d.id));
+      const estIds = new Set(this.data.estudiantes.map(e => e.id));
+      this.data.asignaciones = this.data.asignaciones.filter(a => docIds.has(a.docenteId) && estIds.has(a.estudianteId));
+
+      this.save();
+    } else {
+      // Primera vez: cargar nueva semana 17 al 21 de Agosto con historial respaldado
+      this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
       this.save();
     }
+
     if (!this.data.config) {
       this.data.config = { tiempoTraslado: 20, semana: CONFIG.semana };
       this.save();
     }
-    // Sincronizar constante de configuración global con base de datos activa
     CONFIG.semana = "17 al 21 de Agosto de 2026";
     if (this.data.config) {
       this.data.config.semana = CONFIG.semana;
@@ -2095,7 +2089,10 @@ const DB = {
   },
   save() {
     try {
-      localStorage.setItem('escuela370_data_v45', JSON.stringify(this.data));
+      const serialized = JSON.stringify(this.data);
+      localStorage.setItem(this.STORAGE_KEY, serialized);
+      // Respaldo de compatibilidad
+      localStorage.setItem('escuela370_data_v45', serialized);
     } catch (err) {
       console.error("Error al guardar en localStorage:", err);
       if (typeof showToast === 'function') {
