@@ -861,16 +861,28 @@ function renderEstudiantes() {
       ${activeEsts.map(e => {
         const asigs = Asignaciones.getByEstudiante(e.id);
         const asigsCount = asigs.length;
+        
+        let modBadge = '<span class="badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-size:0.65rem; font-weight:700;">🟢 Presencial</span>';
+        if (e.modalidad === 'Trabajos Practicos') {
+          modBadge = '<span class="badge" style="background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; font-size:0.65rem; font-weight:700;">🟠 Trabajos Prácticos (T.P.)</span>';
+        } else if (e.modalidad === 'Ausente Salud' || (e.alertaClases && (e.detalleAlerta || '').toLowerCase().includes('médic'))) {
+          modBadge = `<span class="badge" style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; font-size:0.65rem; font-weight:700;" title="${e.detalleAlerta || 'Reposo médico'}">🔴 Ausente Salud: ${e.detalleAlerta || 'Reposo'}</span>`;
+        } else if (e.modalidad === 'Mixta') {
+          modBadge = '<span class="badge" style="background:#f5f3ff; color:#6d28d9; border:1px solid #ddd6fe; font-size:0.65rem; font-weight:700;">🟣 Mixta (Presencial + T.P.)</span>';
+        } else if (e.modalidad === 'Seguimiento POT') {
+          modBadge = '<span class="badge" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; font-size:0.65rem; font-weight:700;">🔵 Seguimiento P.O.T.</span>';
+        }
+
         return `
         <div class="data-card">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
             <div>
               <div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main); margin-bottom: 2px;">${e.nombre}</div>
-              <div style="font-size: 0.75rem; color: var(--text-secondary);">${e.barrio || 'Sin barrio'}</div>
+              <div style="font-size: 0.75rem; color: var(--text-secondary);">${e.barrio || 'Sin barrio'} • ${e.grado || 'Secundaria'}</div>
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
-              <span class="badge badge-primary">${e.nivel}</span>
-              ${e.alertaClases ? `<span class="badge badge-warning" style="font-size:0.6rem; cursor:help;" title="${e.detalleAlerta || 'Clases pendientes'}">⚠️ FALTÓ</span>` : ''}
+              ${modBadge}
+              ${e.alertaClases && e.modalidad !== 'Ausente Salud' && !(e.detalleAlerta || '').toLowerCase().includes('médic') ? `<span class="badge badge-warning" style="font-size:0.6rem; cursor:help;" title="${e.detalleAlerta || 'Clases pendientes'}">⚠️ FALTÓ</span>` : ''}
             </div>
           </div>
           
@@ -1002,32 +1014,53 @@ function openEstudianteModal(id = null) {
       </div>
     </div>
 
-    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📋 Matrícula y Estado</div>
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📋 Matrícula y Situación Pedagógica / Salud</div>
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Nivel</label>
-        <select class="form-select" id="f-nivel">
-          <option value="Secundaria" ${e?.nivel === 'Secundaria' || !e?.nivel ? 'selected' : ''}>Secundaria</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Estado</label>
+      <div class="form-group" style="flex:1.2;">
+        <label class="form-label">Estado de Matrícula</label>
         <select class="form-select" id="f-estado" onchange="document.getElementById('f-fecha-alta-container').style.display = this.value === 'Alta Médica' ? 'block' : 'none'">
           <option value="Activo" ${e?.estado !== 'Alta Médica' && e?.estado !== 'En Espera' && e?.estado !== 'Próximo Ingreso' ? 'selected' : ''}>🎓 Matrícula Activa</option>
           <option value="En Espera" ${e?.estado === 'En Espera' || e?.estado === 'Próximo Ingreso' ? 'selected' : ''}>⏳ Lista de Espera (Próximo Ingreso)</option>
           <option value="Alta Médica" ${e?.estado === 'Alta Médica' ? 'selected' : ''}>🏥 Alta Médica (Finalizado)</option>
         </select>
       </div>
-      <div class="form-group" id="f-fecha-alta-container" style="display: ${e?.estado === 'Alta Médica' ? 'block' : 'none'}; width: 100%; background: var(--bg-secondary); padding: 12px; border-radius: 8px; border-left: 3px solid #10b981; margin-top: 10px;">
-        <div class="form-row">
-          <div class="form-group" style="flex: 1; margin-bottom: 0;">
-            <label class="form-label" style="font-weight: 700; color: #15803d;">📅 Fecha de Alta Médica</label>
-            <input class="form-input" type="date" id="f-fecha-alta" value="${formatDateForInput(e?.fechaAlta || e?.certificadoVence)}">
-          </div>
-          <div class="form-group" style="flex: 2; margin-bottom: 0;">
-            <label class="form-label" style="font-weight: 700;">📋 Seguimiento Posterior / Observaciones</label>
-            <input class="form-input" id="f-observaciones-seguimiento" value="${e?.observacionesSeguimiento || ''}" placeholder="Ej: Alta médica otorgada. Reincorporado a Escuela N° 704">
-          </div>
+      <div class="form-group" style="flex:1.8;">
+        <label class="form-label">Modalidad / Asistencia Semanal</label>
+        <select class="form-select" id="f-modalidad" onchange="
+          const det = document.getElementById('f-detalle-alerta-container');
+          const cb = document.getElementById('f-alerta-clases');
+          if (this.value === 'Ausente Salud') {
+            det.style.display = 'block';
+            cb.checked = true;
+            if (!document.getElementById('f-detalle-alerta').value) {
+              document.getElementById('f-detalle-alerta').value = 'No disponible esta semana por cuestiones médicas';
+            }
+          }
+        ">
+          <option value="Presencial" ${!e?.modalidad || e?.modalidad === 'Presencial' ? 'selected' : ''}>🟢 Clases Presenciales (Visita Domiciliaria/Hosp.)</option>
+          <option value="Trabajos Practicos" ${e?.modalidad === 'Trabajos Practicos' ? 'selected' : ''}>🟠 Trabajos Prácticos (T.P. / Seguimiento a distancia)</option>
+          <option value="Ausente Salud" ${e?.modalidad === 'Ausente Salud' || (e?.alertaClases && (e?.detalleAlerta || '').toLowerCase().includes('médic')) ? 'selected' : ''}>🔴 Ausente por Causas de Salud (Reposo / No disponible)</option>
+          <option value="Mixta" ${e?.modalidad === 'Mixta' ? 'selected' : ''}>🟣 Modalidad Mixta (Presencial + T.P.)</option>
+          <option value="Seguimiento POT" ${e?.modalidad === 'Seguimiento POT' ? 'selected' : ''}>🔵 Seguimiento de Trayectoria / P.O.T.</option>
+        </select>
+      </div>
+      <div class="form-group" style="max-width:130px;">
+        <label class="form-label">Nivel</label>
+        <select class="form-select" id="f-nivel">
+          <option value="Secundaria" ${e?.nivel === 'Secundaria' || !e?.nivel ? 'selected' : ''}>Secundaria</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group" id="f-fecha-alta-container" style="display: ${e?.estado === 'Alta Médica' ? 'block' : 'none'}; width: 100%; background: var(--bg-secondary); padding: 12px; border-radius: 8px; border-left: 3px solid #10b981; margin-top: 5px;">
+      <div class="form-row">
+        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+          <label class="form-label" style="font-weight: 700; color: #15803d;">📅 Fecha de Alta Médica</label>
+          <input class="form-input" type="date" id="f-fecha-alta" value="${formatDateForInput(e?.fechaAlta || e?.certificadoVence)}">
+        </div>
+        <div class="form-group" style="flex: 2; margin-bottom: 0;">
+          <label class="form-label" style="font-weight: 700;">📋 Seguimiento Posterior / Observaciones</label>
+          <input class="form-input" id="f-observaciones-seguimiento" value="${e?.observacionesSeguimiento || ''}" placeholder="Ej: Alta médica otorgada. Reincorporado a Escuela N° 704">
         </div>
       </div>
     </div>
@@ -1036,10 +1069,10 @@ function openEstudianteModal(id = null) {
       <div class="form-group" style="margin-bottom:0; width: 100%;">
         <label class="form-label" style="display:flex; align-items:center; gap:8px;">
           <input type="checkbox" id="f-alerta-clases" ${e?.alertaClases ? 'checked' : ''} onchange="document.getElementById('f-detalle-alerta-container').style.display = this.checked ? 'block' : 'none'">
-          ⚠️ Alerta de Inasistencia / Clases Pendientes
+          ⚠️ Detalle de Salud, Ausencia o Clases Pendientes
         </label>
-        <div id="f-detalle-alerta-container" style="display: ${e?.alertaClases ? 'block' : 'none'}; margin-top: 10px;">
-          <input class="form-input" id="f-detalle-alerta" value="${e?.detalleAlerta || ''}" placeholder="Ej: Faltó a clase por Paro Docente (Recuperar)">
+        <div id="f-detalle-alerta-container" style="display: ${e?.alertaClases || e?.modalidad === 'Ausente Salud' ? 'block' : 'none'}; margin-top: 10px;">
+          <input class="form-input" id="f-detalle-alerta" value="${e?.detalleAlerta || ''}" placeholder="Ej: No disponible esta semana por cuestiones médicas / Reposo post-quirúrgico">
         </div>
       </div>
     </div>`;
@@ -1059,10 +1092,14 @@ function saveEstudiante() {
   if (!nombre) { showToast('El nombre es obligatorio', 'error'); return; }
 
   const estado = document.getElementById('f-estado').value;
+  const modalidad = document.getElementById('f-modalidad').value;
   const fechaAlta = estado === 'Alta Médica' ? (document.getElementById('f-fecha-alta')?.value || new Date().toISOString().split('T')[0]) : null;
   const observacionesSeguimiento = estado === 'Alta Médica' ? (document.getElementById('f-observaciones-seguimiento')?.value.trim() || 'Alta médica otorgada. Reincorporado a su escuela regular.') : null;
   const venceDate = document.getElementById('f-vence-date').value.trim();
   const finalVence = venceDate || (editingId ? Estudiantes.getById(editingId)?.certificadoVence : '2026-12-31');
+  const isAlertaChecked = document.getElementById('f-alerta-clases').checked;
+  const alertaClases = isAlertaChecked || modalidad === 'Ausente Salud';
+  const detalleAlerta = document.getElementById('f-detalle-alerta').value.trim() || (modalidad === 'Ausente Salud' ? 'No disponible esta semana por cuestiones médicas' : '');
 
   const data = {
     nombre,
@@ -1074,6 +1111,7 @@ function saveEstudiante() {
     contacto: document.getElementById('f-contacto').value.trim() || 'mamá (WhatsApp)',
     domicilio: document.getElementById('f-domicilio').value.trim() || 'S/D',
     estado,
+    modalidad,
     fechaAlta,
     observacionesSeguimiento,
     vencimientoCertificado: finalVence,
@@ -1082,13 +1120,14 @@ function saveEstudiante() {
     wifi: document.getElementById('f-wifi').value,
     conectividad: document.getElementById('f-conectividad').value,
     foto: document.getElementById('modal-overlay').dataset.tempPhoto || (editingId ? Estudiantes.getById(editingId).foto : null),
-    alertaClases: document.getElementById('f-alerta-clases').checked,
-    detalleAlerta: document.getElementById('f-detalle-alerta').value.trim()
+    alertaClases,
+    detalleAlerta
   };
   if (editingId) { Estudiantes.update(editingId, data); showToast('Estudiante actualizado'); }
   else { Estudiantes.add(data); showToast('Estudiante creado'); }
   closeModal();
   renderEstudiantes();
+  if (typeof renderHorarios === 'function') renderHorarios();
 }
 
 function quickUpdateCertificado(id) {
