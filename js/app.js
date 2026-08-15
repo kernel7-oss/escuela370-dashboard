@@ -344,7 +344,9 @@ function renderAlertas() {
                 <span class="badge ${badgeClass}">${badgeText}</span>
               </td>
               <td style="padding: 12px;">
-                <button class="btn btn-secondary btn-sm" onclick="showToast('Aviso enviado a familia de ${a.nombre}')">📱 Avisar</button>
+                <button class="btn btn-secondary btn-sm" onclick="enviarAvisoWhatsApp('${a.id}')" style="background:#25d366; color:#fff; font-weight:700; border:none; border-radius:6px;" title="Enviar recordatorio automático por WhatsApp">
+                  💬 Avisar por WhatsApp
+                </button>
               </td>
             </tr>
           `}).join('')}
@@ -353,6 +355,39 @@ function renderAlertas() {
     `;
   }
   el.innerHTML = html;
+}
+
+function enviarAvisoWhatsApp(estudianteId) {
+  const e = Estudiantes.getById(estudianteId);
+  if (!e) return;
+  
+  let tel = (e.telefono || '').replace(/\D/g, '');
+  if (!tel || tel.length < 6) {
+    showToast(`El estudiante ${e.nombre} no tiene un teléfono válido cargado`, 'warning');
+    return;
+  }
+  
+  // Formato internacional para Argentina: +54 9 + código de área sin 0 ni 15
+  if (!tel.startsWith('54')) {
+    if (tel.startsWith('297') || tel.length === 10) {
+      tel = '549' + tel;
+    } else {
+      tel = '54' + tel;
+    }
+  }
+
+  const fechaVence = formatDateDDMMYYYY(e.certificadoVence || e.vencimientoCertificado) || 'fecha próxima';
+  const mensaje = encodeURIComponent(
+    `Estimada familia de *${e.nombre}*:\n\n` +
+    `Nos comunicamos desde la *Escuela Hospitalaria y Domiciliaria N° 370*.\n` +
+    `Les recordamos que el certificado médico de reposo tiene fecha de vencimiento el día *${fechaVence}*.\n\n` +
+    `Para dar continuidad pedagógica a la atención domiciliaria, les solicitamos que nos envíen la renovación médica correspondiente cuando la tengan disponible.\n\n` +
+    `Muchas gracias. Equipo Directivo y Docente - Escuela N° 370.`
+  );
+
+  const url = `https://wa.me/${tel}?text=${mensaje}`;
+  window.open(url, '_blank');
+  showToast(`Abriendo WhatsApp para avisar a la familia de ${e.nombre}...`, 'success');
 }
 
 function showDetailModal(estado, nivel = null) {
