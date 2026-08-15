@@ -243,8 +243,9 @@
         </div>
       </div>
       <div class="card" style="padding: 24px;">
-        <h3 style="margin-bottom: 15px;">💾 Mantenimiento de Datos</h3>
+        <h3 style="margin-bottom: 15px;">💾 Mantenimiento y Sincronización de Datos</h3>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="openSyncCloudModal()" style="background:#6366f1; color:white; font-weight:700;">☁️ Sincronizar con Web Pública / Copiar Datos</button>
           <button class="btn btn-secondary" onclick="exportData()">📤 Exportar Backup (JSON)</button>
           <button class="btn btn-secondary" onclick="importData()">📥 Importar Backup (JSON)</button>
           <button class="btn btn-danger" onclick="resetData()">🔄 Restaurar Datos por Defecto</button>

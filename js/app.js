@@ -2325,6 +2325,56 @@ function importData() {
   input.click();
 }
 
+function openSyncCloudModal() {
+  modalType = 'sync_cloud';
+  const modal = document.getElementById('modal-overlay');
+  modal.classList.add('active');
+  document.getElementById('modal-title').textContent = `☁️ Sincronizar Local ➔ Web Pública (GitHub)`;
+  
+  const currentJson = JSON.stringify(DB.data, null, 2);
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="background:var(--bg-secondary); padding:12px; border-radius:8px; margin-bottom:15px; border-left:3px solid var(--primary);">
+      <p style="font-size:0.82rem; color:var(--text-main); margin:0 0 6px 0; font-weight:700;">¿Cómo sincronizar los cambios de tu computadora con la Web Pública?</p>
+      <p style="font-size:0.75rem; color:var(--text-secondary); margin:0;">Los navegadores protegen la memoria de cada sitio. Para pasar todos tus datos exactos (alumnos en espera, horarios, docentes) a la web pública:</p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:12px;">
+        <strong style="display:block; font-size:0.85rem; color:var(--primary); margin-bottom:4px;">Paso 1: Copiar todos tus datos locales</strong>
+        <button class="btn btn-primary" onclick="navigator.clipboard.writeText(JSON.stringify(DB.data)).then(() => showToast('¡Datos copiados al portapapeles! Listo para pegar en la web'))" style="width:100%; margin-top:6px; font-weight:700;">
+          📋 1. Copiar Todo al Portapapeles
+        </button>
+      </div>
+
+      <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:8px; padding:12px;">
+        <strong style="display:block; font-size:0.85rem; color:var(--text-main); margin-bottom:4px;">Paso 2: Abrir la Web Pública y pegar aquí</strong>
+        <textarea id="sync-json-input" rows="4" style="width:100%; border:1px solid var(--border-color); border-radius:6px; padding:8px; font-family:monospace; font-size:0.75rem; background:var(--bg-secondary); color:var(--text-main);" placeholder="Pegá aquí el texto copiado de tu versión local..."></textarea>
+        <button class="btn btn-secondary" onclick="
+          try {
+            const raw = document.getElementById('sync-json-input').value.trim();
+            if (!raw) return showToast('Pegá el texto primero', 'warning');
+            const parsed = JSON.parse(raw);
+            if (!parsed.docentes || !parsed.estudiantes) return showToast('Formato JSON no válido', 'error');
+            DB.data = parsed;
+            DB.save();
+            showToast('¡Datos sincronizados con éxito!', 'success');
+            closeModal();
+            navigate(currentPage);
+          } catch(err) {
+            showToast('Error al procesar los datos: ' + err.message, 'error');
+          }
+        " style="width:100%; margin-top:8px; background:#10b981; color:#fff; font-weight:700; border:none;">
+          📥 2. Cargar y Aplicar en este Navegador
+        </button>
+      </div>
+    </div>
+  `;
+
+  const saveBtn = document.getElementById('modal-save-btn');
+  if (saveBtn) saveBtn.style.display = 'none';
+}
+
 // ===== MODAL =====
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('active');
