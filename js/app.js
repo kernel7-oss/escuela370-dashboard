@@ -540,6 +540,23 @@ function openDocenteModal(id = null) {
           </div>`;
         }).join('')}
       </div>
+    </div>
+
+    <div class="form-group" style="background:var(--bg-secondary); padding:12px; border-radius:8px; border-left:3px solid var(--primary); margin-top:14px;">
+      <label class="form-label" style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.75rem; margin-bottom:8px;">👥 Nómina de Estudiantes Asignados</label>
+      <p style="font-size:0.72rem; color:var(--text-secondary); margin-bottom:10px;">Seleccioná los estudiantes que pertenecen a la cartera de este docente:</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:6px; max-height:220px; overflow-y:auto; padding:2px;">
+        ${(() => {
+          const allActive = Estudiantes.getAll().filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso' && e.estado !== 'Alta Médica');
+          const curNom = new Set(d?.nominaEstudiantes || []);
+          return allActive.map(e => `
+            <label style="display:flex; align-items:center; gap:8px; padding:6px 8px; background:var(--bg-main); border:1px solid ${curNom.has(e.id) ? 'var(--primary)' : 'var(--border-color)'}; border-radius:6px; font-size:0.75rem; cursor:pointer;">
+              <input type="checkbox" class="doc-modal-nomina-cb" value="${e.id}" ${curNom.has(e.id) ? 'checked' : ''}>
+              <strong style="color:var(--text-main); font-size:0.72rem;">${e.nombre}</strong>
+            </label>
+          `).join('');
+        })()}
+      </div>
     </div>`;
   modal.classList.add('active');
 }
@@ -571,7 +588,10 @@ function saveDocente() {
     if (i && f) jornada[dia] = { i, f };
   });
 
-  const docenteData = { nombre, cuil, dni, email, materia, status, nivel, jornada };
+  const nominaCbs = document.querySelectorAll('.doc-modal-nomina-cb:checked');
+  const nominaEstudiantes = Array.from(nominaCbs).map(cb => cb.value);
+
+  const docenteData = { nombre, cuil, dni, email, materia, status, nivel, jornada, nominaEstudiantes };
 
   if (editingId) { 
     Docentes.update(editingId, docenteData); 
@@ -582,7 +602,75 @@ function saveDocente() {
   }
   closeModal();
   renderDocentes();
-  updateConflictBadge();
+  renderHorarios();
+}
+
+function openGestionarNominaModal(docenteId) {
+  const doc = Docentes.getById(docenteId);
+  if (!doc) return;
+  
+  editingId = docenteId;
+  modalType = 'nomina_docente';
+  const modal = document.getElementById('modal-overlay');
+  modal.classList.add('active');
+  document.getElementById('modal-title').textContent = `👥 Nómina de Alumnos: ${doc.nombre}`;
+  
+  const allActiveEsts = Estudiantes.getAll().filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso' && e.estado !== 'Alta Médica');
+  const currentNomina = new Set(doc.nominaEstudiantes || []);
+  
+  // Agregar también los alumnos con asignaciones activas
+  const docAsigs = Asignaciones.getByDocente(docenteId);
+  docAsigs.forEach(a => currentNomina.add(a.estudianteId));
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="background:var(--bg-secondary); padding:12px; border-radius:8px; margin-bottom:15px; border-left:3px solid var(--primary);">
+      <div style="font-weight:800; font-size:0.95rem; color:var(--text-main);">${doc.nombre}</div>
+      <div style="font-size:0.75rem; color:var(--primary); font-weight:700; text-transform:uppercase;">${doc.materia}</div>
+      <p style="font-size:0.75rem; color:var(--text-secondary); margin:4px 0 0 0;">Marcá los estudiantes que pertenecen a la nómina de este docente. Podrás planificar sus visitas o dejarlos asentados.</p>
+    </div>
+
+    <div style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:var(--primary); margin-bottom:8px; letter-spacing:0.5px;">Estudiantes Activos (${allActiveEsts.length}):</div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:8px; max-height:340px; overflow-y:auto; padding:4px;">
+      ${allActiveEsts.map(est => {
+        const isChecked = currentNomina.has(est.id);
+        const hasAsigs = docAsigs.filter(a => a.estudianteId === est.id);
+        const diasText = hasAsigs.length > 0 ? hasAsigs.map(a => a.sinHorario ? `${a.dia.slice(0,2)} (Asent.)` : `${a.dia.slice(0,2)} ${a.horaInicio}`).join(', ') : 'Sin horarios esta semana';
+        
+        return `
+          <label style="display:flex; align-items:flex-start; gap:10px; padding:10px; background:${isChecked ? 'rgba(99, 102, 241, 0.08)' : 'var(--bg-main)'}; border:1.5px solid ${isChecked ? 'var(--primary)' : 'var(--border-color)'}; border-radius:8px; cursor:pointer; transition:all 0.2s;">
+            <input type="checkbox" class="nomina-checkbox" value="${est.id}" ${isChecked ? 'checked' : ''} style="margin-top:3px; transform:scale(1.15);">
+            <div style="flex:1;">
+              <strong style="display:block; font-size:0.82rem; color:var(--text-main); line-height:1.2;">${est.nombre}</strong>
+              <div style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">🏫 ${est.escuelaOrigen || 'S/D'} • 📍 ${est.barrio || 'S/D'}</div>
+              <div style="font-size:0.65rem; color:${hasAsigs.length > 0 ? '#10b981' : 'var(--text-muted)'}; font-weight:700; margin-top:3px;">📅 ${diasText}</div>
+            </div>
+          </label>
+        `;
+      }).join('')}
+    </div>
+
+    <div style="margin-top:20px; text-align:right;">
+      <button class="btn btn-primary" onclick="saveNominaDocente('${doc.id}')">💾 Guardar Nómina</button>
+    </div>
+  `;
+
+  const saveBtn = document.getElementById('modal-save-btn');
+  if (saveBtn) saveBtn.style.display = 'none';
+}
+
+function saveNominaDocente(docenteId) {
+  const checkboxes = document.querySelectorAll('.nomina-checkbox:checked');
+  const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+  
+  const doc = Docentes.getById(docenteId);
+  if (doc) {
+    doc.nominaEstudiantes = selectedIds;
+    Docentes.update(docenteId, doc);
+    showToast(`Nómina de ${doc.nombre} actualizada (${selectedIds.length} alumnos)`);
+  }
+  
+  closeModal();
+  renderHorarios();
 }
 
 function deleteDocente(id) {
@@ -1401,12 +1489,14 @@ function renderHorarios() {
     const isPOT = doc.materia.toUpperCase().includes('P.O.T.') || doc.nombre.toUpperCase().includes('VENTER');
     const allActiveEsts = Estudiantes.getAll().filter(e => e.estado !== 'En Espera' && e.estado !== 'Próximo Ingreso' && e.estado !== 'Alta Médica');
 
-    // Para el Prof. Venter (P.O.T.), siempre tiene a la totalidad de los estudiantes activos a su cargo
-    const uniqueEstIds = isPOT 
-      ? allActiveEsts.map(e => e.id)
-      : [...new Set(allDocAsigs.map(a => a.estudianteId))];
+    // Nómina de estudiantes: unión de doc.nominaEstudiantes y las asignaciones de la semana
+    const nominaSet = new Set(doc.nominaEstudiantes || []);
+    allDocAsigs.forEach(a => nominaSet.add(a.estudianteId));
+    if (isPOT) {
+      allActiveEsts.forEach(e => nominaSet.add(e.id));
+    }
 
-    const docStudents = uniqueEstIds.map(id => {
+    const docStudents = Array.from(nominaSet).map(id => {
       const est = Estudiantes.getById(id);
       const estAsigs = allDocAsigs.filter(a => a.estudianteId === id);
       const hasPresencial = estAsigs.some(a => !a.sinHorario && (!a.estadoSemana || a.estadoSemana === 'Normal'));
@@ -1457,9 +1547,9 @@ function renderHorarios() {
                 badgeBg = 'rgba(234, 88, 12, 0.08)';
                 statusText = '🟠 Asentado / T.P.';
               } else if (!hasPresencial && !hasAsentado) {
-                badgeColor = '#6366f1';
-                badgeBg = 'rgba(99, 102, 241, 0.08)';
-                statusText = '📋 Seguimiento P.O.T.';
+                badgeColor = isPOT ? '#6366f1' : '#64748b';
+                badgeBg = isPOT ? 'rgba(99, 102, 241, 0.08)' : 'rgba(100, 116, 139, 0.08)';
+                statusText = isPOT ? '📋 Seguimiento P.O.T.' : '⚪ En Nómina (Sin horario)';
               }
               
               return `
@@ -1470,6 +1560,11 @@ function renderHorarios() {
               `;
             }).join('')}
           </div>
+          ${isHistorical ? '' : `
+            <button class="btn btn-secondary btn-sm" onclick="openGestionarNominaModal('${doc.id}')" style="font-size:0.65rem; padding:4px 8px; width:100%; margin-top:8px; font-weight:700; background:var(--bg-main); border:1px solid var(--primary); color:var(--primary);" title="Gestionar qué estudiantes tiene asignados este docente">
+              ➕ Gestionar Alumnos
+            </button>
+          `}
         </div>
       </div>
     `;

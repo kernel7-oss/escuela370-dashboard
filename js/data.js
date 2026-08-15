@@ -54,7 +54,20 @@ const DEFAULT_DATA = {
           "i": "13:20",
           "f": "16:40"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e17",
+        "e18",
+        "e14",
+        "e13",
+        "e22",
+        "e23",
+        "e24",
+        "e25",
+        "e26",
+        "e27",
+        "e29"
+      ]
     },
     {
       "id": "d30",
@@ -78,7 +91,16 @@ const DEFAULT_DATA = {
           "i": "14:40",
           "f": "18:00"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e23",
+        "e14",
+        "e13",
+        "e24",
+        "e17",
+        "e18",
+        "e22"
+      ]
     },
     {
       "id": "d18",
@@ -106,7 +128,20 @@ const DEFAULT_DATA = {
           "i": "13:20",
           "f": "17:20"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e17",
+        "e18",
+        "e14",
+        "e13",
+        "e22",
+        "e23",
+        "e24",
+        "e25",
+        "e26",
+        "e27",
+        "e29"
+      ]
     },
     {
       "id": "d15",
@@ -134,7 +169,18 @@ const DEFAULT_DATA = {
           "i": "14:00",
           "f": "17:20"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e25",
+        "e22",
+        "e27",
+        "e29",
+        "e14",
+        "e13",
+        "e23",
+        "e17",
+        "e18"
+      ]
     },
     {
       "id": "d17",
@@ -158,7 +204,18 @@ const DEFAULT_DATA = {
           "i": "13:20",
           "f": "17:20"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e14",
+        "e13",
+        "e23",
+        "e22",
+        "e25",
+        "e26",
+        "e18",
+        "e17",
+        "e24"
+      ]
     },
     {
       "id": "d14",
@@ -186,7 +243,16 @@ const DEFAULT_DATA = {
           "i": "14:00",
           "f": "15:20"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e18",
+        "e14",
+        "e13",
+        "e17",
+        "e22",
+        "e26",
+        "e24"
+      ]
     },
     {
       "id": "d16",
@@ -210,7 +276,18 @@ const DEFAULT_DATA = {
           "i": "14:00",
           "f": "16:40"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e14",
+        "e13",
+        "e23",
+        "e26",
+        "e18",
+        "e25",
+        "e22",
+        "e17",
+        "e24"
+      ]
     },
     {
       "id": "d19",
@@ -230,7 +307,14 @@ const DEFAULT_DATA = {
           "i": "13:20",
           "f": "17:20"
         }
-      }
+      },
+      "nominaEstudiantes": [
+        "e25",
+        "e22",
+        "e23",
+        "e27",
+        "e29"
+      ]
     }
   ],
   "estudiantes": [
@@ -401,7 +485,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d30_Lunes_1",
       "docenteId": "d30",
-      "estudianteId": "e2",
+      "estudianteId": "e23",
       "dia": "Lunes",
       "horaInicio": "14:40",
       "horaFin": "15:40",
@@ -411,7 +495,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d30_Lunes_2",
       "docenteId": "d30",
-      "estudianteId": "e22",
+      "estudianteId": "e14",
       "dia": "Lunes",
       "horaInicio": "15:50",
       "horaFin": "16:50",
@@ -421,7 +505,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d30_Lunes_3",
       "docenteId": "d30",
-      "estudianteId": "e23",
+      "estudianteId": "e13",
       "dia": "Lunes",
       "horaInicio": "17:00",
       "horaFin": "18:00",
@@ -441,7 +525,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d30_Martes_2",
       "docenteId": "d30",
-      "estudianteId": "e20",
+      "estudianteId": "e17",
       "dia": "Martes",
       "horaInicio": "16:20",
       "horaFin": "17:40",
@@ -451,7 +535,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d30_Miercoles_1",
       "docenteId": "d30",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Miércoles",
       "horaInicio": "16:50",
       "horaFin": "18:00",
@@ -461,7 +545,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d30_Jueves_1",
       "docenteId": "d30",
-      "estudianteId": "e1",
+      "estudianteId": "e22",
       "dia": "Jueves",
       "horaInicio": "16:50",
       "horaFin": "18:00",
@@ -471,7 +555,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d18_Miercoles_1",
       "docenteId": "d18",
-      "estudianteId": "e23",
+      "estudianteId": "e13",
       "dia": "Miércoles",
       "horaInicio": "13:20",
       "horaFin": "14:20",
@@ -501,7 +585,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d18_Viernes_2",
       "docenteId": "d18",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Viernes",
       "horaInicio": "14:20",
       "horaFin": "15:20",
@@ -511,7 +595,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d18_Viernes_3",
       "docenteId": "d18",
-      "estudianteId": "e2",
+      "estudianteId": "e23",
       "dia": "Viernes",
       "horaInicio": "15:20",
       "horaFin": "16:20",
@@ -521,7 +605,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d18_Viernes_4",
       "docenteId": "d18",
-      "estudianteId": "e20",
+      "estudianteId": "e17",
       "dia": "Viernes",
       "horaInicio": "16:20",
       "horaFin": "17:20",
@@ -531,7 +615,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d18_Viernes_5",
       "docenteId": "d18",
-      "estudianteId": "e22",
+      "estudianteId": "e14",
       "dia": "Viernes",
       "horaInicio": "17:20",
       "horaFin": "18:20",
@@ -551,7 +635,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d15_Martes_2",
       "docenteId": "d15",
-      "estudianteId": "e1",
+      "estudianteId": "e22",
       "dia": "Martes",
       "horaInicio": "15:00",
       "horaFin": "16:20",
@@ -581,7 +665,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d15_Jueves_1",
       "docenteId": "d15",
-      "estudianteId": "e22",
+      "estudianteId": "e14",
       "dia": "Jueves",
       "horaInicio": "14:00",
       "horaFin": "15:00",
@@ -591,7 +675,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d15_Jueves_2",
       "docenteId": "d15",
-      "estudianteId": "e23",
+      "estudianteId": "e13",
       "dia": "Jueves",
       "horaInicio": "15:00",
       "horaFin": "16:00",
@@ -601,7 +685,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d15_Viernes_1",
       "docenteId": "d15",
-      "estudianteId": "e2",
+      "estudianteId": "e23",
       "dia": "Viernes",
       "horaInicio": "14:00",
       "horaFin": "15:00",
@@ -611,7 +695,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d15_Viernes_2",
       "docenteId": "d15",
-      "estudianteId": "e20",
+      "estudianteId": "e17",
       "dia": "Viernes",
       "horaInicio": "15:00",
       "horaFin": "16:00",
@@ -621,7 +705,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d15_Viernes_3",
       "docenteId": "d15",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Viernes",
       "horaInicio": "16:00",
       "horaFin": "17:00",
@@ -631,7 +715,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d17_Martes_1",
       "docenteId": "d17",
-      "estudianteId": "e22",
+      "estudianteId": "e14",
       "dia": "Martes",
       "horaInicio": "13:20",
       "horaFin": "14:20",
@@ -641,7 +725,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d17_Martes_2",
       "docenteId": "d17",
-      "estudianteId": "e23",
+      "estudianteId": "e13",
       "dia": "Martes",
       "horaInicio": "14:30",
       "horaFin": "15:30",
@@ -651,7 +735,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d17_Martes_3",
       "docenteId": "d17",
-      "estudianteId": "e2",
+      "estudianteId": "e23",
       "dia": "Martes",
       "horaInicio": "15:40",
       "horaFin": "16:40",
@@ -661,7 +745,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d17_Miercoles_1",
       "docenteId": "d17",
-      "estudianteId": "e1",
+      "estudianteId": "e22",
       "dia": "Miércoles",
       "horaInicio": "13:20",
       "horaFin": "15:20",
@@ -691,7 +775,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d17_Viernes_2",
       "docenteId": "d17",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Viernes",
       "horaInicio": "15:40",
       "horaFin": "16:40",
@@ -701,7 +785,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d17_Viernes_3",
       "docenteId": "d17",
-      "estudianteId": "e20",
+      "estudianteId": "e17",
       "dia": "Viernes",
       "horaInicio": "16:40",
       "horaFin": "17:20",
@@ -721,7 +805,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d14_Lunes_1",
       "docenteId": "d14",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Lunes",
       "horaInicio": "15:20",
       "horaFin": "17:20",
@@ -731,7 +815,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d14_Martes_1",
       "docenteId": "d14",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Martes",
       "horaInicio": "14:00",
       "horaFin": "15:00",
@@ -741,7 +825,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d14_Martes_2",
       "docenteId": "d14",
-      "estudianteId": "e22",
+      "estudianteId": "e14",
       "dia": "Martes",
       "horaInicio": "15:00",
       "horaFin": "16:00",
@@ -751,7 +835,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d14_Martes_3",
       "docenteId": "d14",
-      "estudianteId": "e23",
+      "estudianteId": "e13",
       "dia": "Martes",
       "horaInicio": "16:00",
       "horaFin": "16:40",
@@ -761,7 +845,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d14_Martes_4",
       "docenteId": "d14",
-      "estudianteId": "e20",
+      "estudianteId": "e17",
       "dia": "Martes",
       "horaInicio": "16:40",
       "horaFin": "17:20",
@@ -771,7 +855,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d14_Miercoles_1",
       "docenteId": "d14",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Miércoles",
       "horaInicio": "14:00",
       "horaFin": "15:20",
@@ -781,7 +865,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d14_Miercoles_2",
       "docenteId": "d14",
-      "estudianteId": "e1",
+      "estudianteId": "e22",
       "dia": "Miércoles",
       "horaInicio": "15:50",
       "horaFin": "17:20",
@@ -811,7 +895,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d16_Lunes_1",
       "docenteId": "d16",
-      "estudianteId": "e22",
+      "estudianteId": "e14",
       "dia": "Lunes",
       "horaInicio": "14:00",
       "horaFin": "14:50",
@@ -821,7 +905,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d16_Lunes_2",
       "docenteId": "d16",
-      "estudianteId": "e23",
+      "estudianteId": "e13",
       "dia": "Lunes",
       "horaInicio": "14:50",
       "horaFin": "15:40",
@@ -831,7 +915,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d16_Lunes_3",
       "docenteId": "d16",
-      "estudianteId": "e2",
+      "estudianteId": "e23",
       "dia": "Lunes",
       "horaInicio": "15:40",
       "horaFin": "16:40",
@@ -851,7 +935,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d16_Miercoles_2",
       "docenteId": "d16",
-      "estudianteId": "e21",
+      "estudianteId": "e18",
       "dia": "Miércoles",
       "horaInicio": "15:40",
       "horaFin": "16:40",
@@ -871,7 +955,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d16_Jueves_2",
       "docenteId": "d16",
-      "estudianteId": "e1",
+      "estudianteId": "e22",
       "dia": "Jueves",
       "horaInicio": "15:40",
       "horaFin": "16:40",
@@ -881,7 +965,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d16_Viernes_1",
       "docenteId": "d16",
-      "estudianteId": "e20",
+      "estudianteId": "e17",
       "dia": "Viernes",
       "horaInicio": "14:00",
       "horaFin": "15:10",
@@ -911,7 +995,7 @@ const DEFAULT_DATA = {
     {
       "id": "as_d19_Jueves_2",
       "docenteId": "d19",
-      "estudianteId": "e1",
+      "estudianteId": "e22",
       "dia": "Jueves",
       "horaInicio": "14:20",
       "horaFin": "15:30",
@@ -921,12 +1005,12 @@ const DEFAULT_DATA = {
     {
       "id": "as_d19_Jueves_3",
       "docenteId": "d19",
-      "estudianteId": "e2",
+      "estudianteId": "e23",
       "dia": "Jueves",
       "horaInicio": "15:30",
       "horaFin": "16:30",
       "sinHorario": true,
-      "nota": null
+      "nota": "Cuestión médica"
     },
     {
       "id": "as_d19_Viernes_1",
@@ -1910,7 +1994,7 @@ const DEFAULT_DATA = {
 const DB = {
   data: null,
   load() {
-    const saved = localStorage.getItem('escuela370_data_v40');
+    const saved = localStorage.getItem('escuela370_data_v43');
     if (saved) {
       this.data = JSON.parse(saved);
       // Limpiar licencias/novedades del objeto docente de la semana pasada si quedaron persistidas
@@ -1920,6 +2004,9 @@ const DB = {
           const defDoc = DEFAULT_DATA.docentes.find(def => def.id === d.id);
           if (!d.jornada && defDoc && defDoc.jornada) {
             d.jornada = defDoc.jornada;
+          }
+          if ((!d.nominaEstudiantes || d.nominaEstudiantes.length === 0) && defDoc && defDoc.nominaEstudiantes) {
+            d.nominaEstudiantes = defDoc.nominaEstudiantes;
           }
         });
       }
@@ -1948,7 +2035,7 @@ const DB = {
       // Cargar la nueva semana 17 al 21 de Agosto directamente con su historial respaldado
       this.data = JSON.parse(JSON.stringify(DEFAULT_DATA));
       // Si existen historiales o fotos previas en el storage del usuario, conservarlas
-      const prevKeys = ['escuela370_data_v37', 'escuela370_data_v36', 'escuela370_data_v35', 'escuela370_data_v34'];
+      const prevKeys = ['escuela370_data_v40', 'escuela370_data_v37', 'escuela370_data_v36', 'escuela370_data_v35'];
       for (const k of prevKeys) {
         const val = localStorage.getItem(k);
         if (val) {
@@ -2004,7 +2091,7 @@ const DB = {
   },
   save() {
     try {
-      localStorage.setItem('escuela370_data_v40', JSON.stringify(this.data));
+      localStorage.setItem('escuela370_data_v43', JSON.stringify(this.data));
     } catch (err) {
       console.error("Error al guardar en localStorage:", err);
       if (typeof showToast === 'function') {
