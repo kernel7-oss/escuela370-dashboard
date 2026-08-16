@@ -931,6 +931,18 @@ function renderEstudiantes() {
             </div>
           </div>
 
+          <!-- Contactos Familiares -->
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+            ${e.telefono && e.telefono !== 'S/D' ? `
+              <a href="https://wa.me/${(e.telefono.replace(/\D/g,'').startsWith('54') ? e.telefono.replace(/\D/g,'') : '549' + e.telefono.replace(/\D/g,''))}" target="_blank" class="badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; text-decoration:none; font-size:0.7rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;" title="Abrir WhatsApp">
+                💬 ${e.telefono} <span style="opacity:0.85; font-weight:600;">(${e.contacto || 'mamá'})</span>
+              </a>` : ''}
+            ${e.telefono2 && e.telefono2 !== 'S/D' ? `
+              <a href="https://wa.me/${(e.telefono2.replace(/\D/g,'').startsWith('54') ? e.telefono2.replace(/\D/g,'') : '549' + e.telefono2.replace(/\D/g,''))}" target="_blank" class="badge" style="background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; text-decoration:none; font-size:0.7rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;" title="Abrir WhatsApp 2">
+                💬 ${e.telefono2} <span style="opacity:0.85; font-weight:600;">(${e.contacto2 || 'papá'})</span>
+              </a>` : ''}
+          </div>
+
           <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
             <div style="font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                <span>Certificado:</span>
@@ -1007,26 +1019,70 @@ function openEstudianteModal(id = null) {
       <div class="form-group"><label class="form-label">Escuela de Origen</label><input class="form-input" id="f-escuela" value="${e?.escuelaOrigen || ''}" placeholder="Ej: Escuela N° 796"></div>
     </div>
 
-    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">🏠 Domicilio y Contacto Familiar</div>
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">🏠 Domicilio y Contactos Familiares</div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Domicilio</label><input class="form-input" id="f-domicilio" value="${e?.domicilio || ''}" placeholder="Ej: Alvear N° 421"></div>
       <div class="form-group"><label class="form-label">Barrio</label><input class="form-input" id="f-barrio" value="${e?.barrio || ''}" placeholder="Ej: Centro"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Teléfono de la Familia</label><input class="form-input" id="f-telefono" value="${e?.telefono || ''}" placeholder="Ej: 2974260193"></div>
-      <div class="form-group"><label class="form-label">Titular / WhatsApp</label>
-        <input class="form-input" id="f-contacto" list="sugerencias-contacto" value="${e?.contacto || 'mamá (WhatsApp)'}" placeholder="Ej: mamá (WhatsApp)">
-        <datalist id="sugerencias-contacto">
-          <option value="mamá (WhatsApp)">
-          <option value="papá (WhatsApp)">
-          <option value="mamá">
-          <option value="papá">
-          <option value="tutor (WhatsApp)">
-          <option value="familiar (WhatsApp)">
-        </datalist>
+
+    <!-- Contacto 1 -->
+    <div style="background:var(--bg-secondary, #f8fafc); padding:10px 12px; border-radius:8px; margin-bottom:10px; border-left:3px solid var(--primary, #6366f1);">
+      <div style="font-weight:700; font-size:0.75rem; color:var(--text-main); margin-bottom:6px; text-transform:uppercase;">📱 Contacto Principal (Teléfono 1)</div>
+      <div class="form-row" style="margin-bottom:0;">
+        <div class="form-group" style="flex:1.2; margin-bottom:0;">
+          <label class="form-label">Teléfono 1</label>
+          <input class="form-input" id="f-telefono" value="${e?.telefono || ''}" placeholder="Ej: 2974260193">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Nombre</label>
+          <input class="form-input" id="f-contacto-nombre" value="${e?.contactoNombre || ''}" placeholder="Ej: Mariela">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Vínculo / Parentesco</label>
+          <select class="form-select" id="f-contacto-parentesco">
+            <option value="mamá (WhatsApp)" ${(!e?.contactoParentesco && (!e?.contacto || e?.contacto.includes('mamá'))) || e?.contactoParentesco === 'mamá (WhatsApp)' ? 'selected' : ''}>Mamá (WhatsApp)</option>
+            <option value="papá (WhatsApp)" ${(e?.contactoParentesco === 'papá (WhatsApp)' || (e?.contacto && e?.contacto.includes('papá'))) ? 'selected' : ''}>Papá (WhatsApp)</option>
+            <option value="tío/a (WhatsApp)" ${e?.contactoParentesco === 'tío/a (WhatsApp)' ? 'selected' : ''}>Tío / Tía (WhatsApp)</option>
+            <option value="abuelo/a (WhatsApp)" ${e?.contactoParentesco === 'abuelo/a (WhatsApp)' ? 'selected' : ''}>Abuelo / Abuela (WhatsApp)</option>
+            <option value="hermano/a (WhatsApp)" ${e?.contactoParentesco === 'hermano/a (WhatsApp)' ? 'selected' : ''}>Hermano / Hermana (WhatsApp)</option>
+            <option value="tutor (WhatsApp)" ${e?.contactoParentesco === 'tutor (WhatsApp)' ? 'selected' : ''}>Tutor / Tutora (WhatsApp)</option>
+            <option value="familiar (WhatsApp)" ${e?.contactoParentesco === 'familiar (WhatsApp)' ? 'selected' : ''}>Familiar (WhatsApp)</option>
+            <option value="otro (WhatsApp)" ${e?.contactoParentesco === 'otro (WhatsApp)' ? 'selected' : ''}>Otro (WhatsApp)</option>
+          </select>
+        </div>
       </div>
     </div>
-    <div class="form-group"><label class="form-label">Teléfono de Emergencias</label><input class="form-input" id="f-emergencia" value="${e?.emergencia || ''}" placeholder="Ej: 2974XXXXXX o vacío"></div>
+
+    <!-- Contacto 2 (Opcional) -->
+    <div style="background:var(--bg-secondary, #f8fafc); padding:10px 12px; border-radius:8px; margin-bottom:10px; border-left:3px solid #10b981;">
+      <div style="font-weight:700; font-size:0.75rem; color:var(--text-main); margin-bottom:6px; text-transform:uppercase;">📱 Segundo Contacto Adicional (Teléfono 2 - Papá, Tío, etc.)</div>
+      <div class="form-row" style="margin-bottom:0;">
+        <div class="form-group" style="flex:1.2; margin-bottom:0;">
+          <label class="form-label">Teléfono 2 (Opcional)</label>
+          <input class="form-input" id="f-telefono2" value="${e?.telefono2 || ''}" placeholder="Ej: 2974998877">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Segundo Nombre</label>
+          <input class="form-input" id="f-contacto2-nombre" value="${e?.contacto2Nombre || ''}" placeholder="Ej: Carlos">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Vínculo / Parentesco 2</label>
+          <select class="form-select" id="f-contacto2-parentesco">
+            <option value="" ${!e?.contacto2Parentesco ? 'selected' : ''}>-- Seleccionar vínculo --</option>
+            <option value="papá (WhatsApp)" ${e?.contacto2Parentesco === 'papá (WhatsApp)' ? 'selected' : ''}>Papá (WhatsApp)</option>
+            <option value="mamá (WhatsApp)" ${e?.contacto2Parentesco === 'mamá (WhatsApp)' ? 'selected' : ''}>Mamá (WhatsApp)</option>
+            <option value="tío/a (WhatsApp)" ${e?.contacto2Parentesco === 'tío/a (WhatsApp)' ? 'selected' : ''}>Tío / Tía (WhatsApp)</option>
+            <option value="abuelo/a (WhatsApp)" ${e?.contacto2Parentesco === 'abuelo/a (WhatsApp)' ? 'selected' : ''}>Abuelo / Abuela (WhatsApp)</option>
+            <option value="hermano/a (WhatsApp)" ${e?.contacto2Parentesco === 'hermano/a (WhatsApp)' ? 'selected' : ''}>Hermano / Hermana (WhatsApp)</option>
+            <option value="tutor (WhatsApp)" ${e?.contacto2Parentesco === 'tutor (WhatsApp)' ? 'selected' : ''}>Tutor / Tutora (WhatsApp)</option>
+            <option value="familiar (WhatsApp)" ${e?.contacto2Parentesco === 'familiar (WhatsApp)' ? 'selected' : ''}>Familiar (WhatsApp)</option>
+            <option value="otro (WhatsApp)" ${e?.contacto2Parentesco === 'otro (WhatsApp)' ? 'selected' : ''}>Otro (WhatsApp)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group"><label class="form-label">Teléfono de Emergencias</label><input class="form-input" id="f-emergencia" value="${e?.emergencia || ''}" placeholder="Ej: FRANCISCO 297-4231957 o vacío"></div>
 
     <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📶 Conectividad y Certificado Médico</div>
     <div class="form-row">
@@ -1135,14 +1191,30 @@ function saveEstudiante() {
   const alertaClases = isAlertaChecked || modalidad === 'Ausente Salud';
   const detalleAlerta = document.getElementById('f-detalle-alerta').value.trim() || (modalidad === 'Ausente Salud' ? 'No disponible esta semana por cuestiones médicas' : '');
 
+  const telefono = document.getElementById('f-telefono').value.trim() || 'S/D';
+  const contactoNombre = document.getElementById('f-contacto-nombre')?.value.trim() || '';
+  const contactoParentesco = document.getElementById('f-contacto-parentesco')?.value || 'mamá (WhatsApp)';
+  const contacto = contactoNombre ? `${contactoNombre} (${contactoParentesco})` : contactoParentesco;
+
+  const telefono2 = document.getElementById('f-telefono2')?.value.trim() || '';
+  const contacto2Nombre = document.getElementById('f-contacto2-nombre')?.value.trim() || '';
+  const contacto2Parentesco = document.getElementById('f-contacto2-parentesco')?.value || '';
+  const contacto2 = contacto2Nombre ? `${contacto2Nombre} (${contacto2Parentesco || 'WhatsApp'})` : contacto2Parentesco;
+
   const data = {
     nombre,
     grado: document.getElementById('f-grado').value.trim() || '1er año',
     escuelaOrigen: document.getElementById('f-escuela').value.trim() || 'S/D',
     nivel: document.getElementById('f-nivel').value,
     barrio: document.getElementById('f-barrio').value.trim() || 'S/D',
-    telefono: document.getElementById('f-telefono').value.trim() || 'S/D',
-    contacto: document.getElementById('f-contacto').value.trim() || 'mamá (WhatsApp)',
+    telefono,
+    contactoNombre,
+    contactoParentesco,
+    contacto,
+    telefono2,
+    contacto2Nombre,
+    contacto2Parentesco,
+    contacto2,
     domicilio: document.getElementById('f-domicilio').value.trim() || 'S/D',
     estado,
     modalidad,
@@ -1255,25 +1327,69 @@ function openEstudianteEsperaModal(id = null) {
       <div class="form-group"><label class="form-label">Escuela de Origen</label><input class="form-input" id="f-wait-escuela" value="${e?.escuelaOrigen || ''}" placeholder="Ej: Escuela N° 711"></div>
     </div>
 
-    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">🏠 Domicilio y Contacto Familiar</div>
+    <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">🏠 Domicilio y Contactos Familiares</div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Domicilio</label><input class="form-input" id="f-wait-domicilio" value="${e?.domicilio || ''}" placeholder="Ej: La Ferrere N° 3283"></div>
       <div class="form-group"><label class="form-label">Barrio</label><input class="form-input" id="f-wait-barrio" value="${e?.barrio || ''}" placeholder="Ej: Ceferino Namuncura"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Teléfono de la Familia</label><input class="form-input" id="f-wait-telefono" value="${e?.telefono || ''}" placeholder="Ej: 2976246194"></div>
-      <div class="form-group"><label class="form-label">Titular / WhatsApp</label>
-        <input class="form-input" id="f-wait-contacto" list="sugerencias-contacto-wait" value="${e?.contacto || 'mamá (WhatsApp)'}" placeholder="Ej: mamá (WhatsApp)">
-        <datalist id="sugerencias-contacto-wait">
-          <option value="mamá (WhatsApp)">
-          <option value="papá (WhatsApp)">
-          <option value="mamá">
-          <option value="papá">
-          <option value="tutor (WhatsApp)">
-          <option value="familiar (WhatsApp)">
-        </datalist>
+
+    <!-- Contacto 1 Espera -->
+    <div style="background:var(--bg-secondary, #f8fafc); padding:10px 12px; border-radius:8px; margin-bottom:10px; border-left:3px solid var(--primary, #6366f1);">
+      <div style="font-weight:700; font-size:0.75rem; color:var(--text-main); margin-bottom:6px; text-transform:uppercase;">📱 Contacto Principal (Teléfono 1)</div>
+      <div class="form-row" style="margin-bottom:0;">
+        <div class="form-group" style="flex:1.2; margin-bottom:0;">
+          <label class="form-label">Teléfono 1</label>
+          <input class="form-input" id="f-wait-telefono" value="${e?.telefono || ''}" placeholder="Ej: 2976246194">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Nombre</label>
+          <input class="form-input" id="f-wait-contacto-nombre" value="${e?.contactoNombre || ''}" placeholder="Ej: Mariela">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Vínculo / Parentesco</label>
+          <select class="form-select" id="f-wait-contacto-parentesco">
+            <option value="mamá (WhatsApp)" ${(!e?.contactoParentesco && (!e?.contacto || e?.contacto.includes('mamá'))) || e?.contactoParentesco === 'mamá (WhatsApp)' ? 'selected' : ''}>Mamá (WhatsApp)</option>
+            <option value="papá (WhatsApp)" ${(e?.contactoParentesco === 'papá (WhatsApp)' || (e?.contacto && e?.contacto.includes('papá'))) ? 'selected' : ''}>Papá (WhatsApp)</option>
+            <option value="tío/a (WhatsApp)" ${e?.contactoParentesco === 'tío/a (WhatsApp)' ? 'selected' : ''}>Tío / Tía (WhatsApp)</option>
+            <option value="abuelo/a (WhatsApp)" ${e?.contactoParentesco === 'abuelo/a (WhatsApp)' ? 'selected' : ''}>Abuelo / Abuela (WhatsApp)</option>
+            <option value="hermano/a (WhatsApp)" ${e?.contactoParentesco === 'hermano/a (WhatsApp)' ? 'selected' : ''}>Hermano / Hermana (WhatsApp)</option>
+            <option value="tutor (WhatsApp)" ${e?.contactoParentesco === 'tutor (WhatsApp)' ? 'selected' : ''}>Tutor / Tutora (WhatsApp)</option>
+            <option value="familiar (WhatsApp)" ${e?.contactoParentesco === 'familiar (WhatsApp)' ? 'selected' : ''}>Familiar (WhatsApp)</option>
+            <option value="otro (WhatsApp)" ${e?.contactoParentesco === 'otro (WhatsApp)' ? 'selected' : ''}>Otro (WhatsApp)</option>
+          </select>
+        </div>
       </div>
     </div>
+
+    <!-- Contacto 2 Espera (Opcional) -->
+    <div style="background:var(--bg-secondary, #f8fafc); padding:10px 12px; border-radius:8px; margin-bottom:10px; border-left:3px solid #10b981;">
+      <div style="font-weight:700; font-size:0.75rem; color:var(--text-main); margin-bottom:6px; text-transform:uppercase;">📱 Segundo Contacto Adicional (Teléfono 2 - Papá, Tío, etc.)</div>
+      <div class="form-row" style="margin-bottom:0;">
+        <div class="form-group" style="flex:1.2; margin-bottom:0;">
+          <label class="form-label">Teléfono 2 (Opcional)</label>
+          <input class="form-input" id="f-wait-telefono2" value="${e?.telefono2 || ''}" placeholder="Ej: 2974998877">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Segundo Nombre</label>
+          <input class="form-input" id="f-wait-contacto2-nombre" value="${e?.contacto2Nombre || ''}" placeholder="Ej: Carlos">
+        </div>
+        <div class="form-group" style="flex:1; margin-bottom:0;">
+          <label class="form-label">Vínculo / Parentesco 2</label>
+          <select class="form-select" id="f-wait-contacto2-parentesco">
+            <option value="" ${!e?.contacto2Parentesco ? 'selected' : ''}>-- Seleccionar vínculo --</option>
+            <option value="papá (WhatsApp)" ${e?.contacto2Parentesco === 'papá (WhatsApp)' ? 'selected' : ''}>Papá (WhatsApp)</option>
+            <option value="mamá (WhatsApp)" ${e?.contacto2Parentesco === 'mamá (WhatsApp)' ? 'selected' : ''}>Mamá (WhatsApp)</option>
+            <option value="tío/a (WhatsApp)" ${e?.contacto2Parentesco === 'tío/a (WhatsApp)' ? 'selected' : ''}>Tío / Tía (WhatsApp)</option>
+            <option value="abuelo/a (WhatsApp)" ${e?.contacto2Parentesco === 'abuelo/a (WhatsApp)' ? 'selected' : ''}>Abuelo / Abuela (WhatsApp)</option>
+            <option value="hermano/a (WhatsApp)" ${e?.contacto2Parentesco === 'hermano/a (WhatsApp)' ? 'selected' : ''}>Hermano / Hermana (WhatsApp)</option>
+            <option value="tutor (WhatsApp)" ${e?.contacto2Parentesco === 'tutor (WhatsApp)' ? 'selected' : ''}>Tutor / Tutora (WhatsApp)</option>
+            <option value="familiar (WhatsApp)" ${e?.contacto2Parentesco === 'familiar (WhatsApp)' ? 'selected' : ''}>Familiar (WhatsApp)</option>
+            <option value="otro (WhatsApp)" ${e?.contacto2Parentesco === 'otro (WhatsApp)' ? 'selected' : ''}>Otro (WhatsApp)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group"><label class="form-label">Teléfono de Emergencias</label><input class="form-input" id="f-wait-emergencia" value="${e?.emergencia || ''}" placeholder="Ej: 2974XXXXXX o vacío"></div>
 
     <div style="font-size:0.8rem; font-weight:800; color:var(--primary); text-transform:uppercase; margin-top:14px; margin-bottom:8px; letter-spacing:0.5px;">📶 Conectividad</div>
@@ -1339,14 +1455,30 @@ function saveEstudianteEspera() {
     certificadoVence = venceDate.toISOString().slice(0, 10);
   }
 
+  const telefono = document.getElementById('f-wait-telefono').value.trim() || 'S/D';
+  const contactoNombre = document.getElementById('f-wait-contacto-nombre')?.value.trim() || '';
+  const contactoParentesco = document.getElementById('f-wait-contacto-parentesco')?.value || 'mamá (WhatsApp)';
+  const contacto = contactoNombre ? `${contactoNombre} (${contactoParentesco})` : contactoParentesco;
+
+  const telefono2 = document.getElementById('f-wait-telefono2')?.value.trim() || '';
+  const contacto2Nombre = document.getElementById('f-wait-contacto2-nombre')?.value.trim() || '';
+  const contacto2Parentesco = document.getElementById('f-wait-contacto2-parentesco')?.value || '';
+  const contacto2 = contacto2Nombre ? `${contacto2Nombre} (${contacto2Parentesco || 'WhatsApp'})` : contacto2Parentesco;
+
   const data = {
     nombre,
     escuelaOrigen: document.getElementById('f-wait-escuela').value.trim() || 'S/D',
     grado: document.getElementById('f-wait-grado').value.trim() || 'Secundaria',
     barrio: document.getElementById('f-wait-barrio').value.trim() || 'S/D',
     domicilio: document.getElementById('f-wait-domicilio').value.trim() || 'S/D',
-    telefono: document.getElementById('f-wait-telefono').value.trim() || 'S/D',
-    contacto: document.getElementById('f-wait-contacto').value.trim() || 'mamá (WhatsApp)',
+    telefono,
+    contactoNombre,
+    contactoParentesco,
+    contacto,
+    telefono2,
+    contacto2Nombre,
+    contacto2Parentesco,
+    contacto2,
     emergencia: document.getElementById('f-wait-emergencia').value.trim(),
     wifi: document.getElementById('f-wait-wifi').value,
     conectividad: document.getElementById('f-wait-conectividad').value,
@@ -2725,6 +2857,9 @@ function exportWordPorNivel() {
                 <span style="font-style: italic; font-size: 14px;"> -TELÉFONO:</span> 
                 <a href="${waUrl}" target="_blank" class="link-text" style="font-size: 14.5px;" title="Abrir en WhatsApp">${e.telefono || 'S/D'}</a> 
                 <span style="font-size: 14px; font-weight:700;">${e.contacto || 'mamá (WhatsApp)'}</span>- 
+                ${e.telefono2 && e.telefono2 !== 'S/D' ? `
+                  <a href="${(e.telefono2.replace(/\D/g,'').length >= 6 ? 'https://wa.me/' + (e.telefono2.replace(/\D/g,'').startsWith('54') ? e.telefono2.replace(/\D/g,'') : '549' + e.telefono2.replace(/\D/g,'')) : '#')}" target="_blank" class="link-text" style="font-size: 14.5px;" title="Abrir en WhatsApp 2">${e.telefono2}</a> 
+                  <span style="font-size: 14px; font-weight:700;">${e.contacto2 || 'papá (WhatsApp)'}</span>- ` : ''}
                 <span style="font-style: italic; font-size: 14px;">Wi-Fi: ${e.wifi || 'SI'} – 3G:${e.conectividad || 'SI'}</span>
               </div>
             </td>
