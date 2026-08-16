@@ -821,7 +821,6 @@ function renderEstudiantes() {
         🏥 Altas Médicas (${estsAltas.length})
       </button>
     </div>
-    ${activeEstudiantesTab === 'Activos' ? `<button class="btn btn-secondary" onclick="exportWordPorNivel()" style="background-color: #2b5797; color: white; border-radius: 20px;">📄 Generar Word (Matrícula Activa)</button>` : ''}
   </div>`;
 
   if (activeEstudiantesTab === 'Espera') {
