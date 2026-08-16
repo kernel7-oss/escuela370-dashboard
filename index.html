@@ -150,7 +150,8 @@
         <h2>📅 Grilla de Planificación</h2>
         <p class="subtitle" id="horarios-subtitle">Visualización semanal por docente</p>
       </div>
-      <div style="display:flex; gap:10px;">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="exportWordPorNivel()" style="background-color: #2b5797; color: white; border-radius: 20px; font-weight:700;" title="Generar cuadernillo de horarios para familias en formato Word y PDF">📄 Generar Word / PDF (Familias)</button>
         <button class="btn btn-secondary" onclick="exportData()">📤 Exportar</button>
         <button class="btn btn-primary" onclick="openAsignacionModal()">➕ Asignar</button>
       </div>

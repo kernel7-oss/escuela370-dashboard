@@ -2609,7 +2609,7 @@ function exportWordPorNivel() {
 
   showToast('Generando cuadernillo oficial de horarios...', 'info');
   
-  // Format date utility
+  // Format date utility (Ej: DICIEMBRE 30, 2026)
   const formatCertDate = (dateStr) => {
     if (!dateStr) return 'S/D';
     if (dateStr === 'PERMANENTE' || dateStr === 'EN PROCESO') return dateStr;
@@ -2626,10 +2626,44 @@ function exportWordPorNivel() {
 
   const buildFichaEstudiante = (e, isWaitlist = false) => {
     const asigs = assignments.filter(a => a.estudianteId === e.id);
+    
+    // Generar enlaces directos interactivos
+    let cleanPhone = (e.telefono || '').replace(/\D/g, '');
+    let waUrl = '#';
+    if (cleanPhone.length >= 6) {
+      const fullPhone = cleanPhone.startsWith('54') ? cleanPhone : ('549' + cleanPhone);
+      waUrl = `https://wa.me/${fullPhone}`;
+    }
+    
+    const mapsUrl = e.mapsUrl || (`https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent((e.domicilio || '') + ', ' + (e.barrio || '') + ', Comodoro Rivadavia, Chubut'));
+
+    // Horarios disponibles de jornada por día
+    const dispHoras = e.horariosDisponibles || {
+      "Lunes": "13:20 a 15:00",
+      "Martes": "13:20 a 15:00",
+      "Miércoles": "14:00 a 15:20",
+      "Jueves": "13:20 a 15:00",
+      "Viernes": "13:20 a 15:00"
+    };
+
     let diasHTML = '';
     
     dias.forEach(dia => {
-      // Clases presenciales con horario establecido
+      // Si es Lunes (Feriado Nacional del 17 de Agosto)
+      if (dia === 'Lunes' && !isWaitlist) {
+        diasHTML += `
+          <td class="schedule-cell" style="vertical-align:middle; padding:4px;">
+            <div style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; padding: 10px 4px; border-radius: 6px; text-align: center; border: 1.5px solid #0369a1; box-shadow:0 2px 4px rgba(0,0,0,0.12);">
+              <div style="font-size: 11.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase;">🇦🇷 FERIADO NACIONAL</div>
+              <div style="font-size: 9.5px; font-weight: 700; opacity: 0.95; margin-top: 2px;">en Argentina</div>
+              <div style="font-size: 8.5px; margin-top: 4px; opacity: 0.92; line-height: 1.15;">Paso a la Inmortalidad del General José de San Martín.</div>
+            </div>
+          </td>
+        `;
+        return;
+      }
+
+      // Clases presenciales y terapias con horario establecido
       const classesForDay = asigs.filter(a => a.dia === dia && !a.sinHorario && a.horaInicio && a.horaFin).sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
       
       // Chequear si hay notas de salud o inasistencia especial
@@ -2640,7 +2674,7 @@ function exportWordPorNivel() {
         noteHTML = `<div style="color:#c00000; font-weight:800; font-size:11px; margin-top:3px; line-height:1.2;">AUSENTE POR TRATAMIENTO MÉDICO (BS. AS.)</div>`;
       } else if (e.nombre.includes('CASTRO') && dia === 'Miércoles') {
         noteHTML = `<div style="color:#0070c0; font-weight:800; font-size:11px; margin-bottom:4px;">CLASES desde 16:00 HS.</div>`;
-      } else if (e.modalidad === 'Ausente Salud' && dia === 'Lunes' && e.detalleAlerta) {
+      } else if (e.modalidad === 'Ausente Salud' && dia === 'Martes' && e.detalleAlerta) {
         noteHTML = `<div style="color:#c00000; font-weight:800; font-size:11px; margin-top:3px; line-height:1.2;">${e.detalleAlerta.toUpperCase()}</div>`;
       }
 
@@ -2650,11 +2684,16 @@ function exportWordPorNivel() {
 
         classesForDay.forEach(c => {
           const doc = teachers.find(t => t.id === c.docenteId);
+          const isTerapia = c.materiaExterna || (doc && (doc.materia.toUpperCase().includes('TERAPIA') || doc.materia.toUpperCase().includes('FONOAUDIO')));
+          const materiaNombre = c.materiaExterna || (doc ? doc.materia : 'MATERIA');
+          const timeColor = isTerapia ? '#000000' : '#c00000';
+          const profLabel = doc ? `<div style="font-weight:800; font-size:12px; color:#7030a0;">${getProfShortName(doc)}</div>` : '';
+
           diasHTML += `
             <div style="margin-bottom: 8px;">
-              <div style="font-weight:800; font-size:12px; color:#000000; text-transform:uppercase; margin-bottom:2px; line-height:1.2;">${doc ? doc.materia : 'MATERIA'}</div>
-              <div style="font-weight:800; font-size:13px; color:#c00000; margin-bottom:2px;">${c.horaInicio} a ${c.horaFin}</div>
-              <div style="font-weight:800; font-size:12px; color:#7030a0;">${getProfShortName(doc)}</div>
+              <div style="font-weight:800; font-size:12px; color:#000000; text-transform:uppercase; margin-bottom:2px; line-height:1.2;">${materiaNombre}</div>
+              <div style="font-weight:800; font-size:13px; color:${timeColor}; margin-bottom:2px;">${c.horaInicio} a ${c.horaFin}</div>
+              ${profLabel}
             </div>
           `;
         });
@@ -2671,22 +2710,22 @@ function exportWordPorNivel() {
         <table class="ficha-table">
           <tr>
             <td class="photo-cell">
-              ${e.foto ? `<img src="${e.foto}" alt="Foto">` : `<div style="width:100px; height:105px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#999; font-size:11px; border:1px dashed #7030a0;">Sin foto</div>`}
+              ${e.foto ? `<img src="${e.foto}" alt="Foto">` : `<div style="width:95px; height:100px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#999; font-size:11px; border:1px dashed #7030a0;">Sin foto</div>`}
             </td>
             <td class="info-cell" colspan="4">
               <div style="margin-bottom:4px;">
-                <span style="font-weight: bold; font-style: italic; font-size: 15px;">${e.nombre.toUpperCase()} - ${e.grado || '1er año'}</span> 
+                <span style="font-weight: bold; font-style: italic; font-size: 15.5px;">${e.nombre.toUpperCase()} - ${e.grado || '1er año'}</span> 
                 <span style="font-style: italic; font-size: 14px;">ESC. DE ORIGEN:</span> 
                 <span style="font-weight: bold; font-size: 15px;">${e.escuelaOrigen || 'S/D'}</span> -
               </div>
               <div>
                 <span style="font-style: italic; font-size: 14px;">DOMICILIO:</span> 
-                <span class="link-text" style="font-size: 14px;">${e.domicilio || 'S/D'}</span> 
+                <a href="${mapsUrl}" target="_blank" class="link-text" style="font-size: 14.5px;" title="Ver en Google Maps">${e.domicilio || 'S/D'}</a> 
                 <span style="font-style: italic; font-size: 14px;"> -BARRIO:</span> 
                 <span style="font-weight: bold; font-size: 14px;">${e.barrio || 'S/D'}</span> 
                 <span style="font-style: italic; font-size: 14px;"> -TELÉFONO:</span> 
-                <span class="link-text" style="font-size: 14px;">${e.telefono || 'S/D'}</span> 
-                <span style="font-size: 14px; font-weight:600;">${e.contacto || 'mamá (WhatsApp)'}</span>- 
+                <a href="${waUrl}" target="_blank" class="link-text" style="font-size: 14.5px;" title="Abrir en WhatsApp">${e.telefono || 'S/D'}</a> 
+                <span style="font-size: 14px; font-weight:700;">${e.contacto || 'mamá (WhatsApp)'}</span>- 
                 <span style="font-style: italic; font-size: 14px;">Wi-Fi: ${e.wifi || 'SI'} – 3G:${e.conectividad || 'SI'}</span>
               </div>
             </td>
@@ -2697,7 +2736,12 @@ function exportWordPorNivel() {
             </td>
           </tr>
           <tr>
-            ${dias.map(d => `<th>${d}</th>`).join('')}
+            ${dias.map(d => `
+              <th>
+                <div>${d.toUpperCase()}</div>
+                ${dispHoras[d] ? `<div style="font-size:11px; font-weight:700; color:#000; text-transform:none; margin-top:2px;">${dispHoras[d]}</div>` : ''}
+              </th>
+            `).join('')}
           </tr>
           <tr>
             ${diasHTML}
@@ -2733,13 +2777,13 @@ function exportWordPorNivel() {
         .ficha { width: 100%; margin-bottom: 30px; page-break-inside: avoid; background: #fff; }
         .ficha-table { width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; border: 1.5px solid #7030a0; }
         .ficha-table th, .ficha-table td { border: 1.5px solid #7030a0; }
-        .photo-cell { width: 110px; text-align: center; vertical-align: middle !important; padding: 4px; border: 1.5px solid #7030a0; }
-        .photo-cell img { width: 95px; height: 100px; object-fit: cover; border-radius: 4px; }
+        .photo-cell { width: 110px; text-align: center; vertical-align: middle !important; padding: 4px; border: 1.5px solid #7030a0; background: #fff; }
+        .photo-cell img { width: 95px; height: 100px; object-fit: cover; border-radius: 4px; background: #fff; }
         .info-cell { padding: 6px 10px; text-align: left; line-height: 1.45; vertical-align: middle !important; font-size: 13.5px; border: 1.5px solid #7030a0; }
-        .link-text { color: #0070c0; text-decoration: underline; font-weight: bold; }
+        .link-text { color: #0070c0; text-decoration: underline; font-weight: bold; cursor: pointer; }
         .emergencia-row { text-align: center; color: #c00000; font-weight: bold; font-style: italic; padding: 3px; font-size: 13.5px; border: 1.5px solid #7030a0; }
-        .ficha-table th { background: #fce4d6; color: #000; font-weight: bold; padding: 5px; font-size: 12.5px; text-transform: uppercase; border: 1.5px solid #7030a0; }
-        .schedule-cell { height: 115px; vertical-align: top; text-align: center; padding: 6px 3px; border: 1.5px solid #7030a0; }
+        .ficha-table th { background: #fce4d6; color: #000; font-weight: bold; padding: 6px 4px; font-size: 12.5px; text-transform: uppercase; border: 1.5px solid #7030a0; vertical-align: middle; }
+        .schedule-cell { height: 120px; vertical-align: top; text-align: center; padding: 6px 3px; border: 1.5px solid #7030a0; background: #fff; }
         .vencimiento-row { text-align: center; color: #7030a0; font-weight: bold; padding: 4px; font-size: 13.5px; text-transform: uppercase; border: 1.5px solid #7030a0; }
         .proximo-ingreso-row { background: #ffff00; color: #c00000; font-weight: 900; text-align: center; padding: 5px; font-size: 13.5px; text-transform: uppercase; border: 1.5px solid #7030a0; }
         .footer-row { text-align: center; font-weight: bold; padding: 3px; font-size: 12.5px; border: 1.5px solid #7030a0; text-transform: uppercase; }
@@ -2785,7 +2829,7 @@ function exportWordPorNivel() {
       <script>
         function downloadDoc() {
           const content = document.querySelector('.ficha-container').innerHTML;
-          const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Cuadernillo Horarios</title><style>body{font-family:'Segoe UI',Calibri,Arial,sans-serif;font-size:13px;}.main-header-box{text-align:center;margin-bottom:20px;border-bottom:2px solid #7030a0;padding-bottom:10px;}.main-title{font-size:18px;font-weight:900;text-transform:uppercase;}.main-stats{display:flex;justify-content:center;gap:30px;font-weight:bold;color:#7030a0;}.ficha-table{width:100%;border-collapse:collapse;border:1.5px solid #7030a0;margin-bottom:25px;}.ficha-table td,.ficha-table th{border:1.5px solid #7030a0;padding:4px;}.photo-cell{width:100px;text-align:center;}.link-text{color:#0070c0;text-decoration:underline;font-weight:bold;}.emergencia-row{text-align:center;color:#c00000;font-weight:bold;font-style:italic;}.ficha-table th{background:#fce4d6;color:#000;font-weight:bold;text-transform:uppercase;}.schedule-cell{height:110px;vertical-align:top;text-align:center;}.vencimiento-row{text-align:center;color:#7030a0;font-weight:bold;text-transform:uppercase;}.proximo-ingreso-row{background:#ffff00;color:#c00000;font-weight:900;text-align:center;text-transform:uppercase;}.footer-row{text-align:center;font-weight:bold;text-transform:uppercase;}.btn-bar{display:none;}</style></head><body>";
+          const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Cuadernillo Horarios</title><style>body{font-family:'Segoe UI',Calibri,Arial,sans-serif;font-size:13px;}.main-header-box{text-align:center;margin-bottom:20px;border-bottom:2px solid #7030a0;padding-bottom:10px;}.main-title{font-size:18px;font-weight:900;text-transform:uppercase;}.main-stats{display:flex;justify-content:center;gap:30px;font-weight:bold;color:#7030a0;}.ficha-table{width:100%;border-collapse:collapse;border:1.5px solid #7030a0;margin-bottom:25px;background:#fff;}.ficha-table td,.ficha-table th{border:1.5px solid #7030a0;padding:4px;}.photo-cell{width:100px;text-align:center;}.link-text{color:#0070c0;text-decoration:underline;font-weight:bold;}.emergencia-row{text-align:center;color:#c00000;font-weight:bold;font-style:italic;}.ficha-table th{background:#fce4d6;color:#000;font-weight:bold;text-transform:uppercase;}.schedule-cell{height:110px;vertical-align:top;text-align:center;}.vencimiento-row{text-align:center;color:#7030a0;font-weight:bold;text-transform:uppercase;}.proximo-ingreso-row{background:#ffff00;color:#c00000;font-weight:900;text-align:center;text-transform:uppercase;}.footer-row{text-align:center;font-weight:bold;text-transform:uppercase;}.btn-bar{display:none;}</style></head><body>";
           const footer = "</body></html>";
           const sourceHTML = header + content + footer;
           const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
